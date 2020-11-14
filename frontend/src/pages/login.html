@@ -1,0 +1,26 @@
+<html>
+  <link rel="stylesheet" href="./theme/base.scss" />
+  <link rel="stylesheet" href="./login.scss" />
+  <body>
+    <div class="top-banner">
+      <h1 class="title">Login page</h1>
+    </div>
+    <div class="main flex-col">
+      <h3 id="login-message" class="message">Login with the email</h3>
+      <div class="input-container flex-col">
+        <label>email</label>
+        <input id="email-input" />
+      </div>
+      <div class="input-container flex-col">
+        <label>password</label>
+        <input id="password-input" type="password" />
+      </div>
+      <button id="login-button" class="text-button">LOGIN</button>
+      <div id="signup-container">
+        <label>Don't have account?</label>
+        <button id="signup-button">signup</button>
+      </div>
+    </div>
+  </body>
+  <script src="../scripts/pages/login.ts"></script>
+</html>

@@ -1,0 +1,67 @@
+.text-button {
+  background-color: transparent;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0px;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.top-banner {
+  min-width: 450px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.top-banner .title {
+  margin-left: 16px;
+  margin-bottom: 8px;
+}
+
+.main {
+  min-width: 450px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.input-container {
+  padding: 8px 0px;
+  width: 100%;
+}
+
+.message {
+  font-style: italic;
+}
+
+#user-state {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+#user-state p,
+#user-state div,
+#user-state button {
+  align-self: center;
+}
+
+.border {
+  border: 1px white solid;
+}
+
+.border-radius {
+  border-radius: 8px;
+}
+
+/*# sourceMappingURL=/classes.5e0f6bea.css.map */
