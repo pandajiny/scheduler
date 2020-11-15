@@ -1,5 +1,5 @@
 export const navigateTo = (pathname: string) => {
-  if (process.env.NODE_ENV?.includes("LOCAL")) {
+  if (location.hostname == "localhost") {
     window.location.pathname = pathname;
   } else {
     window.location.pathname = `scheduler/` + pathname;

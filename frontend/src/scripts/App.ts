@@ -1,7 +1,5 @@
 import { LOGIN_PATH, navigateTo } from "../constants/paths";
-import { doSignOut, getUser } from "./AuthModule";
-
-export const renderTopbanner = () => {};
+import { doSignOut, getUser } from "./Modules/AuthModules";
 
 export const renderNavigator = (navItems: NavItem[]) => {
   const $navigator = document.getElementById("navigator") as HTMLDivElement;
@@ -19,7 +17,9 @@ export async function renderUserState(): Promise<User | null> {
   const $userState = document.getElementById("user-state") as HTMLDivElement;
   $userState.innerHTML = "";
 
-  const user = await getUser();
+  const user = await getUser().catch((err) => {
+    throw err;
+  });
   console.log(`got user state`, user);
   if (!user) {
     const $loginRequire = document.createElement("div");
@@ -146,6 +146,30 @@ export function $createContainer(props: {
   return $container;
 }
 
-export const serverUrl: string = process.env.NODE_ENV?.includes("LOCAL")
-  ? "http://localhost/"
-  : process.env.SERVER_URL || "SERVER_URL not found";
+let url = "https://pandajiny.shop/";
+
+export const isDevMode: boolean =
+  process.env.NODE_ENV?.includes("DEV") || false;
+
+export const isLocalMode: boolean =
+  process.env.NODE_ENV?.includes("LOCAL") || false;
+
+if (isLocalMode) {
+  console.log(`app is local mode`);
+  url = "http://localhost/";
+}
+
+if (isDevMode) {
+  // init dev mode
+  console.log(`app is dev mode`);
+  fetch(url).then((res) => {
+    if (res.ok) {
+      console.log(`server activated`);
+    } else {
+      console.log(`server not responde, using localhost`);
+      url = "http://localhost/";
+    }
+  });
+}
+
+export const serverUrl = url;

@@ -1,6 +1,5 @@
 import { HOME_PATH, SIGNUP_PATH, navigateTo } from "../../constants/paths";
-import { renderNavigator } from "../App";
-import { doLoginWithEmailAndPassword } from "../AuthModule";
+import { doLoginWithEmailAndPassword } from "../Modules/AuthModules";
 
 // renderNavigator([{ title: "go home", pathname: HOME_PATH }]);
 
@@ -10,28 +9,7 @@ const $loginButton = document.getElementById(
   "login-button"
 ) as HTMLButtonElement;
 
-$loginButton.addEventListener("click", function () {
-  const email = $email.value;
-  const password = $password.value;
-  // validation
-  if (isFormatted(email, password)) {
-    doLoginWithEmailAndPassword({
-      email,
-      password,
-    })
-      .catch((err) => {
-        $message.textContent = err;
-        throw err;
-      })
-      .then(() => {
-        console.log(`login passed, will redirect to home`);
-        // navigateTo(HOME_PATH);
-      });
-  } else {
-    $message.textContent = "Please fill blanks";
-    console.error(`user not filled input`);
-  }
-});
+$loginButton.addEventListener("click", doLogin);
 
 const $signupButton = document.getElementById(
   "signup-button"
@@ -42,6 +20,29 @@ const $message = document.getElementById(
   "login-message"
 ) as HTMLParagraphElement;
 
-function isFormatted(email: string, _password: string): boolean {
+function isFormattedCorrectly(email: string, _password: string): boolean {
   return email != "" && _password != "";
+}
+
+function doLogin() {
+  const email = $email.value;
+  const password = $password.value;
+  // validation
+  if (isFormattedCorrectly(email, password)) {
+    doLoginWithEmailAndPassword({
+      email,
+      password,
+    })
+      .catch((err) => {
+        $message.textContent = err;
+        throw err;
+      })
+      .then(() => {
+        console.log(`login passed, will redirect to home`);
+        navigateTo(HOME_PATH);
+      });
+  } else {
+    $message.textContent = "Please fill blanks";
+    console.error(`user not filled input`);
+  }
 }

@@ -1,83 +1,61 @@
 import { Injectable } from '@nestjs/common';
-// import * as sqlite_module from 'sqlite3';
-// const sqlite = sqlite_module.verbose();
+import { SSL_OP_NO_QUERY_MTU } from 'constants';
 import * as mysql from 'mysql';
-import { dbHost, dbPassword } from 'src/auth/secrets';
+import { dbHost, dbPassword } from 'src/secret/secrets';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class DbService {
-  connection = mysql.createConnection({
+  dbInstance = mysql;
+
+  connectOptions = {
     host: dbHost,
     port: 3306,
     user: 'root',
     password: dbPassword,
     insecureAuth: true,
     database: 'scheduler_db',
-  });
+  };
 
-  // async doGetQuery<T>(query: string): Promise<T[] | null> {
-  //   return new Promise(resolve => {
-  //     console.log(`do query : ${query}`);
-  //     const db = new sqlite.Database('jinius-scheduler.db');
-
-  //     db.all(query, (err, rows) => {
-  //       if (err) {
-  //         throw err;
-  //       }
-
-  //       if (rows.length > 0) {
-  //         resolve(rows);
-  //       } else {
-  //         resolve(null);
-  //       }
-  //       return;
-  //     });
-
-  //     db.close();
-  //   });
-  // }
   async doGetQuery<T>(query: string): Promise<T[] | null> {
-    return new Promise((res, rej) => {
-      this.connection.query(query, (err, results) => {
-        if (err) {
-          rej(err);
-        }
+    console.log(`get query with ${query}`);
+    // const queryResult = await new Promise<T[]>((res, rej) => {
+    //   this.connection.connect(err => {
+    //     if (err) throw err;
+    //     this.connection.query<T[]>(query, (err, results) => {
+    //       if (err) {
+    //         console.log(`---------------`);
+    //         throw err;
+    //       }
+    //       res(results);
+    //     });
+    //   });
+    // });
 
-        res(results);
+    const queryResult = await new Promise<T[]>((res, rej) => {
+      const connection = mysql.createConnection(this.connectOptions);
+      connection.connect(err => {
+        if (err) rej(err);
+        connection.query(query, (err, results) => {
+          if (err) rej(err);
+          connection.end();
+          res(results);
+        });
       });
+    }).catch(err => {
+      console.log(`------catched`);
+      console.log(err);
+      throw err;
     });
+
+    return queryResult;
   }
 
-  // async doWriteQuery(query: string): Promise<ActionResult> {
-  //   return new Promise((resolve, reject) => {
-  //     console.log(`do write query`, query);
-  //     const db = new sqlite.Database('jinius-scheduler.db', err => {
-  //       if (err) {
-  //         throw err;
-  //       }
-  //     });
-
-  //     db.exec(query, err => {
-  //       if (err) {
-  //         console.log(`error found dd`);
-  //         reject(err);
-  //         return;
-  //       }
-
-  //       console.log(`successfully done query ${query}`);
-  //       resolve({
-  //         ok: true,
-  //         message: `successfully done query ${query}`,
-  //       });
-  //       return;
-  //     });
-  //     db.close();
-  //   })
-  // }
   async doWriteQuery(query: string): Promise<ActionResult> {
-    return new Promise((res, rej) => {
-      this.connection.query(query, (err, results) => {
+    console.log(`write query with ${query}`);
+    const queryResult = await new Promise<ActionResult>((res, rej) => {
+      const connection = mysql.createConnection(this.connectOptions);
+      connection.query(query, (err, results) => {
         if (err) {
           rej(err);
         }
@@ -88,6 +66,9 @@ export class DbService {
         });
       });
     });
+
+    console.log(`writing query done`);
+    return queryResult;
   }
 
   getUniqueString(): string {

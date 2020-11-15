@@ -8,7 +8,7 @@ export class TodoService {
 
   async addTodoItem(request: AddTodoItemRequest): Promise<ActionResult> {
     const id = this.dbService.getUniqueString();
-    const { owner, content, isComplete, parentId, endTime } = request;
+    const { owner, content, isComplete, parentId } = request;
 
     const createTime = new Date().getTime();
 
@@ -20,10 +20,9 @@ export class TodoService {
       )
     `;
 
-    console.log(query);
-
     const writeResult = await this.dbService.doWriteQuery(query);
-    console.log(writeResult);
+
+    console.log(`getting todo query done ${writeResult.message}`);
 
     return {
       ok: true,

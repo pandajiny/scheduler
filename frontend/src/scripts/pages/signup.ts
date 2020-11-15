@@ -1,5 +1,5 @@
 import { HOME_PATH, LOGIN_PATH, navigateTo } from "../../constants/paths";
-import { doSignUp } from "../AuthModule";
+import { doSignUp } from "../Modules/AuthModules";
 
 const $message = document.getElementById(
   "signup-message"

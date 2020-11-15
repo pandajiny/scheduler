@@ -9,6 +9,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
+import { resourceLimits } from 'worker_threads';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -20,11 +21,11 @@ export class AuthController {
     private authService: AuthService,
   ) {}
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get('user')
-  // user(@Request() req): User {
-  //   return req.user as User;
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Get('user')
+  user(@Request() req): User {
+    return req.user as User;
+  }
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -42,14 +43,18 @@ export class AuthController {
     const { email, name, password } = request;
     const _password = this.authService.hashPassword(password);
 
-    return this.authService
+    const result = await this.authService
       .doSignup({
         email,
         name,
         _password,
       })
       .catch(err => {
+        console.log(`Sign up Error`, err);
         throw new HttpException(err, HttpStatus.FORBIDDEN);
       });
+
+    console.log(`signup passed`, result);
+    return result;
   }
 }

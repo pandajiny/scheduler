@@ -9,6 +9,7 @@ import {
   Param,
   HttpException,
   Put,
+  HttpStatus,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { TodoService } from './todo.service';
@@ -20,13 +21,17 @@ export class TodoController {
 
   @Get()
   async getTodos(@Request() req): Promise<TodoItem[]> {
-    console.log(`----- get todos -----`);
     const user = req.user as User;
     console.log(`get todo with ${user.email}`);
-    return this.todoService.getTodosFromDb(user.uid).catch(err => {
-      console.error(err);
-      throw err;
-    });
+    const todoItems = await this.todoService
+      .getTodosFromDb(user.uid)
+      .catch(err => {
+        console.log(`cannot query todo`, err);
+        throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+      });
+    console.log(`${todoItems.length} of todo Items have queried`);
+
+    return todoItems;
   }
 
   @Post()
@@ -36,10 +41,13 @@ export class TodoController {
   ): Promise<ActionResult> {
     const user = req.user as User;
     console.log(`adding todo with ${user.email}`, addRequest);
-    await this.todoService.addTodoItem(addRequest).catch(err => {
+
+    const result = await this.todoService.addTodoItem(addRequest).catch(err => {
       console.error(err);
       throw err;
     });
+
+    console.log(``);
 
     return {
       ok: false,

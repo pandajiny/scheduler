@@ -1,4 +1,4 @@
-import { serverUrl } from "./App";
+import { serverUrl } from "../App";
 
 export async function doLoginWithEmailAndPassword(request: LoginRequest) {
   const url = serverUrl + "auth/login";
@@ -44,6 +44,7 @@ export const getUser = async (): Promise<User | null> => {
   const url = serverUrl + "auth/user";
   const response = await fetch(url, { headers: getAuthHeader() });
   const result = (await response.json()) as User;
+  console.log(result);
   return result.email && result.uid ? result : null;
 };
 

@@ -12,7 +12,7 @@ import { AuthService } from '../auth.service';
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
     // if username and password not exist, return none
-    super({ usernameField: 'email', passwordField: '_password' });
+    super({ usernameField: 'email', passwordField: 'password' });
   }
 
   async validate(email: string, _password: string): Promise<User> {
@@ -24,6 +24,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       .catch(err => {
         throw err;
       });
+    console.log(`${email} has validated`);
     return user;
   }
 }

@@ -7,7 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { createHmac } from 'crypto';
-import { jwtConstants } from './secrets';
+import { jwtConstants } from 'src/secret/secrets';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +40,6 @@ export class AuthService {
   }
 
   async doLogin(user: User): Promise<LoginResult> {
-    console.log(`login with`, user);
     const payload: JwtPayload = { email: user.email, uid: user.uid };
     const token = this.jwtService.sign(payload);
     console.log(`tokken issued : ${token} with payload`, payload);
@@ -54,7 +53,6 @@ export class AuthService {
     email: string;
     _password: string;
   }): Promise<LoginResult> {
-    console.log(`signup with`, props);
     const { email, name, _password } = props;
     const user = await this.usersService.addUser({ email, name, _password });
     return this.doLogin(user);

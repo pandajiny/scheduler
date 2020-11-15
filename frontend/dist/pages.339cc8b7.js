@@ -126,9 +126,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.SIGNUP_PATH = exports.LOGIN_PATH = exports.HOME_PATH = exports.navigateTo = void 0;
 
 exports.navigateTo = function (pathname) {
-  var _a;
-
-  if ((_a = "development") === null || _a === void 0 ? void 0 : _a.includes("LOCAL")) {
+  if (location.hostname == "localhost") {
     window.location.pathname = pathname;
   } else {
     window.location.pathname = "scheduler/" + pathname;
@@ -138,7 +136,7 @@ exports.navigateTo = function (pathname) {
 exports.HOME_PATH = "index.html";
 exports.LOGIN_PATH = "login.html";
 exports.SIGNUP_PATH = "signup.html";
-},{}],"../scripts/AuthModule.ts":[function(require,module,exports) {
+},{}],"../scripts/Modules/AuthModules.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -289,7 +287,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.createAuthPostOption = exports.createPostOption = exports.getAuthHeader = exports.getProfile = exports.getUser = exports.doSignUp = exports.doSignOut = exports.doLoginWithEmailAndPassword = void 0;
 
-var App_1 = require("./App");
+var App_1 = require("../App");
 
 function doLoginWithEmailAndPassword(request) {
   return __awaiter(this, void 0, void 0, function () {
@@ -338,16 +336,21 @@ function doLoginWithEmailAndPassword(request) {
 
 exports.doLoginWithEmailAndPassword = doLoginWithEmailAndPassword;
 
-exports.doSignOut = function () {
-  return __awaiter(void 0, void 0, void 0, function () {
+function doSignOut() {
+  return __awaiter(this, void 0, Promise, function () {
     return __generator(this, function (_a) {
       localStorage.removeItem("jwtToken");
       return [2
       /*return*/
-      ];
+      , {
+        ok: true,
+        message: "user sign out"
+      }];
     });
   });
-};
+}
+
+exports.doSignOut = doSignOut;
 
 exports.doSignUp = function (request) {
   return __awaiter(void 0, void 0, Promise, function () {
@@ -407,6 +410,7 @@ exports.getUser = function () {
 
         case 2:
           result = _a.sent();
+          console.log(result);
           return [2
           /*return*/
           , result.email && result.uid ? result : null];
@@ -462,7 +466,7 @@ exports.createAuthPostOption = function (body) {
     body: JSON.stringify(body)
   };
 };
-},{"./App":"../scripts/App.ts"}],"../scripts/App.ts":[function(require,module,exports) {
+},{"../App":"../scripts/App.ts"}],"../scripts/App.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -608,18 +612,16 @@ var __generator = this && this.__generator || function (thisArg, body) {
   }
 };
 
-var _a;
+var _a, _b;
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.serverUrl = exports.$createContainer = exports.$createInputElement = exports.$createParagraphElement = exports.$createButtonElement = exports.renderUserState = exports.renderNavigator = exports.renderTopbanner = void 0;
+exports.serverUrl = exports.isLocalMode = exports.isDevMode = exports.$createContainer = exports.$createInputElement = exports.$createParagraphElement = exports.$createButtonElement = exports.renderUserState = exports.renderNavigator = void 0;
 
 var paths_1 = require("../constants/paths");
 
-var AuthModule_1 = require("./AuthModule");
-
-exports.renderTopbanner = function () {};
+var AuthModules_1 = require("./Modules/AuthModules");
 
 exports.renderNavigator = function (navItems) {
   var $navigator = document.getElementById("navigator");
@@ -645,7 +647,9 @@ function renderUserState() {
           $userState.innerHTML = "";
           return [4
           /*yield*/
-          , AuthModule_1.getUser()];
+          , AuthModules_1.getUser().catch(function (err) {
+            throw err;
+          })];
 
         case 1:
           user = _a.sent();
@@ -672,7 +676,7 @@ function renderUserState() {
             $signoutButton.className = "text-button";
             $signoutButton.appendChild(document.createTextNode("SIGNOUT?"));
             $signoutButton.addEventListener("click", function () {
-              AuthModule_1.doSignOut().then(function () {
+              AuthModules_1.doSignOut().then(function () {
                 window.location.reload();
               });
             });
@@ -796,8 +800,30 @@ function $createContainer(props) {
 }
 
 exports.$createContainer = $createContainer;
-exports.serverUrl = ((_a = "development") === null || _a === void 0 ? void 0 : _a.includes("LOCAL")) ? "http://localhost/" : "https://pandajiny.shop/" || "SERVER_URL not found";
-},{"../constants/paths":"../constants/paths.ts","./AuthModule":"../scripts/AuthModule.ts"}],"../scripts/todo.ts":[function(require,module,exports) {
+var url = "https://pandajiny.shop/";
+exports.isDevMode = ((_a = "LOCAL ") === null || _a === void 0 ? void 0 : _a.includes("DEV")) || false;
+exports.isLocalMode = ((_b = "LOCAL ") === null || _b === void 0 ? void 0 : _b.includes("LOCAL")) || false;
+
+if (exports.isLocalMode) {
+  console.log("app is local mode");
+  url = "http://localhost/";
+}
+
+if (exports.isDevMode) {
+  // init dev mode
+  console.log("app is dev mode");
+  fetch(url).then(function (res) {
+    if (res.ok) {
+      console.log("server activated");
+    } else {
+      console.log("server not responde, using localhost");
+      url = "http://localhost/";
+    }
+  });
+}
+
+exports.serverUrl = url;
+},{"../constants/paths":"../constants/paths.ts","./Modules/AuthModules":"../scripts/Modules/AuthModules.ts"}],"../scripts/Modules/TodoModules.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -948,9 +974,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.uncompleteTodos = exports.completeTodos = exports.editTodo = exports.deleteTodoItem = exports.addTodoItem = exports.getTodoItems = void 0;
 
-var App_1 = require("./App");
+var App_1 = require("../App");
 
-var AuthModule_1 = require("./AuthModule");
+var AuthModules_1 = require("./AuthModules");
 
 exports.getTodoItems = function () {
   return __awaiter(void 0, void 0, Promise, function () {
@@ -960,12 +986,15 @@ exports.getTodoItems = function () {
         case 0:
           console.log("get todoItems");
           url = App_1.serverUrl + "todo";
-          console.log("header", AuthModule_1.getAuthHeader());
+          console.log("header", AuthModules_1.getAuthHeader());
           return [4
           /*yield*/
           , fetch(url, {
             method: "GET",
-            headers: AuthModule_1.getAuthHeader()
+            headers: AuthModules_1.getAuthHeader()
+          }).catch(function (err) {
+            console.log("error catched");
+            throw err;
           })];
 
         case 1:
@@ -1003,7 +1032,7 @@ exports.addTodoItem = function (content, parentId) {
           url = App_1.serverUrl + "todo";
           return [4
           /*yield*/
-          , AuthModule_1.getUser()];
+          , AuthModules_1.getUser()];
 
         case 1:
           user = _a.sent();
@@ -1026,7 +1055,7 @@ exports.addTodoItem = function (content, parentId) {
           };
           return [4
           /*yield*/
-          , fetch(url, AuthModule_1.createAuthPostOption(request)).then(function (resp) {
+          , fetch(url, AuthModules_1.createAuthPostOption(request)).then(function (resp) {
             return __awaiter(void 0, void 0, void 0, function () {
               return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -1064,7 +1093,7 @@ exports.deleteTodoItem = function (request) {
           return [4
           /*yield*/
           , fetch(url, {
-            headers: AuthModule_1.getAuthHeader(),
+            headers: AuthModules_1.getAuthHeader(),
             method: "DELETE"
           })];
 
@@ -1097,7 +1126,7 @@ function editTodo(todo) {
           url = App_1.serverUrl + ("todo/" + todo.id);
           headers = Object.assign({
             "Content-Type": "application/json"
-          }, AuthModule_1.getAuthHeader());
+          }, AuthModules_1.getAuthHeader());
           console.log(headers);
           return [4
           /*yield*/
@@ -1154,7 +1183,7 @@ function completeTodos(ids) {
           url = App_1.serverUrl + "todo/complete";
           headers = Object.assign({
             "Content-Type": "application/json"
-          }, AuthModule_1.getAuthHeader());
+          }, AuthModules_1.getAuthHeader());
           return [4
           /*yield*/
           , fetch(url, {
@@ -1204,7 +1233,7 @@ function uncompleteTodos(ids) {
           url = App_1.serverUrl + "todo/uncomplete";
           headers = Object.assign({
             "Content-Type": "application/json"
-          }, AuthModule_1.getAuthHeader());
+          }, AuthModules_1.getAuthHeader());
           return [4
           /*yield*/
           , fetch(url, {
@@ -1243,7 +1272,7 @@ function uncompleteTodos(ids) {
 }
 
 exports.uncompleteTodos = uncompleteTodos;
-},{"./App":"../scripts/App.ts","./AuthModule":"../scripts/AuthModule.ts"}],"../scripts/pages/index.ts":[function(require,module,exports) {
+},{"../App":"../scripts/App.ts","./AuthModules":"../scripts/Modules/AuthModules.ts"}],"../scripts/pages/index.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -1409,7 +1438,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var App_1 = require("../App");
 
-var todo_1 = require("../todo");
+var TodoModules_1 = require("../Modules/TodoModules");
 
 initializeApp();
 
@@ -1428,7 +1457,7 @@ var todoItems = [];
 var $addTodoInput = document.getElementById("add-todo-input");
 $addTodoInput.addEventListener("keyup", function (ev) {
   if (ev.key == "Enter") {
-    todo_1.addTodoItem($addTodoInput.value).then(function () {
+    TodoModules_1.addTodoItem($addTodoInput.value).then(function () {
       $addTodoInput.value = "";
       updateTodolist();
     });
@@ -1436,7 +1465,7 @@ $addTodoInput.addEventListener("keyup", function (ev) {
 });
 var $submit = document.getElementById("submit");
 $submit.addEventListener("click", function () {
-  todo_1.addTodoItem($addTodoInput.value).then(function () {
+  TodoModules_1.addTodoItem($addTodoInput.value).then(function () {
     $addTodoInput.value = "";
     updateTodolist();
   });
@@ -1450,7 +1479,10 @@ function updateTodolist() {
         case 0:
           return [4
           /*yield*/
-          , todo_1.getTodoItems()];
+          , TodoModules_1.getTodoItems().catch(function (err) {
+            console.error("errorrr");
+            throw err.message;
+          })];
 
         case 1:
           todoItems = _a.sent();
@@ -1510,7 +1542,7 @@ function $createTodoItem(todo) {
               todo.content = content;
               return [4
               /*yield*/
-              , todo_1.editTodo(todo).then(function () {
+              , TodoModules_1.editTodo(todo).then(function () {
                 updateTodolist();
               })];
 
@@ -1538,7 +1570,7 @@ function $createTodoItem(todo) {
     className: "text-button",
     content: "\u2716\t",
     onClick: function onClick() {
-      todo_1.deleteTodoItem({
+      TodoModules_1.deleteTodoItem({
         id: todo.id
       }).then(function () {
         updateTodolist();
@@ -1558,13 +1590,13 @@ function $createTodoItem(todo) {
     content: "\u2713",
     onClick: function onClick() {
       if (!todo.isComplete) {
-        todo_1.completeTodos(__spreadArrays([todo.id], childList.map(function (t) {
+        TodoModules_1.completeTodos(__spreadArrays([todo.id], childList.map(function (t) {
           return t.id;
         }))).then(function () {
           return updateTodolist();
         });
       } else {
-        todo_1.uncompleteTodos(__spreadArrays([todo.id], childList.map(function (t) {
+        TodoModules_1.uncompleteTodos(__spreadArrays([todo.id], childList.map(function (t) {
           return t.id;
         }))).then(function () {
           return updateTodolist();
@@ -1592,7 +1624,7 @@ function $createTodoItem(todo) {
     onSubmit: function onSubmit(v) {
       return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-          todo_1.addTodoItem(v, todo.id).then(function () {
+          TodoModules_1.addTodoItem(v, todo.id).then(function () {
             return updateTodolist();
           });
           return [2
@@ -1645,7 +1677,7 @@ function $createTodoItem(todo) {
   });
   return $todo;
 }
-},{"../App":"../scripts/App.ts","../todo":"../scripts/todo.ts"}],"C:/Users/astic/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"../App":"../scripts/App.ts","../Modules/TodoModules":"../scripts/Modules/TodoModules.ts"}],"C:/Users/astic/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -1673,7 +1705,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52180" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56363" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

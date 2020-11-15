@@ -1,5 +1,5 @@
-import { serverUrl } from "./App";
-import { getAuthHeader, createAuthPostOption, getUser } from "./AuthModule";
+import { serverUrl } from "../App";
+import { getAuthHeader, createAuthPostOption, getUser } from "./AuthModules";
 
 export const getTodoItems = async (): Promise<TodoItem[] | []> => {
   console.log("get todoItems");
@@ -8,6 +8,9 @@ export const getTodoItems = async (): Promise<TodoItem[] | []> => {
   const result = await fetch(url, {
     method: "GET",
     headers: getAuthHeader(),
+  }).catch((err) => {
+    console.log(`error catched`);
+    throw err;
   });
   console.log(result.ok);
   if (!result.ok) {

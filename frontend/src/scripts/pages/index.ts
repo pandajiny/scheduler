@@ -12,7 +12,7 @@ import {
   editTodo,
   getTodoItems,
   uncompleteTodos,
-} from "../todo";
+} from "../Modules/TodoModules";
 
 initializeApp();
 
@@ -52,7 +52,10 @@ $submit.addEventListener("click", () => {
 const $todolist = document.getElementById("todolist") as HTMLDivElement;
 
 async function updateTodolist() {
-  todoItems = await getTodoItems();
+  todoItems = await getTodoItems().catch((err) => {
+    console.error(`errorrr`);
+    throw err.message;
+  });
   $todolist.innerHTML = "";
   todoItems
     .filter((todoItem) => todoItem.parentId == null)

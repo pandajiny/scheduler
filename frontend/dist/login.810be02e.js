@@ -126,9 +126,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.SIGNUP_PATH = exports.LOGIN_PATH = exports.HOME_PATH = exports.navigateTo = void 0;
 
 exports.navigateTo = function (pathname) {
-  var _a;
-
-  if ((_a = "development") === null || _a === void 0 ? void 0 : _a.includes("LOCAL")) {
+  if (location.hostname == "localhost") {
     window.location.pathname = pathname;
   } else {
     window.location.pathname = "scheduler/" + pathname;
@@ -284,18 +282,16 @@ var __generator = this && this.__generator || function (thisArg, body) {
   }
 };
 
-var _a;
+var _a, _b;
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.serverUrl = exports.$createContainer = exports.$createInputElement = exports.$createParagraphElement = exports.$createButtonElement = exports.renderUserState = exports.renderNavigator = exports.renderTopbanner = void 0;
+exports.serverUrl = exports.isLocalMode = exports.isDevMode = exports.$createContainer = exports.$createInputElement = exports.$createParagraphElement = exports.$createButtonElement = exports.renderUserState = exports.renderNavigator = void 0;
 
 var paths_1 = require("../constants/paths");
 
-var AuthModule_1 = require("./AuthModule");
-
-exports.renderTopbanner = function () {};
+var AuthModules_1 = require("./Modules/AuthModules");
 
 exports.renderNavigator = function (navItems) {
   var $navigator = document.getElementById("navigator");
@@ -321,7 +317,9 @@ function renderUserState() {
           $userState.innerHTML = "";
           return [4
           /*yield*/
-          , AuthModule_1.getUser()];
+          , AuthModules_1.getUser().catch(function (err) {
+            throw err;
+          })];
 
         case 1:
           user = _a.sent();
@@ -348,7 +346,7 @@ function renderUserState() {
             $signoutButton.className = "text-button";
             $signoutButton.appendChild(document.createTextNode("SIGNOUT?"));
             $signoutButton.addEventListener("click", function () {
-              AuthModule_1.doSignOut().then(function () {
+              AuthModules_1.doSignOut().then(function () {
                 window.location.reload();
               });
             });
@@ -472,8 +470,30 @@ function $createContainer(props) {
 }
 
 exports.$createContainer = $createContainer;
-exports.serverUrl = ((_a = "development") === null || _a === void 0 ? void 0 : _a.includes("LOCAL")) ? "http://localhost/" : "https://pandajiny.shop/" || "SERVER_URL not found";
-},{"../constants/paths":"../constants/paths.ts","./AuthModule":"../scripts/AuthModule.ts"}],"../scripts/AuthModule.ts":[function(require,module,exports) {
+var url = "https://pandajiny.shop/";
+exports.isDevMode = ((_a = "LOCAL ") === null || _a === void 0 ? void 0 : _a.includes("DEV")) || false;
+exports.isLocalMode = ((_b = "LOCAL ") === null || _b === void 0 ? void 0 : _b.includes("LOCAL")) || false;
+
+if (exports.isLocalMode) {
+  console.log("app is local mode");
+  url = "http://localhost/";
+}
+
+if (exports.isDevMode) {
+  // init dev mode
+  console.log("app is dev mode");
+  fetch(url).then(function (res) {
+    if (res.ok) {
+      console.log("server activated");
+    } else {
+      console.log("server not responde, using localhost");
+      url = "http://localhost/";
+    }
+  });
+}
+
+exports.serverUrl = url;
+},{"../constants/paths":"../constants/paths.ts","./Modules/AuthModules":"../scripts/Modules/AuthModules.ts"}],"../scripts/Modules/AuthModules.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -624,7 +644,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.createAuthPostOption = exports.createPostOption = exports.getAuthHeader = exports.getProfile = exports.getUser = exports.doSignUp = exports.doSignOut = exports.doLoginWithEmailAndPassword = void 0;
 
-var App_1 = require("./App");
+var App_1 = require("../App");
 
 function doLoginWithEmailAndPassword(request) {
   return __awaiter(this, void 0, void 0, function () {
@@ -673,16 +693,21 @@ function doLoginWithEmailAndPassword(request) {
 
 exports.doLoginWithEmailAndPassword = doLoginWithEmailAndPassword;
 
-exports.doSignOut = function () {
-  return __awaiter(void 0, void 0, void 0, function () {
+function doSignOut() {
+  return __awaiter(this, void 0, Promise, function () {
     return __generator(this, function (_a) {
       localStorage.removeItem("jwtToken");
       return [2
       /*return*/
-      ];
+      , {
+        ok: true,
+        message: "user sign out"
+      }];
     });
   });
-};
+}
+
+exports.doSignOut = doSignOut;
 
 exports.doSignUp = function (request) {
   return __awaiter(void 0, void 0, Promise, function () {
@@ -742,6 +767,7 @@ exports.getUser = function () {
 
         case 2:
           result = _a.sent();
+          console.log(result);
           return [2
           /*return*/
           , result.email && result.uid ? result : null];
@@ -797,7 +823,7 @@ exports.createAuthPostOption = function (body) {
     body: JSON.stringify(body)
   };
 };
-},{"./App":"../scripts/App.ts"}],"../scripts/pages/login.ts":[function(require,module,exports) {
+},{"../App":"../scripts/App.ts"}],"../scripts/pages/login.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -806,41 +832,44 @@ Object.defineProperty(exports, "__esModule", {
 
 var paths_1 = require("../../constants/paths");
 
-var AuthModule_1 = require("../AuthModule"); // renderNavigator([{ title: "go home", pathname: HOME_PATH }]);
+var AuthModules_1 = require("../Modules/AuthModules"); // renderNavigator([{ title: "go home", pathname: HOME_PATH }]);
 
 
 var $email = document.getElementById("email-input");
 var $password = document.getElementById("password-input");
 var $loginButton = document.getElementById("login-button");
-$loginButton.addEventListener("click", function () {
-  var email = $email.value;
-  var password = $password.value; // validation
-
-  if (isFormatted(email, password)) {
-    AuthModule_1.doLoginWithEmailAndPassword({
-      email: email,
-      password: password
-    }).catch(function (err) {
-      $message.textContent = err;
-      throw err;
-    }).then(function () {
-      console.log("login passed, will redirect to home"); // navigateTo(HOME_PATH);
-    });
-  } else {
-    $message.textContent = "Please fill blanks";
-    console.error("user not filled input");
-  }
-});
+$loginButton.addEventListener("click", doLogin);
 var $signupButton = document.getElementById("signup-button");
 $signupButton.addEventListener("click", function () {
   return paths_1.navigateTo(paths_1.SIGNUP_PATH);
 });
 var $message = document.getElementById("login-message");
 
-function isFormatted(email, _password) {
+function isFormattedCorrectly(email, _password) {
   return email != "" && _password != "";
 }
-},{"../../constants/paths":"../constants/paths.ts","../AuthModule":"../scripts/AuthModule.ts"}],"C:/Users/astic/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+function doLogin() {
+  var email = $email.value;
+  var password = $password.value; // validation
+
+  if (isFormattedCorrectly(email, password)) {
+    AuthModules_1.doLoginWithEmailAndPassword({
+      email: email,
+      password: password
+    }).catch(function (err) {
+      $message.textContent = err;
+      throw err;
+    }).then(function () {
+      console.log("login passed, will redirect to home");
+      paths_1.navigateTo(paths_1.HOME_PATH);
+    });
+  } else {
+    $message.textContent = "Please fill blanks";
+    console.error("user not filled input");
+  }
+}
+},{"../../constants/paths":"../constants/paths.ts","../Modules/AuthModules":"../scripts/Modules/AuthModules.ts"}],"C:/Users/astic/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -868,7 +897,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52180" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56363" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

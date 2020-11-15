@@ -10,6 +10,7 @@
   },
   "scripts": {
     "start": "parcel src/pages/*.html",
+    "start:dev": "set NODE_ENV=DEV && npm run start",
     "start:local": "set NODE_ENV=LOCAL && npm run start",
     "build": "parcel build src/pages/*.html -d ../docs",
     "compile": "tsc --noEmit",
