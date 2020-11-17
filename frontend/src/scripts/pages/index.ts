@@ -20,6 +20,9 @@ async function initialPage() {
   const user = await getUser();
 
   if (user) {
+    (document.getElementById(
+      "content-container"
+    ) as HTMLElement).style.display = "flex";
     const $accountContainer = document.getElementById(
       "account-container"
     ) as HTMLElement;
