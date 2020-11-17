@@ -1,5 +1,16 @@
 import { serverUrl } from "../App";
 
+export function getAuthHeader(): AuthHeader | null {
+  const token = localStorage.getItem("jwtToken") || null;
+  if (!token) {
+    return null;
+  }
+
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+}
+
 export async function doLoginWithEmailAndPassword(request: LoginRequest) {
   const url = serverUrl + "auth/login";
   const response = await fetch(url, createPostOption(request));
@@ -37,34 +48,22 @@ export const doSignUp = async (
     ok: true,
     message: `signup ok`,
   };
-  // const result = await response.json() as unknown as SignupResu
 };
 
 export const getUser = async (): Promise<User | null> => {
   const url = serverUrl + "auth/user";
-  const response = await fetch(url, { headers: getAuthHeader() });
+  const headers = getAuthHeader();
+  if (!headers) {
+    return null;
+  }
+
+  const response = await fetch(url, {
+    headers,
+  });
+
   const result = (await response.json()) as User;
   console.log(result);
   return result.email && result.uid ? result : null;
-};
-
-export const getProfile = async () => {
-  const url = serverUrl + "profile";
-
-  fetch(url, {
-    headers: getAuthHeader(),
-  }).then((resp) => {
-    resp.json().then((data) => {
-      console.log(data);
-    });
-  });
-};
-
-export const getAuthHeader = () => {
-  const token = localStorage.getItem("jwtToken");
-  return {
-    Authorization: `Bearer ${token}`,
-  };
 };
 
 export const createPostOption = (body: Object): RequestInit => {

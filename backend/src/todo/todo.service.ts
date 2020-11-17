@@ -8,15 +8,15 @@ export class TodoService {
 
   async addTodoItem(request: AddTodoItemRequest): Promise<ActionResult> {
     const id = this.dbService.getUniqueString();
-    const { owner, content, isComplete, parentId } = request;
+    const { owner, content, isComplete, parentId, endTime } = request;
 
     const createTime = new Date().getTime();
 
     const query = `
-      INSERT INTO TodoItems (id,owner, content, isComplete, parentId, createTime)
+      INSERT INTO TodoItems (id,owner, content, isComplete, parentId, createTime, endTime)
       VALUES(
         "${id}","${owner}", "${content}", ${isComplete},
-        ${parentId ? `"${parentId}"` : `null`}, ${createTime}
+        ${parentId ? `"${parentId}"` : `null`}, ${createTime}, ${endTime}
       )
     `;
 

@@ -14,7 +14,7 @@ export class UsersService {
       VALUES ("${uid}","${name}","${email}","${_password}")
     `;
 
-    await this.dbService.doWriteQuery(query);
+    const result = await this.dbService.doWriteQuery(query);
 
     const user: User = {
       uid,
@@ -22,6 +22,7 @@ export class UsersService {
       email,
       _password,
     };
+
     return user;
   }
 

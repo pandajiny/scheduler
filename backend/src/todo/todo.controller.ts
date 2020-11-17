@@ -42,15 +42,11 @@ export class TodoController {
     const user = req.user as User;
     console.log(`adding todo with ${user.email}`, addRequest);
 
-    const result = await this.todoService.addTodoItem(addRequest).catch(err => {
-      console.error(err);
-      throw err;
-    });
-
-    console.log(``);
+    const result = await this.todoService.addTodoItem(addRequest);
+    console.log(`adding todo done : ${result.message}`);
 
     return {
-      ok: false,
+      ok: true,
       message: 'testing api',
     };
   }

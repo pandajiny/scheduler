@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { SSL_OP_NO_QUERY_MTU } from 'constants';
 import * as mysql from 'mysql';
 import { dbHost, dbPassword } from 'src/secret/secrets';
 import { v4 as uuidv4 } from 'uuid';
@@ -8,29 +7,17 @@ import { v4 as uuidv4 } from 'uuid';
 export class DbService {
   dbInstance = mysql;
 
-  connectOptions = {
+  connectOptions: mysql.ConnectionConfig = {
     host: dbHost,
+    // socketPath: '/var/run/mysqld/mysqld.sock',
     port: 3306,
     user: 'root',
     password: dbPassword,
-    insecureAuth: true,
     database: 'scheduler_db',
   };
 
   async doGetQuery<T>(query: string): Promise<T[] | null> {
     console.log(`get query with ${query}`);
-    // const queryResult = await new Promise<T[]>((res, rej) => {
-    //   this.connection.connect(err => {
-    //     if (err) throw err;
-    //     this.connection.query<T[]>(query, (err, results) => {
-    //       if (err) {
-    //         console.log(`---------------`);
-    //         throw err;
-    //       }
-    //       res(results);
-    //     });
-    //   });
-    // });
 
     const queryResult = await new Promise<T[]>((res, rej) => {
       const connection = mysql.createConnection(this.connectOptions);

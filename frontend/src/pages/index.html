@@ -2,16 +2,42 @@
   <link rel="stylesheet" href="./theme/base.scss" />
   <link rel="stylesheet" href="./index.scss" />
   <body>
-    <div class="top-banner">
-      <h1 class="title">JINIUS SCHEDULER</h1>
-      <div id="user-state"></div>
+    <div id="top-banner">
+      <h1 id="title">SCHEDULER</h1>
+      <div id="account-container"></div>
     </div>
-    <div id="main" class="main" style="display: none">
-      <div id="todolist"></div>
-      <div id="input-form">
-        <label>Add Todo</label>
-        <input id="add-todo-input" placeholder="...todo content" />
-        <button id="submit">SUBMIT BUTTON</button>
+    <div id="main" class="main">
+      <div id="introduce">
+        <h1 id="welcome-text">Welcome to JINIUS SCHEDULER</h1>
+        <p>
+          If you want to use it, Please Login first.
+          <button id="login-button">Login</button>
+        </p>
+        <p>Don't have account?<button id="signup-button">Sign Up</button></p>
+      </div>
+
+      <div id="content-container">
+        <div id="nav-container">
+          <ul id="nav-list">
+            <!-- <li class="selected">All todos</li>
+            <li>Not Selected</li>
+            <li>ex) 11.18</li>
+            <li>ex) 11.19</li>
+            <li>ex) 11.20</li> -->
+          </ul>
+        </div>
+        <div id="todolist-container">
+          <h2 class="title">All todos</h2>
+          <div id="todolist"></div>
+          <div id="add-todo-container" class="input-form">
+            <input id="date-select" placeholder="Unselected" type="date" />
+            <input id="add-todo-input" placeholder="...todo content" />
+            <button id="submit-button" class="text-button">✓</button>
+          </div>
+        </div>
+        <div id="additional-container">
+          <h2>Upcommings</h2>
+        </div>
       </div>
     </div>
   </body>

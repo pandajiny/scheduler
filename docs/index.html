@@ -1,21 +1,36 @@
 <html>
-  <link rel="stylesheet" href="./base.76f83f50.css" /><link
+  <link rel="stylesheet" href="./base.54a8d615.css" /><link
     rel="stylesheet"
-    href="./pages.ad0806f5.css"
+    href="./pages.03c2d8e5.css"
   />
   <body>
-    <div class="top-banner">
-      <h1 class="title">JINIUS SCHEDULER</h1>
-      <div id="user-state"></div>
+    <div id="top-banner">
+      <h1 id="title">SCHEDULER</h1>
+      <div id="account-container"></div>
     </div>
-    <div id="main" class="main" style="display: none">
-      <div id="todolist"></div>
-      <div id="input-form">
-        <label>Add Todo</label>
-        <input id="add-todo-input" placeholder="...todo content" />
-        <button id="submit">SUBMIT</button>
+    <div id="main" class="main">
+      <div id="introduce">
+        <h1 id="welcome-text">Welcome to JINIUS SCHEDULER</h1>
+        <p>
+          If you want to use it, Please Login first.
+          <button id="login-button">Login</button>
+        </p>
+        <p>Don't have account?<button id="signup-button">Sign Up</button></p>
+      </div>
+      <div id="content-container">
+        <div id="nav-container"><ul id="nav-list"></ul></div>
+        <div id="todolist-container">
+          <h2 class="title">All todos</h2>
+          <div id="todolist"></div>
+          <div id="add-todo-container" class="input-form">
+            <input id="date-select" placeholder="Unselected" type="date" />
+            <input id="add-todo-input" placeholder="...todo content" />
+            <button id="submit-button" class="text-button">✓</button>
+          </div>
+        </div>
+        <div id="additional-container"><h2>Upcommings</h2></div>
       </div>
     </div>
   </body>
-  <script src="./pages.8edc8df0.js"></script>
+  <script src="./pages.c0e3ff65.js"></script>
 </html>

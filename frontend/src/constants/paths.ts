@@ -6,7 +6,7 @@ export const navigateTo = (pathname: string) => {
   }
 };
 
-export const HOME_PATH = "index.html";
+export const HOME_PATH = location.hostname == "localhost" ? "index.html" : "";
 
 export const LOGIN_PATH = "login.html";
 export const SIGNUP_PATH = "signup.html";

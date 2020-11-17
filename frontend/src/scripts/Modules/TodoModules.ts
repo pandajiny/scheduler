@@ -1,30 +1,36 @@
 import { serverUrl } from "../App";
-import { getAuthHeader, createAuthPostOption, getUser } from "./AuthModules";
+import { createAuthPostOption, getAuthHeader, getUser } from "./AuthModules";
 
 export const getTodoItems = async (): Promise<TodoItem[] | []> => {
   console.log("get todoItems");
   const url = serverUrl + "todo";
-  console.log(`header`, getAuthHeader());
+
+  const headers = getAuthHeader();
+  if (!headers) {
+    return [];
+  }
+
   const result = await fetch(url, {
     method: "GET",
-    headers: getAuthHeader(),
-  }).catch((err) => {
-    console.log(`error catched`);
-    throw err;
+    headers,
   });
-  console.log(result.ok);
+
   if (!result.ok) {
     return [];
   }
-  const data = ((await result.json()) as unknown) as TodoItem[];
-  console.log("todoItems :", data);
-  return data;
+
+  const todoItems = ((await result.json()) as unknown) as TodoItem[];
+  console.log(`${todoItems.length} todo items updated`);
+
+  return todoItems;
 };
 
-export const addTodoItem = async (
-  content: string,
-  parentId?: string
-): Promise<ActionResult> => {
+export const addTodoItem = async (props: {
+  content: string;
+  parentId?: string;
+  endTime: number | null;
+}): Promise<ActionResult> => {
+  const { content, endTime, parentId } = props;
   console.log("adding todo");
   const url = serverUrl + "todo";
   const user = await getUser();
@@ -38,9 +44,10 @@ export const addTodoItem = async (
 
   const request: AddTodoItemRequest = {
     content,
-    parentId,
+    parentId: parentId || null,
     isComplete: false,
     owner: user.uid,
+    endTime: endTime || null,
   };
 
   return await fetch(url, createAuthPostOption(request)).then(
@@ -52,9 +59,14 @@ export const deleteTodoItem = async (request: { id: string }) => {
   const { id } = request;
   const url = serverUrl + `todo/${id}`;
 
+  const headers = getAuthHeader();
+  if (!headers) {
+    throw "please login first";
+  }
+
   const resp = await fetch(url, {
-    headers: getAuthHeader(),
     method: "DELETE",
+    headers,
   });
   const result = await resp.json();
 
@@ -70,7 +82,6 @@ export async function editTodo(todo: TodoItem): Promise<ActionResult> {
     getAuthHeader()
   );
 
-  console.log(headers);
   const resp = await fetch(url, {
     headers,
     method: "PUT",

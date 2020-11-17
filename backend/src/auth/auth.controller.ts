@@ -23,8 +23,14 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('user')
-  user(@Request() req): User {
-    return req.user as User;
+  async getUser(@Request() req): Promise<User> {
+    const email = req.user.email;
+    console.log(`user information requested from ${email}`);
+    const user = await this.usersService.findUserFromEmail(email).catch(err => {
+      throw new HttpException(err, HttpStatus.UNAUTHORIZED);
+    });
+
+    return user;
   }
 
   @UseGuards(LocalAuthGuard)

@@ -7,3 +7,6 @@ node_modules
 git-test
 
 server
+
+frontend/.cache
+frontend/dist

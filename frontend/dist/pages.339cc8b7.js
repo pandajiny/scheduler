@@ -133,7 +133,7 @@ exports.navigateTo = function (pathname) {
   }
 };
 
-exports.HOME_PATH = "index.html";
+exports.HOME_PATH = location.hostname == "localhost" ? "index.html" : "";
 exports.LOGIN_PATH = "login.html";
 exports.SIGNUP_PATH = "signup.html";
 },{}],"../scripts/Modules/AuthModules.ts":[function(require,module,exports) {
@@ -285,9 +285,23 @@ var __generator = this && this.__generator || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createAuthPostOption = exports.createPostOption = exports.getAuthHeader = exports.getProfile = exports.getUser = exports.doSignUp = exports.doSignOut = exports.doLoginWithEmailAndPassword = void 0;
+exports.createAuthPostOption = exports.createPostOption = exports.getUser = exports.doSignUp = exports.doSignOut = exports.doLoginWithEmailAndPassword = exports.getAuthHeader = void 0;
 
 var App_1 = require("../App");
+
+function getAuthHeader() {
+  var token = localStorage.getItem("jwtToken") || null;
+
+  if (!token) {
+    return null;
+  }
+
+  return {
+    Authorization: "Bearer " + token
+  };
+}
+
+exports.getAuthHeader = getAuthHeader;
 
 function doLoginWithEmailAndPassword(request) {
   return __awaiter(this, void 0, void 0, function () {
@@ -391,15 +405,23 @@ exports.doSignUp = function (request) {
 
 exports.getUser = function () {
   return __awaiter(void 0, void 0, Promise, function () {
-    var url, response, result;
+    var url, headers, response, result;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
           url = App_1.serverUrl + "auth/user";
+          headers = getAuthHeader();
+
+          if (!headers) {
+            return [2
+            /*return*/
+            , null];
+          }
+
           return [4
           /*yield*/
           , fetch(url, {
-            headers: exports.getAuthHeader()
+            headers: headers
           })];
 
         case 1:
@@ -417,32 +439,6 @@ exports.getUser = function () {
       }
     });
   });
-};
-
-exports.getProfile = function () {
-  return __awaiter(void 0, void 0, void 0, function () {
-    var url;
-    return __generator(this, function (_a) {
-      url = App_1.serverUrl + "profile";
-      fetch(url, {
-        headers: exports.getAuthHeader()
-      }).then(function (resp) {
-        resp.json().then(function (data) {
-          console.log(data);
-        });
-      });
-      return [2
-      /*return*/
-      ];
-    });
-  });
-};
-
-exports.getAuthHeader = function () {
-  var token = localStorage.getItem("jwtToken");
-  return {
-    Authorization: "Bearer " + token
-  };
 };
 
 exports.createPostOption = function (body) {
@@ -469,232 +465,65 @@ exports.createAuthPostOption = function (body) {
 },{"../App":"../scripts/App.ts"}],"../scripts/App.ts":[function(require,module,exports) {
 "use strict";
 
-var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-
-var __generator = this && this.__generator || function (thisArg, body) {
-  var _ = {
-    label: 0,
-    sent: function sent() {
-      if (t[0] & 1) throw t[1];
-      return t[1];
-    },
-    trys: [],
-    ops: []
-  },
-      f,
-      y,
-      t,
-      g;
-  return g = {
-    next: verb(0),
-    "throw": verb(1),
-    "return": verb(2)
-  }, typeof Symbol === "function" && (g[Symbol.iterator] = function () {
-    return this;
-  }), g;
-
-  function verb(n) {
-    return function (v) {
-      return step([n, v]);
-    };
-  }
-
-  function step(op) {
-    if (f) throw new TypeError("Generator is already executing.");
-
-    while (_) {
-      try {
-        if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-        if (y = 0, t) op = [op[0] & 2, t.value];
-
-        switch (op[0]) {
-          case 0:
-          case 1:
-            t = op;
-            break;
-
-          case 4:
-            _.label++;
-            return {
-              value: op[1],
-              done: false
-            };
-
-          case 5:
-            _.label++;
-            y = op[1];
-            op = [0];
-            continue;
-
-          case 7:
-            op = _.ops.pop();
-
-            _.trys.pop();
-
-            continue;
-
-          default:
-            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
-              _ = 0;
-              continue;
-            }
-
-            if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
-              _.label = op[1];
-              break;
-            }
-
-            if (op[0] === 6 && _.label < t[1]) {
-              _.label = t[1];
-              t = op;
-              break;
-            }
-
-            if (t && _.label < t[2]) {
-              _.label = t[2];
-
-              _.ops.push(op);
-
-              break;
-            }
-
-            if (t[2]) _.ops.pop();
-
-            _.trys.pop();
-
-            continue;
-        }
-
-        op = body.call(thisArg, _);
-      } catch (e) {
-        op = [6, e];
-        y = 0;
-      } finally {
-        f = t = 0;
-      }
-    }
-
-    if (op[0] & 5) throw op[1];
-    return {
-      value: op[0] ? op[1] : void 0,
-      done: true
-    };
-  }
-};
-
 var _a, _b;
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.serverUrl = exports.isLocalMode = exports.isDevMode = exports.$createContainer = exports.$createInputElement = exports.$createParagraphElement = exports.$createButtonElement = exports.renderUserState = exports.renderNavigator = void 0;
+exports.isLocalMode = exports.isDevMode = exports.serverUrl = exports.$createContainer = exports.keyInputListener = exports.$createInputElement = exports.$createParagraphElement = exports.$createButtonElement = exports.$renderAccountState = void 0;
 
 var paths_1 = require("../constants/paths");
 
 var AuthModules_1 = require("./Modules/AuthModules");
 
-exports.renderNavigator = function (navItems) {
-  var $navigator = document.getElementById("navigator");
-  $navigator.innerHTML = "";
-  navItems.map(function (navItem) {
-    var $navItem = document.createElement("a");
-    $navItem.id = "nav-item";
-    $navItem.appendChild(document.createTextNode(navItem.title));
-    $navItem.addEventListener("click", function () {
-      return paths_1.navigateTo(navItem.pathname);
+function $renderAccountState(props) {
+  var $container = props.$container,
+      user = props.user;
+
+  if (user) {
+    $renderUserState({
+      $container: $container,
+      user: user
     });
-    $navigator.appendChild($navItem);
-  });
-};
-
-function renderUserState() {
-  return __awaiter(this, void 0, Promise, function () {
-    var $userState, user, $loginRequire, $loginButton, $user, $signoutButton;
-    return __generator(this, function (_a) {
-      switch (_a.label) {
-        case 0:
-          $userState = document.getElementById("user-state");
-          $userState.innerHTML = "";
-          return [4
-          /*yield*/
-          , AuthModules_1.getUser().catch(function (err) {
-            throw err;
-          })];
-
-        case 1:
-          user = _a.sent();
-          console.log("got user state", user);
-
-          if (!user) {
-            $loginRequire = document.createElement("div");
-            $loginRequire.appendChild(document.createTextNode("please login first"));
-            $userState.appendChild($loginRequire);
-            $loginButton = document.createElement("button");
-            $loginButton.appendChild(document.createTextNode("LOGIN"));
-            $loginButton.addEventListener("click", function () {
-              paths_1.navigateTo(paths_1.LOGIN_PATH);
-            });
-            $userState.appendChild($loginButton);
-            return [2
-            /*return*/
-            , null];
-          } else {
-            $user = document.createElement("p");
-            $user.appendChild(document.createTextNode("Welcome " + user.email));
-            $userState.appendChild($user);
-            $signoutButton = document.createElement("button");
-            $signoutButton.className = "text-button";
-            $signoutButton.appendChild(document.createTextNode("SIGNOUT?"));
-            $signoutButton.addEventListener("click", function () {
-              AuthModules_1.doSignOut().then(function () {
-                window.location.reload();
-              });
-            });
-            $userState.appendChild($signoutButton);
-            return [2
-            /*return*/
-            , user];
-          }
-
-          return [2
-          /*return*/
-          ];
-      }
+  } else {
+    $renderLoginRequire({
+      $container: $container
     });
-  });
+  }
 }
 
-exports.renderUserState = renderUserState;
+exports.$renderAccountState = $renderAccountState;
+
+function $renderUserState(props) {
+  var user = props.user,
+      $container = props.$container;
+  var email = user.email,
+      name = user.name;
+  $container.innerHTML = "\n  <div id=\"user-information\">\n    <p id=\"name\">" + name + "</p>\n    <p id=\"email\">" + email + "</p>\n  </div>\n  <div id=\"account-actions\">\n    <a>Profile</a>\n    <a id=\"signout-button\">Sign out</a>\n  </div>\n";
+  var $signOutButton = document.getElementById("signout-button");
+
+  var handleSignUpButtonClick = function handleSignUpButtonClick() {
+    AuthModules_1.doSignOut().then(function (result) {
+      if (result.ok) {
+        paths_1.navigateTo(paths_1.LOGIN_PATH);
+      }
+    });
+  };
+
+  $signOutButton.addEventListener("click", handleSignUpButtonClick);
+}
+
+function $renderLoginRequire(props) {
+  var $container = props.$container;
+  $container.innerHTML = "\n    <div id=\"login-require\">\n      <button id=\"login-button\">LOG IN</button>\n    </div>\n";
+  var $loginButton = document.getElementById("login-button");
+
+  var handleLoginButtonClick = function handleLoginButtonClick() {
+    paths_1.navigateTo(paths_1.LOGIN_PATH);
+  };
+
+  $loginButton.addEventListener("click", handleLoginButtonClick);
+}
 
 function $createButtonElement(props) {
   var id = props.id,
@@ -776,6 +605,14 @@ function $createInputElement(props) {
 
 exports.$createInputElement = $createInputElement;
 
+function keyInputListener(ev, onSubmit) {
+  if (ev.key == "Enter") {
+    onSubmit();
+  }
+}
+
+exports.keyInputListener = keyInputListener;
+
 function $createContainer(props) {
   var $elements = props.$elements,
       className = props.className,
@@ -800,29 +637,25 @@ function $createContainer(props) {
 }
 
 exports.$createContainer = $createContainer;
-var url = "https://pandajiny.shop/";
+exports.serverUrl = "https://pandajiny.shop";
 exports.isDevMode = ((_a = "LOCAL ") === null || _a === void 0 ? void 0 : _a.includes("DEV")) || false;
-exports.isLocalMode = ((_b = "LOCAL ") === null || _b === void 0 ? void 0 : _b.includes("LOCAL")) || false;
+exports.isLocalMode = ((_b = "LOCAL ") === null || _b === void 0 ? void 0 : _b.toString().includes("LOCAL")) || false;
 
 if (exports.isLocalMode) {
-  console.log("app is local mode");
-  url = "http://localhost/";
-}
-
-if (exports.isDevMode) {
+  exports.serverUrl = "http://localhost/";
+  console.log("app is local mode server url : " + exports.serverUrl);
+} else if (exports.isDevMode) {
   // init dev mode
   console.log("app is dev mode");
-  fetch(url).then(function (res) {
+  fetch(exports.serverUrl).then(function (res) {
     if (res.ok) {
       console.log("server activated");
     } else {
       console.log("server not responde, using localhost");
-      url = "http://localhost/";
+      exports.serverUrl = "http://localhost/";
     }
   });
 }
-
-exports.serverUrl = url;
 },{"../constants/paths":"../constants/paths.ts","./Modules/AuthModules":"../scripts/Modules/AuthModules.ts"}],"../scripts/Modules/TodoModules.ts":[function(require,module,exports) {
 "use strict";
 
@@ -980,26 +813,29 @@ var AuthModules_1 = require("./AuthModules");
 
 exports.getTodoItems = function () {
   return __awaiter(void 0, void 0, Promise, function () {
-    var url, result, data;
+    var url, headers, result, todoItems;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
           console.log("get todoItems");
           url = App_1.serverUrl + "todo";
-          console.log("header", AuthModules_1.getAuthHeader());
+          headers = AuthModules_1.getAuthHeader();
+
+          if (!headers) {
+            return [2
+            /*return*/
+            , []];
+          }
+
           return [4
           /*yield*/
           , fetch(url, {
             method: "GET",
-            headers: AuthModules_1.getAuthHeader()
-          }).catch(function (err) {
-            console.log("error catched");
-            throw err;
+            headers: headers
           })];
 
         case 1:
           result = _a.sent();
-          console.log(result.ok);
 
           if (!result.ok) {
             return [2
@@ -1012,22 +848,23 @@ exports.getTodoItems = function () {
           , result.json()];
 
         case 2:
-          data = _a.sent();
-          console.log("todoItems :", data);
+          todoItems = _a.sent();
+          console.log(todoItems.length + " todo items updated");
           return [2
           /*return*/
-          , data];
+          , todoItems];
       }
     });
   });
 };
 
-exports.addTodoItem = function (content, parentId) {
+exports.addTodoItem = function (props) {
   return __awaiter(void 0, void 0, Promise, function () {
-    var url, user, request;
+    var content, endTime, parentId, url, user, request;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
+          content = props.content, endTime = props.endTime, parentId = props.parentId;
           console.log("adding todo");
           url = App_1.serverUrl + "todo";
           return [4
@@ -1049,9 +886,10 @@ exports.addTodoItem = function (content, parentId) {
 
           request = {
             content: content,
-            parentId: parentId,
+            parentId: parentId || null,
             isComplete: false,
-            owner: user.uid
+            owner: user.uid,
+            endTime: endTime || null
           };
           return [4
           /*yield*/
@@ -1084,17 +922,23 @@ exports.addTodoItem = function (content, parentId) {
 
 exports.deleteTodoItem = function (request) {
   return __awaiter(void 0, void 0, void 0, function () {
-    var id, url, resp, result;
+    var id, url, headers, resp, result;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
           id = request.id;
           url = App_1.serverUrl + ("todo/" + id);
+          headers = AuthModules_1.getAuthHeader();
+
+          if (!headers) {
+            throw "please login first";
+          }
+
           return [4
           /*yield*/
           , fetch(url, {
-            headers: AuthModules_1.getAuthHeader(),
-            method: "DELETE"
+            method: "DELETE",
+            headers: headers
           })];
 
         case 1:
@@ -1127,7 +971,6 @@ function editTodo(todo) {
           headers = Object.assign({
             "Content-Type": "application/json"
           }, AuthModules_1.getAuthHeader());
-          console.log(headers);
           return [4
           /*yield*/
           , fetch(url, {
@@ -1272,7 +1115,30 @@ function uncompleteTodos(ids) {
 }
 
 exports.uncompleteTodos = uncompleteTodos;
-},{"../App":"../scripts/App.ts","./AuthModules":"../scripts/Modules/AuthModules.ts"}],"../scripts/pages/index.ts":[function(require,module,exports) {
+},{"../App":"../scripts/App.ts","./AuthModules":"../scripts/Modules/AuthModules.ts"}],"../scripts/Modules/TimeModules.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.convertStringToTimestamp = exports.convertTimestampToString = void 0;
+
+function convertTimestampToString(timestamp) {
+  var date = new Date(timestamp);
+  return date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+}
+
+exports.convertTimestampToString = convertTimestampToString;
+
+function convertStringToTimestamp(dateString) {
+  var dateArgs = dateString.replace("/", "-").replace("/", "-").replace(".", "-").replace(".", "-").split("-").map(function (t) {
+    return parseInt(t);
+  });
+  return new Date(dateArgs[0], dateArgs[1] - 1, dateArgs[2]).getTime();
+}
+
+exports.convertStringToTimestamp = convertStringToTimestamp;
+},{}],"../scripts/pages/index.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -1418,81 +1284,49 @@ var __generator = this && this.__generator || function (thisArg, body) {
   }
 };
 
-var __spreadArrays = this && this.__spreadArrays || function () {
-  for (var s = 0, i = 0, il = arguments.length; i < il; i++) {
-    s += arguments[i].length;
-  }
-
-  for (var r = Array(s), k = 0, i = 0; i < il; i++) {
-    for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++) {
-      r[k] = a[j];
-    }
-  }
-
-  return r;
-};
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
 var App_1 = require("../App");
 
+var AuthModules_1 = require("../Modules/AuthModules");
+
 var TodoModules_1 = require("../Modules/TodoModules");
 
-initializeApp();
+require("../../pages/index.html");
 
-function initializeApp() {
-  App_1.renderUserState().then(function (user) {
-    console.log("login user : " + (user === null || user === void 0 ? void 0 : user.email));
+var paths_1 = require("../../constants/paths");
 
-    if (user) {
-      document.getElementById("main").style.display = "block";
-      updateTodolist();
-    }
-  });
-}
+var TimeModules_1 = require("../Modules/TimeModules");
 
-var todoItems = [];
-var $addTodoInput = document.getElementById("add-todo-input");
-$addTodoInput.addEventListener("keyup", function (ev) {
-  if (ev.key == "Enter") {
-    TodoModules_1.addTodoItem($addTodoInput.value).then(function () {
-      $addTodoInput.value = "";
-      updateTodolist();
-    });
-  }
-});
-var $submit = document.getElementById("submit");
-$submit.addEventListener("click", function () {
-  TodoModules_1.addTodoItem($addTodoInput.value).then(function () {
-    $addTodoInput.value = "";
-    updateTodolist();
-  });
-});
-var $todolist = document.getElementById("todolist");
+initialPage();
 
-function updateTodolist() {
+function initialPage() {
   return __awaiter(this, void 0, void 0, function () {
+    var user, $accountContainer;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
           return [4
           /*yield*/
-          , TodoModules_1.getTodoItems().catch(function (err) {
-            console.error("errorrr");
-            throw err.message;
-          })];
+          , AuthModules_1.getUser()];
 
         case 1:
-          todoItems = _a.sent();
-          $todolist.innerHTML = "";
-          todoItems.filter(function (todoItem) {
-            return todoItem.parentId == null;
-          }).map(function (todoItem) {
-            var $todo = $createTodoItem(todoItem);
-            $todolist.appendChild($todo);
-          });
+          user = _a.sent();
+
+          if (user) {
+            $accountContainer = document.getElementById("account-container");
+            App_1.$renderAccountState({
+              $container: $accountContainer,
+              user: user
+            });
+            $initialAddingForm();
+            updateView();
+          } else {
+            displayWelcomePage();
+          }
+
           return [2
           /*return*/
           ];
@@ -1501,183 +1335,211 @@ function updateTodolist() {
   });
 }
 
-function $createTodoItem(todo) {
-  // const $todo = document.createElement("div");
-  // $todo.id = `todo-${todo.id}`;
-  // $todo.className = "todo";
-  var _this = this;
+function updateView() {
+  return __awaiter(this, void 0, void 0, function () {
+    var todoItems, navItems, navPath;
+    return __generator(this, function (_a) {
+      switch (_a.label) {
+        case 0:
+          return [4
+          /*yield*/
+          , TodoModules_1.getTodoItems()];
 
-  var $todo = App_1.$createContainer({
-    id: "todo-" + todo.id,
-    className: "todo"
-  });
-  var $label = document.createElement("label");
-  $label.style.display = "none"; // $content container : date + content
-
-  var $mainContainer = App_1.$createContainer({
-    className: "main-container"
-  });
-  var $contentContainer = App_1.$createContainer({
-    className: "content-container"
-  });
-  var $content = App_1.$createParagraphElement({
-    className: "content",
-    text: todo.content,
-    type: "h3"
-  });
-
-  if (todo.isComplete) {
-    $content.className += " done";
-  }
-
-  var $contentEdit = App_1.$createInputElement({
-    id: "content-edit-" + todo.id,
-    className: "unactive",
-    value: todo.content,
-    onSubmit: function onSubmit(content) {
-      return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-          switch (_a.label) {
-            case 0:
-              todo.content = content;
-              return [4
-              /*yield*/
-              , TodoModules_1.editTodo(todo).then(function () {
-                updateTodolist();
-              })];
-
-            case 1:
-              _a.sent();
-
-              console.log("todo-" + todo.id + " has changed!", content);
-              $contentEdit.className = "unactive";
-              $content.className = "content";
-              return [2
-              /*return*/
-              ];
-          }
-        });
-      });
-    }
-  });
-  $contentContainer.appendChild($content);
-  $contentContainer.appendChild($contentEdit); // delete, edit, done button
-
-  var $actionButtons = App_1.$createContainer({
-    className: "action-buttons"
-  });
-  var $deleteButton = App_1.$createButtonElement({
-    className: "text-button",
-    content: "\u2716\t",
-    onClick: function onClick() {
-      TodoModules_1.deleteTodoItem({
-        id: todo.id
-      }).then(function () {
-        updateTodolist();
-      });
-    }
-  });
-  var $editButton = App_1.$createButtonElement({
-    className: "text-button",
-    content: "\u270E",
-    onClick: function onClick() {
-      $contentEdit.className = "active";
-      $content.className = "content unactive";
-    }
-  });
-  var $doneButton = App_1.$createButtonElement({
-    className: "text-button",
-    content: "\u2713",
-    onClick: function onClick() {
-      if (!todo.isComplete) {
-        TodoModules_1.completeTodos(__spreadArrays([todo.id], childList.map(function (t) {
-          return t.id;
-        }))).then(function () {
-          return updateTodolist();
-        });
-      } else {
-        TodoModules_1.uncompleteTodos(__spreadArrays([todo.id], childList.map(function (t) {
-          return t.id;
-        }))).then(function () {
-          return updateTodolist();
-        });
-      }
-    }
-  });
-  $actionButtons.appendChild($deleteButton);
-  $actionButtons.appendChild($editButton);
-  $actionButtons.appendChild($doneButton);
-  $mainContainer.appendChild($contentContainer);
-  $mainContainer.appendChild($actionButtons);
-  var $childContainer = App_1.$createContainer({
-    className: "child-container unactive"
-  });
-  var $childInputContainer = App_1.$createContainer({
-    className: "child-input-container"
-  });
-  var $iconLabel = document.createElement("label");
-  $iconLabel.innerHTML = "➕";
-  $iconLabel.className = "icon";
-  var $childInput = App_1.$createInputElement({
-    className: "child-input",
-    placeholder: "add aditional things...",
-    onSubmit: function onSubmit(v) {
-      return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-          TodoModules_1.addTodoItem(v, todo.id).then(function () {
-            return updateTodolist();
+        case 1:
+          todoItems = _a.sent();
+          navItems = [{
+            title: "All todos",
+            pathname: "all"
+          }];
+          getDateStringListFromTodoItems(todoItems).forEach(function (strDate) {
+            navItems.push({
+              title: strDate,
+              pathname: strDate.replace("/", "").replace("/", "").replace(" ", "").toLowerCase()
+            });
           });
+          $updateNavList(navItems);
+          console.log(navItems);
+          navPath = getNavPath();
+          document.getElementById("nav-" + navPath).className = "selected";
+          $updateTodolist(todoItems, navPath);
           return [2
           /*return*/
           ];
-        });
+      }
+    });
+  });
+}
+
+function getNavPath() {
+  var path = window.location.search.replace("?path=", "");
+
+  if (path == "" || path == "all") {
+    return "all";
+  } else if (path == "notselected") {
+    return "notselected";
+  } else {
+    return path;
+  }
+}
+
+function $updateNavList(navItems) {
+  var $navList = document.getElementById("nav-list");
+  $navList.innerHTML = "";
+  navItems.forEach(function (navItem) {
+    var $navItem = document.createElement("li");
+    $navItem.id = "nav-" + navItem.pathname;
+    $navItem.textContent = navItem.title;
+    $navItem.addEventListener("click", function () {
+      window.location.search = "?path=" + navItem.pathname;
+    });
+    $navList.appendChild($navItem);
+  });
+}
+
+function getDateStringListFromTodoItems(todoItems) {
+  var dateSet = new Set(todoItems.map(function (todoItem) {
+    return todoItem.endTime;
+  }));
+  var stringDateList = [];
+  dateSet.forEach(function (timestamp) {
+    if (timestamp == null) {
+      stringDateList.push("Not selected");
+    } else {
+      stringDateList.push(TimeModules_1.convertTimestampToString(timestamp));
+    }
+  });
+  return stringDateList;
+}
+
+function $updateTodolist(todoItems, path) {
+  return __awaiter(this, void 0, void 0, function () {
+    function isWillDisplayed(navPath, endTime) {
+      if (navPath == "all") {
+        return true;
+      }
+
+      if (navPath == "notselected") {
+        return endTime == null;
+      } else {
+        console.log(endTime, navPathToTimestamp(navPath));
+        return endTime == navPathToTimestamp(navPath);
+      }
+    }
+
+    var $todolist;
+    return __generator(this, function (_a) {
+      $todolist = document.getElementById("todolist");
+      $todolist.innerHTML = "";
+      todoItems.filter(function (todoItem) {
+        return todoItem.parentId == null && isWillDisplayed(path, todoItem.endTime);
+      }).forEach(function (todoItem) {
+        var $todo = $createTodoItem(todoItem);
+        $todolist.appendChild($todo);
+      });
+      return [2
+      /*return*/
+      ];
+    });
+  });
+}
+
+function $initialAddingForm() {
+  var $addingForm = document.getElementById("add-todo-container");
+  var $dateSelect = $addingForm.querySelector("#date-select");
+  var $addTodoInput = document.getElementById("add-todo-input");
+  $addTodoInput.addEventListener("keypress", handleAddTodoInputKeypress);
+
+  function handleAddTodoInputKeypress(ev) {
+    if (ev.key == "Enter") {
+      var content = $addTodoInput.value;
+      var endTime = $dateSelect.value != "" ? TimeModules_1.convertStringToTimestamp($dateSelect.value) : null;
+      TodoModules_1.addTodoItem({
+        content: content,
+        endTime: endTime
+      }).then(function (result) {
+        if (result.ok) {
+          $addTodoInput.value = "";
+          updateView();
+        } else {
+          throw result.error_message;
+        }
       });
     }
-  });
-  var $cancelButton = App_1.$createButtonElement({
-    className: "cancel-button text-button",
-    content: "cancel",
-    onClick: function onClick() {
-      $childContainer.className = "child-container unactive";
-      $childInput.value = "";
-    }
-  });
-  $childInputContainer.appendChild($iconLabel);
-  $childInputContainer.appendChild($childInput);
-  $childInputContainer.appendChild($cancelButton);
-  var $childList = App_1.$createContainer({
-    className: "child-todo-list"
-  });
-  var childList = todoItems.filter(function (t) {
-    return t.parentId == todo.id;
-  });
-  childList.map(function (childTodo) {
-    $childList.appendChild($createTodoItem(childTodo));
+  }
+}
+
+function $createTodoItem(todo) {
+  var $todoItem = document.createElement("div");
+  $todoItem.id = "todo-" + todo.id;
+  $todoItem.className = "todo";
+  $todoItem.innerHTML = "\n    <div id=\"todo-content-container\">\n      <p id=\"date\">\n        " + (todo.endTime ? TimeModules_1.convertTimestampToString(todo.endTime) : "not selected") + "\n      </p>\n      <p id=\"content\">" + todo.content + "</p>\n      <div id=\"content-edit-container\" class=\"unactive\">\n        <p class=\"icon\">\u270E </p>\n        <input id=\"content-edit\" value=\"" + todo.content + "\" placeholder=\"...content here\" />\n      </div>\n    </div>\n    <div id=\"action-buttons\">\n      <button id=\"edit-button\" class=\"text-button\">\u270E</button>\n      <button id=\"done-button\" class=\"text-button\">\u2713</button>\n      <button id=\"delete-button\" class=\"text-button\">\u2716</button>\n    </div>\n  "; // content
+
+  var $content = $todoItem.querySelector("#content");
+  var $contentEditContainer = $todoItem.querySelector("#content-edit-container");
+  var $contentEdit = $todoItem.querySelector("#content-edit");
+  $contentEdit.addEventListener("keypress", function (ev) {
+    App_1.keyInputListener(ev, function () {
+      todo.content = $contentEdit.value;
+      TodoModules_1.editTodo(todo).then(updateView);
+    });
+  }); // delete button
+
+  var $deleteButton = $todoItem.querySelector("#delete-button");
+  $deleteButton.addEventListener("click", function () {
+    return handleDeleteButtonClick(todo.id);
+  }); // edit button
+
+  var $editButton = $todoItem.querySelector("#edit-button");
+  $editButton.addEventListener("click", function () {
+    handleEditButtonClick($content, $contentEditContainer);
   });
 
-  if (childList.length > 0) {
-    $label.innerText = childList.length + "more things";
-    $label.style.display = "block";
+  function handleDeleteButtonClick(id) {
+    TodoModules_1.deleteTodoItem({
+      id: id
+    }).then(updateView);
   }
 
-  $childContainer.appendChild($childInputContainer);
-  $childContainer.appendChild($childList);
-  var $divider = document.createElement("div");
-  $divider.className = "divider";
-  $todo.appendChild($label);
-  $todo.appendChild($mainContainer);
-  $todo.appendChild($childContainer);
-  $todo.appendChild($divider);
-  $contentContainer.addEventListener("click", function () {
-    if ($childContainer.className.includes("unactive")) {
-      $childContainer.className = "child-container active";
-    } else {
-      $childContainer.className = "child-container unactive";
-    }
-  });
-  return $todo;
+  function handleEditButtonClick($content, $contentEditContainer) {
+    $contentEditContainer.className = "active";
+    $contentEditContainer.style.display = "flex";
+    $content.className = "unactive";
+  } // function handleDoneButtonClick(id: string) {}
+
+
+  return $todoItem;
 }
-},{"../App":"../scripts/App.ts","../Modules/TodoModules":"../scripts/Modules/TodoModules.ts"}],"C:/Users/astic/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+function displayWelcomePage() {
+  var $introduce = document.getElementById("introduce");
+  $introduce.style.display = "flex";
+  var $signupButton = document.getElementById("signup-button");
+  $signupButton.addEventListener("click", handleSignupButtonClick);
+  var $loginButton = document.getElementById("login-button");
+  $loginButton.addEventListener("click", handleLoginButtonClick);
+
+  function handleLoginButtonClick() {
+    paths_1.navigateTo(paths_1.LOGIN_PATH);
+  }
+
+  function handleSignupButtonClick() {
+    paths_1.navigateTo(paths_1.SIGNUP_PATH);
+  }
+}
+
+function navPathToTimestamp(path) {
+  console.log(path);
+
+  if (path == "all" || path == "notselected") {
+    return 0;
+  } else {
+    var year = path.slice(0, 4);
+    var month = path.slice(4, 6);
+    var date = path.slice(6, 8);
+    return TimeModules_1.convertStringToTimestamp(year + "/" + month + "/" + date);
+  }
+}
+},{"../App":"../scripts/App.ts","../Modules/AuthModules":"../scripts/Modules/AuthModules.ts","../Modules/TodoModules":"../scripts/Modules/TodoModules.ts","../../pages/index.html":"index.html","../../constants/paths":"../constants/paths.ts","../Modules/TimeModules":"../scripts/Modules/TimeModules.ts"}],"C:/Users/astic/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -1705,7 +1567,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56363" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51798" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -1881,5 +1743,128 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["C:/Users/astic/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","../scripts/pages/index.ts"], null)
+},{}],"C:/Users/astic/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+var bundleURL = null;
+
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
+  }
+
+  return bundleURL;
+}
+
+function getBundleURL() {
+  // Attempt to find the URL of the current script and use that as the base URL
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
+
+  return '/';
+}
+
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
+}
+
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+},{}],"C:/Users/astic/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/bundle-loader.js":[function(require,module,exports) {
+var getBundleURL = require('./bundle-url').getBundleURL;
+
+function loadBundlesLazy(bundles) {
+  if (!Array.isArray(bundles)) {
+    bundles = [bundles];
+  }
+
+  var id = bundles[bundles.length - 1];
+
+  try {
+    return Promise.resolve(require(id));
+  } catch (err) {
+    if (err.code === 'MODULE_NOT_FOUND') {
+      return new LazyPromise(function (resolve, reject) {
+        loadBundles(bundles.slice(0, -1)).then(function () {
+          return require(id);
+        }).then(resolve, reject);
+      });
+    }
+
+    throw err;
+  }
+}
+
+function loadBundles(bundles) {
+  return Promise.all(bundles.map(loadBundle));
+}
+
+var bundleLoaders = {};
+
+function registerBundleLoader(type, loader) {
+  bundleLoaders[type] = loader;
+}
+
+module.exports = exports = loadBundlesLazy;
+exports.load = loadBundles;
+exports.register = registerBundleLoader;
+var bundles = {};
+
+function loadBundle(bundle) {
+  var id;
+
+  if (Array.isArray(bundle)) {
+    id = bundle[1];
+    bundle = bundle[0];
+  }
+
+  if (bundles[bundle]) {
+    return bundles[bundle];
+  }
+
+  var type = (bundle.substring(bundle.lastIndexOf('.') + 1, bundle.length) || bundle).toLowerCase();
+  var bundleLoader = bundleLoaders[type];
+
+  if (bundleLoader) {
+    return bundles[bundle] = bundleLoader(getBundleURL() + bundle).then(function (resolved) {
+      if (resolved) {
+        module.bundle.register(id, resolved);
+      }
+
+      return resolved;
+    }).catch(function (e) {
+      delete bundles[bundle];
+      throw e;
+    });
+  }
+}
+
+function LazyPromise(executor) {
+  this.executor = executor;
+  this.promise = null;
+}
+
+LazyPromise.prototype.then = function (onSuccess, onError) {
+  if (this.promise === null) this.promise = new Promise(this.executor);
+  return this.promise.then(onSuccess, onError);
+};
+
+LazyPromise.prototype.catch = function (onError) {
+  if (this.promise === null) this.promise = new Promise(this.executor);
+  return this.promise.catch(onError);
+};
+},{"./bundle-url":"C:/Users/astic/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"C:/Users/astic/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/loaders/browser/html-loader.js":[function(require,module,exports) {
+module.exports = function loadHTMLBundle(bundle) {
+  return fetch(bundle).then(function (res) {
+    return res.text();
+  });
+};
+},{}],0:[function(require,module,exports) {
+var b=require("C:/Users/astic/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/bundle-loader.js");b.register("html",require("C:/Users/astic/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/loaders/browser/html-loader.js"));b.load([["index.html","index.html"]]).then(function(){require("../scripts/pages/index.ts");});
+},{}]},{},["C:/Users/astic/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js",0], null)
 //# sourceMappingURL=/pages.339cc8b7.js.map

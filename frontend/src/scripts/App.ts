@@ -1,54 +1,60 @@
 import { LOGIN_PATH, navigateTo } from "../constants/paths";
-import { doSignOut, getUser } from "./Modules/AuthModules";
+import { doSignOut } from "./Modules/AuthModules";
 
-export const renderNavigator = (navItems: NavItem[]) => {
-  const $navigator = document.getElementById("navigator") as HTMLDivElement;
-  $navigator.innerHTML = "";
-  navItems.map((navItem) => {
-    const $navItem = document.createElement("a");
-    $navItem.id = "nav-item";
-    $navItem.appendChild(document.createTextNode(navItem.title));
-    $navItem.addEventListener("click", () => navigateTo(navItem.pathname));
-    $navigator.appendChild($navItem);
-  });
-};
-
-export async function renderUserState(): Promise<User | null> {
-  const $userState = document.getElementById("user-state") as HTMLDivElement;
-  $userState.innerHTML = "";
-
-  const user = await getUser().catch((err) => {
-    throw err;
-  });
-  console.log(`got user state`, user);
-  if (!user) {
-    const $loginRequire = document.createElement("div");
-    $loginRequire.appendChild(document.createTextNode("please login first"));
-    $userState.appendChild($loginRequire);
-
-    const $loginButton = document.createElement("button");
-    $loginButton.appendChild(document.createTextNode("LOGIN"));
-    $loginButton.addEventListener("click", () => {
-      navigateTo(LOGIN_PATH);
-    });
-    $userState.appendChild($loginButton);
-    return null;
+export function $renderAccountState(props: {
+  $container: HTMLElement;
+  user: User | null;
+}) {
+  const { $container, user } = props;
+  if (user) {
+    $renderUserState({ $container, user });
   } else {
-    const $user = document.createElement("p");
-    $user.appendChild(document.createTextNode(`Welcome ` + user.email));
-    $userState.appendChild($user);
-
-    const $signoutButton = document.createElement("button");
-    $signoutButton.className = "text-button";
-    $signoutButton.appendChild(document.createTextNode("SIGNOUT?"));
-    $signoutButton.addEventListener("click", () => {
-      doSignOut().then(() => {
-        window.location.reload();
-      });
-    });
-    $userState.appendChild($signoutButton);
-    return user;
+    $renderLoginRequire({ $container });
   }
+}
+
+function $renderUserState(props: { $container: HTMLElement; user: User }) {
+  const { user, $container } = props;
+  const { email, name } = user;
+  $container.innerHTML = `
+  <div id="user-information">
+    <p id="name">${name}</p>
+    <p id="email">${email}</p>
+  </div>
+  <div id="account-actions">
+    <a>Profile</a>
+    <a id="signout-button">Sign out</a>
+  </div>
+`;
+  const $signOutButton = document.getElementById(
+    "signout-button"
+  ) as HTMLButtonElement;
+
+  const handleSignUpButtonClick = () => {
+    doSignOut().then((result) => {
+      if (result.ok) {
+        navigateTo(LOGIN_PATH);
+      }
+    });
+  };
+
+  $signOutButton.addEventListener("click", handleSignUpButtonClick);
+}
+
+function $renderLoginRequire(props: { $container: HTMLElement }) {
+  const { $container } = props;
+  $container.innerHTML = `
+    <div id="login-require">
+      <button id="login-button">LOG IN</button>
+    </div>
+`;
+  const $loginButton = document.getElementById(
+    "login-button"
+  ) as HTMLButtonElement;
+  const handleLoginButtonClick = () => {
+    navigateTo(LOGIN_PATH);
+  };
+  $loginButton.addEventListener("click", handleLoginButtonClick);
 }
 
 export function $createButtonElement(props: {
@@ -121,6 +127,12 @@ export function $createInputElement(props: {
   return $input;
 }
 
+export function keyInputListener(ev: KeyboardEvent, onSubmit: () => void) {
+  if (ev.key == "Enter") {
+    onSubmit();
+  }
+}
+
 export function $createContainer(props: {
   id?: string;
   className?: string;
@@ -146,30 +158,25 @@ export function $createContainer(props: {
   return $container;
 }
 
-let url = "https://pandajiny.shop/";
-
+export let serverUrl = "https://pandajiny.shop";
 export const isDevMode: boolean =
   process.env.NODE_ENV?.includes("DEV") || false;
 
 export const isLocalMode: boolean =
-  process.env.NODE_ENV?.includes("LOCAL") || false;
+  process.env.NODE_ENV?.toString().includes("LOCAL") || false;
 
 if (isLocalMode) {
-  console.log(`app is local mode`);
-  url = "http://localhost/";
-}
-
-if (isDevMode) {
+  serverUrl = "http://localhost/";
+  console.log(`app is local mode server url : ${serverUrl}`);
+} else if (isDevMode) {
   // init dev mode
   console.log(`app is dev mode`);
-  fetch(url).then((res) => {
+  fetch(serverUrl).then((res) => {
     if (res.ok) {
       console.log(`server activated`);
     } else {
       console.log(`server not responde, using localhost`);
-      url = "http://localhost/";
+      serverUrl = "http://localhost/";
     }
   });
 }
-
-export const serverUrl = url;

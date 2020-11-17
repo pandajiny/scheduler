@@ -133,238 +133,71 @@ exports.navigateTo = function (pathname) {
   }
 };
 
-exports.HOME_PATH = "index.html";
+exports.HOME_PATH = location.hostname == "localhost" ? "index.html" : "";
 exports.LOGIN_PATH = "login.html";
 exports.SIGNUP_PATH = "signup.html";
 },{}],"../scripts/App.ts":[function(require,module,exports) {
 "use strict";
-
-var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-
-var __generator = this && this.__generator || function (thisArg, body) {
-  var _ = {
-    label: 0,
-    sent: function sent() {
-      if (t[0] & 1) throw t[1];
-      return t[1];
-    },
-    trys: [],
-    ops: []
-  },
-      f,
-      y,
-      t,
-      g;
-  return g = {
-    next: verb(0),
-    "throw": verb(1),
-    "return": verb(2)
-  }, typeof Symbol === "function" && (g[Symbol.iterator] = function () {
-    return this;
-  }), g;
-
-  function verb(n) {
-    return function (v) {
-      return step([n, v]);
-    };
-  }
-
-  function step(op) {
-    if (f) throw new TypeError("Generator is already executing.");
-
-    while (_) {
-      try {
-        if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-        if (y = 0, t) op = [op[0] & 2, t.value];
-
-        switch (op[0]) {
-          case 0:
-          case 1:
-            t = op;
-            break;
-
-          case 4:
-            _.label++;
-            return {
-              value: op[1],
-              done: false
-            };
-
-          case 5:
-            _.label++;
-            y = op[1];
-            op = [0];
-            continue;
-
-          case 7:
-            op = _.ops.pop();
-
-            _.trys.pop();
-
-            continue;
-
-          default:
-            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
-              _ = 0;
-              continue;
-            }
-
-            if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
-              _.label = op[1];
-              break;
-            }
-
-            if (op[0] === 6 && _.label < t[1]) {
-              _.label = t[1];
-              t = op;
-              break;
-            }
-
-            if (t && _.label < t[2]) {
-              _.label = t[2];
-
-              _.ops.push(op);
-
-              break;
-            }
-
-            if (t[2]) _.ops.pop();
-
-            _.trys.pop();
-
-            continue;
-        }
-
-        op = body.call(thisArg, _);
-      } catch (e) {
-        op = [6, e];
-        y = 0;
-      } finally {
-        f = t = 0;
-      }
-    }
-
-    if (op[0] & 5) throw op[1];
-    return {
-      value: op[0] ? op[1] : void 0,
-      done: true
-    };
-  }
-};
 
 var _a, _b;
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.serverUrl = exports.isLocalMode = exports.isDevMode = exports.$createContainer = exports.$createInputElement = exports.$createParagraphElement = exports.$createButtonElement = exports.renderUserState = exports.renderNavigator = void 0;
+exports.isLocalMode = exports.isDevMode = exports.serverUrl = exports.$createContainer = exports.keyInputListener = exports.$createInputElement = exports.$createParagraphElement = exports.$createButtonElement = exports.$renderAccountState = void 0;
 
 var paths_1 = require("../constants/paths");
 
 var AuthModules_1 = require("./Modules/AuthModules");
 
-exports.renderNavigator = function (navItems) {
-  var $navigator = document.getElementById("navigator");
-  $navigator.innerHTML = "";
-  navItems.map(function (navItem) {
-    var $navItem = document.createElement("a");
-    $navItem.id = "nav-item";
-    $navItem.appendChild(document.createTextNode(navItem.title));
-    $navItem.addEventListener("click", function () {
-      return paths_1.navigateTo(navItem.pathname);
+function $renderAccountState(props) {
+  var $container = props.$container,
+      user = props.user;
+
+  if (user) {
+    $renderUserState({
+      $container: $container,
+      user: user
     });
-    $navigator.appendChild($navItem);
-  });
-};
-
-function renderUserState() {
-  return __awaiter(this, void 0, Promise, function () {
-    var $userState, user, $loginRequire, $loginButton, $user, $signoutButton;
-    return __generator(this, function (_a) {
-      switch (_a.label) {
-        case 0:
-          $userState = document.getElementById("user-state");
-          $userState.innerHTML = "";
-          return [4
-          /*yield*/
-          , AuthModules_1.getUser().catch(function (err) {
-            throw err;
-          })];
-
-        case 1:
-          user = _a.sent();
-          console.log("got user state", user);
-
-          if (!user) {
-            $loginRequire = document.createElement("div");
-            $loginRequire.appendChild(document.createTextNode("please login first"));
-            $userState.appendChild($loginRequire);
-            $loginButton = document.createElement("button");
-            $loginButton.appendChild(document.createTextNode("LOGIN"));
-            $loginButton.addEventListener("click", function () {
-              paths_1.navigateTo(paths_1.LOGIN_PATH);
-            });
-            $userState.appendChild($loginButton);
-            return [2
-            /*return*/
-            , null];
-          } else {
-            $user = document.createElement("p");
-            $user.appendChild(document.createTextNode("Welcome " + user.email));
-            $userState.appendChild($user);
-            $signoutButton = document.createElement("button");
-            $signoutButton.className = "text-button";
-            $signoutButton.appendChild(document.createTextNode("SIGNOUT?"));
-            $signoutButton.addEventListener("click", function () {
-              AuthModules_1.doSignOut().then(function () {
-                window.location.reload();
-              });
-            });
-            $userState.appendChild($signoutButton);
-            return [2
-            /*return*/
-            , user];
-          }
-
-          return [2
-          /*return*/
-          ];
-      }
+  } else {
+    $renderLoginRequire({
+      $container: $container
     });
-  });
+  }
 }
 
-exports.renderUserState = renderUserState;
+exports.$renderAccountState = $renderAccountState;
+
+function $renderUserState(props) {
+  var user = props.user,
+      $container = props.$container;
+  var email = user.email,
+      name = user.name;
+  $container.innerHTML = "\n  <div id=\"user-information\">\n    <p id=\"name\">" + name + "</p>\n    <p id=\"email\">" + email + "</p>\n  </div>\n  <div id=\"account-actions\">\n    <a>Profile</a>\n    <a id=\"signout-button\">Sign out</a>\n  </div>\n";
+  var $signOutButton = document.getElementById("signout-button");
+
+  var handleSignUpButtonClick = function handleSignUpButtonClick() {
+    AuthModules_1.doSignOut().then(function (result) {
+      if (result.ok) {
+        paths_1.navigateTo(paths_1.LOGIN_PATH);
+      }
+    });
+  };
+
+  $signOutButton.addEventListener("click", handleSignUpButtonClick);
+}
+
+function $renderLoginRequire(props) {
+  var $container = props.$container;
+  $container.innerHTML = "\n    <div id=\"login-require\">\n      <button id=\"login-button\">LOG IN</button>\n    </div>\n";
+  var $loginButton = document.getElementById("login-button");
+
+  var handleLoginButtonClick = function handleLoginButtonClick() {
+    paths_1.navigateTo(paths_1.LOGIN_PATH);
+  };
+
+  $loginButton.addEventListener("click", handleLoginButtonClick);
+}
 
 function $createButtonElement(props) {
   var id = props.id,
@@ -446,6 +279,14 @@ function $createInputElement(props) {
 
 exports.$createInputElement = $createInputElement;
 
+function keyInputListener(ev, onSubmit) {
+  if (ev.key == "Enter") {
+    onSubmit();
+  }
+}
+
+exports.keyInputListener = keyInputListener;
+
 function $createContainer(props) {
   var $elements = props.$elements,
       className = props.className,
@@ -470,29 +311,25 @@ function $createContainer(props) {
 }
 
 exports.$createContainer = $createContainer;
-var url = "https://pandajiny.shop/";
+exports.serverUrl = "https://pandajiny.shop";
 exports.isDevMode = ((_a = "LOCAL ") === null || _a === void 0 ? void 0 : _a.includes("DEV")) || false;
-exports.isLocalMode = ((_b = "LOCAL ") === null || _b === void 0 ? void 0 : _b.includes("LOCAL")) || false;
+exports.isLocalMode = ((_b = "LOCAL ") === null || _b === void 0 ? void 0 : _b.toString().includes("LOCAL")) || false;
 
 if (exports.isLocalMode) {
-  console.log("app is local mode");
-  url = "http://localhost/";
-}
-
-if (exports.isDevMode) {
+  exports.serverUrl = "http://localhost/";
+  console.log("app is local mode server url : " + exports.serverUrl);
+} else if (exports.isDevMode) {
   // init dev mode
   console.log("app is dev mode");
-  fetch(url).then(function (res) {
+  fetch(exports.serverUrl).then(function (res) {
     if (res.ok) {
       console.log("server activated");
     } else {
       console.log("server not responde, using localhost");
-      url = "http://localhost/";
+      exports.serverUrl = "http://localhost/";
     }
   });
 }
-
-exports.serverUrl = url;
 },{"../constants/paths":"../constants/paths.ts","./Modules/AuthModules":"../scripts/Modules/AuthModules.ts"}],"../scripts/Modules/AuthModules.ts":[function(require,module,exports) {
 "use strict";
 
@@ -642,9 +479,23 @@ var __generator = this && this.__generator || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createAuthPostOption = exports.createPostOption = exports.getAuthHeader = exports.getProfile = exports.getUser = exports.doSignUp = exports.doSignOut = exports.doLoginWithEmailAndPassword = void 0;
+exports.createAuthPostOption = exports.createPostOption = exports.getUser = exports.doSignUp = exports.doSignOut = exports.doLoginWithEmailAndPassword = exports.getAuthHeader = void 0;
 
 var App_1 = require("../App");
+
+function getAuthHeader() {
+  var token = localStorage.getItem("jwtToken") || null;
+
+  if (!token) {
+    return null;
+  }
+
+  return {
+    Authorization: "Bearer " + token
+  };
+}
+
+exports.getAuthHeader = getAuthHeader;
 
 function doLoginWithEmailAndPassword(request) {
   return __awaiter(this, void 0, void 0, function () {
@@ -748,15 +599,23 @@ exports.doSignUp = function (request) {
 
 exports.getUser = function () {
   return __awaiter(void 0, void 0, Promise, function () {
-    var url, response, result;
+    var url, headers, response, result;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
           url = App_1.serverUrl + "auth/user";
+          headers = getAuthHeader();
+
+          if (!headers) {
+            return [2
+            /*return*/
+            , null];
+          }
+
           return [4
           /*yield*/
           , fetch(url, {
-            headers: exports.getAuthHeader()
+            headers: headers
           })];
 
         case 1:
@@ -774,32 +633,6 @@ exports.getUser = function () {
       }
     });
   });
-};
-
-exports.getProfile = function () {
-  return __awaiter(void 0, void 0, void 0, function () {
-    var url;
-    return __generator(this, function (_a) {
-      url = App_1.serverUrl + "profile";
-      fetch(url, {
-        headers: exports.getAuthHeader()
-      }).then(function (resp) {
-        resp.json().then(function (data) {
-          console.log(data);
-        });
-      });
-      return [2
-      /*return*/
-      ];
-    });
-  });
-};
-
-exports.getAuthHeader = function () {
-  var token = localStorage.getItem("jwtToken");
-  return {
-    Authorization: "Bearer " + token
-  };
 };
 
 exports.createPostOption = function (body) {
@@ -897,7 +730,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56363" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51798" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
