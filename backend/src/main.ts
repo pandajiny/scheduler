@@ -34,6 +34,7 @@ async function startWithHttps() {
 }
 
 if (isFileExists([KEY_PATH, CERT_PATH])) {
+  console.log(`server updated`);
   console.log(`cert exist, start https server`);
   startWithHttps();
 } else {

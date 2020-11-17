@@ -158,7 +158,7 @@ export function $createContainer(props: {
   return $container;
 }
 
-export let serverUrl = "https://pandajiny.shop";
+export let serverUrl = "https://pandajiny.shop/";
 export const isDevMode: boolean =
   process.env.NODE_ENV?.includes("DEV") || false;
 
