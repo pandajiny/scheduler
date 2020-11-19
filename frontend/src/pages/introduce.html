@@ -1,0 +1,111 @@
+<html>
+<link rel="stylesheet" href="./introduce.scss" />
+
+<body>
+    <div id="main-container">
+        <div id="ref-container">
+            <div id="main-title">
+                <h1 id="title1">Jinius</h1>
+                <h1 id="title2">scheduler</h1>
+                <a href="https://pandajiny.github.io/scheduler/">› Checkout the app</a>
+                <a href="https://github.com/pandajiny/scheduler">› Checkout github</a>
+            </div>
+
+            <div id="scroll-nav">
+                <a href="#summary-container" id="nav-summary-container" class="nav">Introduce</a>
+
+                <a href="#usage-container" id="nav-usage-container" class="nav">Usage</a>
+                <a href="#add-todo-section" id="nav-add-todo-section" class="nav sm">adding todo</a>
+                <a href="#login-section" id="nav-login-section" class="nav sm">login</a>
+
+                <a href="#dev-features-container" id="nav-dev-features-container" class="nav">Develops</a>
+                <a href="#frontend-section" id="nav-frontend-section" class="nav sm">frontend</a>
+                <a href="#backend-section" id="nav-backend-section" class="nav sm">backend</a>
+                <a href="#auth-section" id="nav-auth-section" class="nav sm">auth</a>
+
+                <a href="#tools-container" id="nav-tools-container" class="nav">Tools</a>
+            </div>
+        </div>
+        <div id="content-container">
+            <div id="main-heading">
+                <h3 id="heading1">Note wherever,</h3>
+                <h3 id="heading2">Note whatever.</h3>
+            </div>
+
+            <section id="summary">
+                <div id="summary-container" class="paragraph-container">
+                    <h2>Introduce App</h2>
+                    <p class="paragraph" id="summary1">• Simple Todolist.</p>
+                    <p class="paragraph" id="summary2">• Can add Additional todo.</p>
+                </div>
+            </section>
+
+            <div id="usage-container" class="paragraph-container">
+                <h2>Usage</h2>
+                <h3 id="add-todo-section">Adding Todo</h3>
+                <p class="paragraph" id="usage1">• Please tell me something to do</p>
+                <p class="paragraph" id="usage2">• And just press Enter.</p>
+                <img src="images/add-todo.PNG" />
+                <p class="paragraph" id="usage2">
+                    • You can also add something about todo.
+                </p>
+                <img src="images/add-child-todo.PNG" />
+
+                <h3 id="login-section">Login First</h3>
+                <p class="paragraph">• Login with email account.</p>
+                <img src="./images/login.PNG" />
+            </div>
+
+            <div id="dev-features-container" class="paragraph-container">
+                <h2>Dev Features</h2>
+                <h3 id="frontend-section">Frontend</h3>
+                <p class="paragraph">• Use Typescript for all JS code.</p>
+                <script src="https://gist.github.com/pandajiny/1ab60961a455ace6bc742fce2088b693.js"></script>
+                <p class="paragraph">• Use Scss for styling.</p>
+                <script src="https://gist.github.com/pandajiny/8acfc621ce1fa2861c31c00213221b45.js"></script>
+
+                <h3 id="backend-section">Backend</h3>
+                <p class="paragraph">• Use NestJS for backend</p>
+                <script src="https://gist.github.com/pandajiny/5ebed2019cbaa6014945c88a0d38c719.js"></script>
+                <p class="paragraph">• Use SQL with sqlite</p>
+                <script src="https://gist.github.com/pandajiny/8794509ed85bedad72d763e3c8ec16fc.js"></script>
+                <p class="paragraph">
+                    • Server running with ubuntu, on the Naver Cloud Platform.
+                </p>
+                <img src="./images/ubuntu.PNG" />
+
+                <h3 id="auth-section">Auth</h3>
+                <p class="paragraph">• User identified with uuid system v4.</p>
+                <p class="paragraph">
+                    • User's password hashed with the secret salt.
+                </p>
+                <script src="https://gist.github.com/pandajiny/9b1d0595e3349263fb4b6fdf6642ba8e.js"></script>
+                <p class="paragraph">
+                    • User can keep login state with passport-jwt module.
+                </p>
+
+                <h2 id="tools-container">Tools</h2>
+                <p class="paragraph">• Docker : Manage linux server and testing APIs.</p>
+                <p class="paragraph">
+                    • Github : manage code log, sharing code with server and deploy
+                    frontend.
+                </p>
+                <p class="paragraph">• VS Code : edit code and debugging.</p>
+                <p class="paragraph">• Parcel : bundling and build frontend code.</p>
+                <p class="paragraph">
+                    • putty : remote connection for linux server on naver.
+                </p>
+            </div>
+
+            <div class="footer">
+                <h3>pandajiny made.</h3>
+                <p>thanks for read thie article</p>
+                <a>› github</a>
+                <a>› blog</a>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../scripts/pages/introduce.ts"></script>
+
+</html>

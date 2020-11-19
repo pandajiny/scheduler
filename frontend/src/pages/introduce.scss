@@ -1,0 +1,192 @@
+body,
+div,
+p,
+h1,
+h2,
+h3 {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+// h1 for heading text, like logo
+h1 {
+  font-size: 60px;
+}
+
+// h2 for title
+h2 {
+  font-size: 43px;
+
+  padding-top: 32px;
+  margin-left: 24px;
+  font-style: italic;
+}
+
+// h3 for hilight paragraph
+h3 {
+  font-size: 28px;
+
+  margin-top: 24px;
+  margin-left: 16px;
+  font-style: italic;
+}
+
+a {
+  margin: 4px;
+}
+
+a:-webkit-any-link {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+// p for main paragraph
+p {
+  font-size: 20px;
+}
+
+img {
+  margin: 8px;
+  border-radius: 4px;
+}
+
+.gist {
+  margin: 16px;
+}
+
+.paragraph {
+  margin-left: 8px;
+  margin-top: 16px;
+}
+
+.paragraph-container {
+  margin-top: 70px;
+  padding-left: 16px;
+}
+
+$color-primary: #2e1a47;
+$color-white: white;
+
+#main-container {
+  display: flex;
+  flex-direction: row;
+
+  #ref-container {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    position: sticky;
+    height: 100vh;
+    top: 0;
+
+    background-color: $color-primary;
+    color: $color-white;
+
+    padding-right: 16px;
+
+    #main-title {
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+
+      padding-top: 70px;
+
+      #title2 {
+        margin-top: -16px;
+      }
+    }
+
+    #scroll-nav {
+      display: flex;
+      flex-direction: column;
+      margin-top: 80px;
+      text-align: right;
+      font-style: italic;
+
+      .nav {
+        color: #a3a3a3;
+        margin: 0;
+        margin-top: 12px;
+        margin-bottom: 4px;
+        font-size: 22px;
+      }
+      .nav.sm {
+        margin: 0;
+        // margin-top: 4px;
+        font-size: 14px;
+      }
+
+      .nav.active {
+        color: white;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  #content-container {
+    flex: 7;
+
+    color: $color-primary;
+
+    padding: 16px;
+
+    #main-heading {
+      margin-top: 92px;
+      h3 {
+        margin: 0px;
+      }
+    }
+
+    #summary-container {
+      margin-top: 100px;
+      //   #summary3 {
+      //     margin: 0;
+      //     margin-top: 8px;
+      //     margin-left: 32px;
+      //   }
+      //   #summary4 {
+      //     margin: 0;
+      //     margin-top: 4px;
+      //     margin-left: 48px;
+      //   }
+    }
+
+    #dev-features-container {
+      #backend-section {
+        margin-top: 64px;
+      }
+
+      #auth-section {
+        margin-top: 64px;
+      }
+    }
+
+    #tools-container {
+      margin-top: 100px;
+    }
+  }
+}
+
+.footer {
+  margin-top: 200px;
+  padding: 16px;
+  color: gray;
+  h3 {
+    font-size: 20px;
+    margin: 8px;
+    font-weight: 500;
+  }
+  p {
+    font-style: italic;
+  }
+}
