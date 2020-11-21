@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { defaultCipherList } from 'constants';
 import { DbService } from 'src/db/db.service';
+import { GroupService } from 'src/group/group.service';
 
 @Injectable()
 export class TodoService {
   constructor(private dbService: DbService) {}
-
   async addTodoItem(request: AddTodoItemRequest): Promise<ActionResult> {
     const id = this.dbService.getUniqueString();
     const { owner, content, isComplete, parentId, endTime } = request;

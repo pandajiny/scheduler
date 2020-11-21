@@ -1,7 +1,18 @@
 import { serverUrl } from "../App";
 import { createAuthPostOption, getAuthHeader, getUser } from "./AuthModules";
 
-export const getTodoItems = async (): Promise<TodoItem[] | []> => {
+export function testReq() {
+  const url = serverUrl + `group`;
+  const headers = getAuthHeader();
+  if (headers) {
+    fetch(url, { headers });
+  }
+}
+
+export const getTodoItemsFromLoggedInUser = async (props: {
+  groupId?: string;
+  endTime?: number | null;
+}): Promise<TodoItem[]> => {
   console.log("get todoItems");
   const url = serverUrl + "todo";
 
@@ -28,18 +39,15 @@ export const getTodoItems = async (): Promise<TodoItem[] | []> => {
 export const addTodoItem = async (props: {
   content: string;
   parentId?: string;
-  endTime: number | null;
+  endTime?: number;
 }): Promise<ActionResult> => {
   const { content, endTime, parentId } = props;
   console.log("adding todo");
   const url = serverUrl + "todo";
   const user = await getUser();
+
   if (!user) {
     throw new Error("please login first");
-  }
-  console.log(user);
-  if (!user.uid) {
-    throw new Error("cannot get user's uid");
   }
 
   const request: AddTodoItemRequest = {
@@ -50,9 +58,15 @@ export const addTodoItem = async (props: {
     endTime: endTime || null,
   };
 
-  return await fetch(url, createAuthPostOption(request)).then(
+  const result = await fetch(url, createAuthPostOption(request)).then(
     async (resp) => await resp.json()
   );
+  console.log(`adding todo done`, result);
+
+  return {
+    ok: true,
+    message: "adding todo done",
+  };
 };
 
 export const deleteTodoItem = async (request: { id: string }) => {
@@ -148,3 +162,47 @@ export async function uncompleteTodos(ids: string[]): Promise<ActionResult> {
 
   return result;
 }
+
+export function getEndTimeListFromTodos(
+  todoItems: TodoItem[]
+): Array<number | null> {
+  return [...new Set(todoItems.map((todoItem) => todoItem.end_time))];
+}
+
+export async function getGroupList(): Promise<Group[]> {
+  const url = serverUrl + `group`;
+  const headers = getAuthHeader();
+  if (!headers) {
+    throw new Error(`please login first`);
+  }
+  const response = await fetch(url, { headers });
+  const result = (await response.json()) as Group[];
+  console.log(`getting ${result.length} of group list done`);
+
+  return result;
+}
+
+export async function addGroup(props: {
+  groupName: string;
+}): Promise<ActionResult> {
+  const { groupName } = props;
+  console.log(`add group with : ${groupName}`);
+  const url = serverUrl + `group`;
+  const headers = Object.assign(POST_HEADERS, getAuthHeader());
+  const request: AddGroupRequest = {
+    groupName,
+  };
+  const response = await fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(request),
+  });
+
+  const result = (await response.json()) as ActionResult;
+  console.log(`add group done, ${result.message}`);
+  return result;
+}
+
+const POST_HEADERS = {
+  "Content-Type": "application/json",
+};

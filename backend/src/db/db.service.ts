@@ -61,4 +61,8 @@ export class DbService {
   getUniqueString(): string {
     return uuidv4();
   }
+
+  getCurrentTime(): number {
+    return new Date().getTime();
+  }
 }

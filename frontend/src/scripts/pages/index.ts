@@ -1,79 +1,119 @@
 import { $renderAccountState, keyInputListener } from "../App";
 import { getUser } from "../Modules/AuthModules";
 import {
-  addTodoItem,
+  addGroup,
   deleteTodoItem,
   editTodo,
-  getTodoItems,
+  getEndTimeListFromTodos,
+  getGroupList,
+  getTodoItemsFromLoggedInUser,
 } from "../Modules/TodoModules";
 
 import "../../pages/index.html";
 import { LOGIN_PATH, navigateTo, SIGNUP_PATH } from "../../constants/paths";
-import {
-  convertStringToTimestamp,
-  convertTimestampToString,
-} from "../Modules/TimeModules";
+import { convertTimestampToString } from "../Modules/TimeModules";
+import { group } from "console";
 
 initialPage();
 
 async function initialPage() {
   const user = await getUser();
-
   if (user) {
-    (document.getElementById(
-      "content-container"
-    ) as HTMLElement).style.display = "flex";
-    const $accountContainer = document.getElementById(
-      "account-container"
-    ) as HTMLElement;
-    $renderAccountState({ $container: $accountContainer, user });
-    $initialAddingForm();
+    $initialAccountState(user);
 
-    updateView();
+    const todoItems = await getTodoItemsFromLoggedInUser();
+    $initialTodolist(todoItems);
+
+    const groups = await getGroupList();
+    const endTimes = getEndTimeListFromTodos(todoItems);
+    $initialNavs({ endTimes, groups });
   } else {
     displayWelcomePage();
   }
 }
 
-async function updateView() {
-  const todoItems = await getTodoItems();
+async function $updateView() {
+  // getDateStringListFromTodoItems(todoItems).forEach((strDate) => {
+  //   navItems.push({
+  //     title: strDate,
+  //     pathname: strDate.split("/").join("").toLowerCase(),
+  //   });
+  // });
+  const todoItems = await getTodoItemsFromLoggedInUser();
 
-  const navItems: NavItem[] = [{ title: "All todos", pathname: "all" }];
+  const groups = await getGroupList();
+  const endTimes = getEndTimeListFromTodos(todoItems);
+  // $updateNavItems(navItems);
 
-  getDateStringListFromTodoItems(todoItems).forEach((strDate) => {
-    navItems.push({
-      title: strDate,
-      pathname: strDate
-        .replace("/", "")
-        .replace("/", "")
-        .replace(" ", "")
-        .toLowerCase(),
-    });
+  console.log(groups, endTimes);
+  // (document.getElementById(`nav-${currentNavPath}`) as HTMLElement).className =
+  //   "selected";
+
+  $updateTodolist(todoItems);
+}
+
+function $initialAccountState(user: User) {
+  (document.getElementById("content-container") as HTMLElement).style.display =
+    "flex";
+  const $accountContainer = document.getElementById(
+    "account-container"
+  ) as HTMLElement;
+  $renderAccountState({ $container: $accountContainer, user });
+}
+
+// const $createGroupButton = document.getElementById(
+//   "create-group-button"
+// ) as HTMLButtonElement;
+// $createGroupButton.addEventListener("click", () => {
+//   console.log(`create Groupd`);
+// });
+
+function $initialNavs(props: {
+  groups: Group[];
+  endTimes: Array<number | null>;
+}) {
+  const { endTimes, groups } = props;
+
+  const $createGroupButton = document.getElementById(
+    "create-group-button"
+  ) as HTMLButtonElement;
+
+  $createGroupButton.addEventListener("click", () => {
+    const groupName = prompt(`new group name`, `GROUP NAME`);
+    console.log(groupName);
+    if (groupName) {
+      addGroup({ groupName }).then($updateView);
+    }
   });
 
-  $updateNavList(navItems);
-  console.log(navItems);
-  const navPath = getNavPath();
-
-  (document.getElementById(`nav-${navPath}`) as HTMLElement).className =
-    "selected";
-
-  $updateTodolist(todoItems, navPath);
+  $updateNavItems({ groups, endTimes });
 }
 
-type NavPath = "all" | "notselected" | string;
-function getNavPath(): NavPath {
-  let path = window.location.search.replace("?path=", "");
-  if (path == `` || path == `all`) {
-    return "all";
-  } else if (path == `notselected`) {
-    return "notselected";
-  } else {
-    return path;
-  }
-}
+function $updateNavItems(props: {
+  groups: Group[];
+  endTimes: Array<number | null>;
+}) {
+  const navItems: NavItem[] = [];
+  const { endTimes, groups } = props;
 
-function $updateNavList(navItems: NavItem[]) {
+  endTimes.forEach((endTime) => {
+    const navItem: NavItem = {
+      type: "TIME",
+      title: endTime ? convertTimestampToString(endTime) : `Date Not Selected`,
+      pathname: endTime ? `${endTime}` : `null`,
+    };
+    navItems.push(navItem);
+  });
+
+  groups.forEach((group) => {
+    const navItem: NavItem = {
+      type: "GROUP",
+      pathname: group.group_id,
+      title: group.group_name,
+    };
+    navItems.push(navItem);
+  });
+
   const $navList = document.getElementById("nav-list") as HTMLDListElement;
   $navList.innerHTML = ``;
 
@@ -82,84 +122,37 @@ function $updateNavList(navItems: NavItem[]) {
     $navItem.id = `nav-${navItem.pathname}`;
     $navItem.textContent = navItem.title;
     $navItem.addEventListener("click", () => {
-      window.location.search = `?path=${navItem.pathname}`;
+      switch (navItem.type) {
+        case "GROUP":
+          window.location.search = `?group=${navItem.pathname}`;
+          return;
+        case "TIME":
+          window.location.search = `?time=${navItem.pathname}`;
+          return;
+      }
     });
     $navList.appendChild($navItem);
   });
 }
 
-function getDateStringListFromTodoItems(todoItems: TodoItem[]): string[] {
-  const dateSet = new Set(todoItems.map((todoItem) => todoItem.endTime));
-  const stringDateList: string[] = [];
-  dateSet.forEach((timestamp) => {
-    if (timestamp == null) {
-      stringDateList.push("Not selected");
-    } else {
-      stringDateList.push(convertTimestampToString(timestamp));
-    }
+async function $initialTodolist(todoItems: TodoItem[]) {
+  const $createGroupButton = document.getElementById(
+    "create-group-button"
+  ) as HTMLButtonElement;
+  $createGroupButton.addEventListener("click", () => {
+    console.log(`create Groupd`);
   });
-  return stringDateList;
+
+  $updateTodolist(todoItems);
 }
 
-async function $updateTodolist(todoItems: TodoItem[], path: NavPath) {
+async function $updateTodolist(todoItems: TodoItem[]) {
   const $todolist = document.getElementById("todolist") as HTMLDivElement;
   $todolist.innerHTML = "";
-  todoItems
-    .filter((todoItem) => {
-      return (
-        todoItem.parentId == null && isWillDisplayed(path, todoItem.endTime)
-      );
-    })
-    .forEach((todoItem) => {
-      const $todo = $createTodoItem(todoItem);
-      $todolist.appendChild($todo);
-    });
-
-  function isWillDisplayed(navPath: NavPath, endTime: number | null): boolean {
-    if (navPath == "all") {
-      return true;
-    }
-    if (navPath == "notselected") {
-      return endTime == null;
-    } else {
-      console.log(endTime, navPathToTimestamp(navPath));
-      return endTime == navPathToTimestamp(navPath);
-    }
-  }
-}
-
-function $initialAddingForm() {
-  const $addingForm = document.getElementById(
-    "add-todo-container"
-  ) as HTMLElement;
-
-  const $dateSelect = $addingForm.querySelector(
-    "#date-select"
-  ) as HTMLInputElement;
-
-  const $addTodoInput = document.getElementById(
-    "add-todo-input"
-  ) as HTMLInputElement;
-
-  $addTodoInput.addEventListener("keypress", handleAddTodoInputKeypress);
-  function handleAddTodoInputKeypress(ev: KeyboardEvent) {
-    if (ev.key == "Enter") {
-      const content = $addTodoInput.value;
-      const endTime =
-        $dateSelect.value != ""
-          ? convertStringToTimestamp($dateSelect.value)
-          : null;
-
-      addTodoItem({ content, endTime }).then((result) => {
-        if (result.ok) {
-          $addTodoInput.value = "";
-          updateView();
-        } else {
-          throw result.error_message;
-        }
-      });
-    }
-  }
+  todoItems.forEach((todoItem) => {
+    const $todo = $createTodoItem(todoItem);
+    $todolist.appendChild($todo);
+  });
 }
 
 function $createTodoItem(todo: TodoItem): HTMLElement {
@@ -170,7 +163,9 @@ function $createTodoItem(todo: TodoItem): HTMLElement {
     <div id="todo-content-container">
       <p id="date">
         ${
-          todo.endTime ? convertTimestampToString(todo.endTime) : "not selected"
+          todo.end_time
+            ? convertTimestampToString(todo.end_time)
+            : "not selected"
         }
       </p>
       <p id="content">${todo.content}</p>
@@ -199,7 +194,7 @@ function $createTodoItem(todo: TodoItem): HTMLElement {
   $contentEdit.addEventListener("keypress", (ev) => {
     keyInputListener(ev, () => {
       todo.content = $contentEdit.value;
-      editTodo(todo).then(updateView);
+      editTodo(todo).then();
     });
   });
 
@@ -222,7 +217,7 @@ function $createTodoItem(todo: TodoItem): HTMLElement {
   });
 
   function handleDeleteButtonClick(id: string) {
-    deleteTodoItem({ id }).then(updateView);
+    deleteTodoItem({ id }).then($updateView);
   }
 
   function handleEditButtonClick(
@@ -257,17 +252,5 @@ function displayWelcomePage() {
   }
   function handleSignupButtonClick() {
     navigateTo(SIGNUP_PATH);
-  }
-}
-
-function navPathToTimestamp(path: string): number {
-  console.log(path);
-  if (path == "all" || path == "notselected") {
-    return 0;
-  } else {
-    const year = path.slice(0, 4);
-    const month = path.slice(4, 6);
-    const date = path.slice(6, 8);
-    return convertStringToTimestamp(`${year}/${month}/${date}`);
   }
 }

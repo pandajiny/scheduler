@@ -5,10 +5,10 @@ export function convertTimestampToString(timestamp: number): string {
 
 export function convertStringToTimestamp(dateString: string): number {
   const dateArgs = dateString
-    .replace("/", "-")
-    .replace("/", "-")
-    .replace(".", "-")
-    .replace(".", "-")
+    .split("/")
+    .join("")
+    .split(".")
+    .join("")
     .split("-")
     .map((t) => parseInt(t));
   return new Date(dateArgs[0], dateArgs[1] - 1, dateArgs[2]).getTime();

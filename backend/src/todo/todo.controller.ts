@@ -12,6 +12,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { GroupService } from 'src/group/group.service';
 import { TodoService } from './todo.service';
 
 @UseGuards(JwtAuthGuard)
@@ -33,6 +34,12 @@ export class TodoController {
 
     return todoItems;
   }
+
+  // @Get('groups/:uid')
+  // async getGroupIds(@Param('uid') uid) {
+  //   console.log(`groups`);
+  //   this.groupService.getGroupLists(uid);
+  // }
 
   @Post()
   async addTodo(

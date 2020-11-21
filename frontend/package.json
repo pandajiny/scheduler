@@ -13,7 +13,7 @@
     "start:dev": "set NODE_ENV=DEV && npm run start",
     "start:local": "set NODE_ENV=LOCAL && npm run start",
     "build": "parcel build src/pages/*.html -d ../docs",
-    "compile": "tsc --noEmit",
+    "compile": "tsc --noEmit -w",
     "update-interface": "cd src/interfaces && (git add . && git commit -m '' && git push) & git pull"
   }
 }

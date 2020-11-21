@@ -37,6 +37,12 @@
       height: 100%;
       flex: 2;
       border-right: 1px theme.$color-gray solid;
+      display: flex;
+      flex-direction: column;
+
+      > * {
+        align-self: flex-end;
+      }
 
       #nav-list {
         padding-right: 16px;
@@ -50,6 +56,9 @@
           font-size: 20px;
           color: white;
         }
+      }
+
+      #create-group-button {
       }
     }
 
@@ -185,129 +194,4 @@
       margin-bottom: 16px;
     }
   }
-
-  //     .main-container {
-  //       width: 100%;
-  //       display: flex;
-  //       flex-direction: row;
-  //       justify-content: space-between;
-
-  //       // .content-container {
-  //       //   width: 100%;
-  //       //   .content {
-  //       //     width: 100%;
-  //       //     margin-left: 8px;
-  //       //     font-size: 18px;
-  //       //     font-weight: 500;
-  //       //   }
-  //       // }
-
-  //       // .content.done {
-  //       //   text-decoration: line-through;
-  //       //   color: theme.$color-gray;
-  //       // }
-
-  //       // .unactive {
-  //       //   display: none;
-  //       // }
-  //     }
-
-  //     .child-container {
-  //       width: 100%;
-  //       .child-input-container {
-  //         width: 100%;
-  //         display: flex;
-  //         flex-direction: row;
-
-  //         .icon {
-  //           font-size: 12px;
-  //           padding-top: 10px;
-  //           padding-right: 4px;
-  //         }
-
-  //         input {
-  //           width: 100%;
-  //           padding: 4px;
-  //           padding-left: 8px;
-  //         }
-  //       }
-  //       .child-todo-list {
-  //         width: auto;
-  //         margin-left: 32px;
-
-  //         .divider {
-  //           display: none;
-  //         }
-  //       }
-  //     }
-
-  //     .unactive {
-  //       display: none;
-  //     }
-
-  //     .divider {
-  //       margin-top: 4px;
-  //       width: 98%;
-  //       margin-left: auto;
-  //       margin-right: auto;
-  //       border-bottom: solid theme.$color-gray 0.3px;
-  //     }
-  //   }
-  // }
-
-  // .todo {
-  //   width: 100%;
-  //   height: 50px;
-
-  //   #container {
-  //     padding: 4px;
-  //     margin: 4px;
-  //     display: flex;
-  //     flex-direction: row;
-  //     justify-content: space-between;
-  //     transition: 0.5s;
-  //   }
-
-  //   #add-child-form {
-  //     display: none;
-  //     border-radius: 4px;
-  //     width: fit-content;
-  //     margin-left: 32px;
-  //     padding: 4px;
-
-  //     input {
-  //       width: 350px;
-  //       outline: none;
-  //       border: none;
-  //     }
-  //     ::placeholder {
-  //       font-style: italic;
-  //     }
-  //   }
-  //   #add-child-form.active,
-  //   #add-child-form.focused {
-  //     display: block;
-  //   }
-
-  //   #add-child-form:focus-within {
-  //     border: 1px gray solid;
-  //   }
-
-  //   #childs {
-  //     margin-left: 24px;
-  //   }
-
-  //   #container:hover {
-  //     background-color: #8d8d8d;
-  //   }
-  // }
-
-  // .done {
-  //   text-decoration: line-through;
-  //   color: gray;
-  // }
-
-  // #input-form {
-  //   width: 100%;
-  // }
 }
