@@ -12,7 +12,7 @@
     "start": "parcel src/pages/*.html",
     "start:dev": "set NODE_ENV=DEV && npm run start",
     "start:local": "set NODE_ENV=LOCAL && npm run start",
-    "build": "parcel build src/pages/*.html -d ../docs",
+    "build": "parcel build src/pages/*.html -d ../docs --public-url ./scheduler/",
     "compile": "tsc --noEmit -w",
     "update-interface": "cd src/interfaces && (git add . && git commit -m '' && git push) & git pull"
   }

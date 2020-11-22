@@ -35,9 +35,9 @@ export const getTodoItemsFromLoggedInUser = async (): Promise<TodoItem[]> => {
 
 export const addTodoItem = async (props: {
   content: string;
-  parentId?: string;
-  endTime?: number;
-  groupId?: string;
+  parentId: string | null;
+  endTime: number | null;
+  groupId: string | null;
 }): Promise<ActionResult> => {
   const { content, endTime, parentId, groupId } = props;
   console.log("adding todo");

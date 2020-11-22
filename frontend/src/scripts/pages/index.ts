@@ -2,6 +2,7 @@ import { $renderAccountState, keyInputListener } from "../App";
 import { getUser } from "../Modules/AuthModules";
 import {
   addGroup,
+  addTodoItem,
   deleteTodoItem,
   editTodo,
   getEndTimeListFromTodos,
@@ -16,8 +17,10 @@ import {
   navigateTo,
   SIGNUP_PATH,
 } from "../../constants/paths";
-import { convertTimestampToString } from "../Modules/TimeModules";
-import { title } from "process";
+import {
+  convertStringToTimestamp,
+  convertTimestampToString,
+} from "../Modules/TimeModules";
 
 $initialPage();
 
@@ -180,6 +183,47 @@ function getCurrentFilterFromUrl(): Filter {
 
 async function $initialTodoContainer(todoItems: TodoItem[], groups: Group[]) {
   const filter = getCurrentFilterFromUrl();
+
+  $updateTitle(filter, groups);
+  $initialAddTodoForm(filter.groupId);
+
+  $updateTodolist(todoItems, filter);
+}
+function $initialAddTodoForm(groupId: string | null) {
+  const $addingForm = document.getElementById(
+    "add-todo-container"
+  ) as HTMLElement;
+  const $addTodoInput = document.getElementById(
+    "add-todo-input"
+  ) as HTMLInputElement;
+  const $dateSelect = $addingForm.querySelector(
+    "#date-select"
+  ) as HTMLInputElement;
+
+  $addTodoInput.addEventListener("keypress", handleAddTodoInputKeypress);
+  function handleAddTodoInputKeypress(ev: KeyboardEvent) {
+    if (ev.key == "Enter") {
+      const content = $addTodoInput.value;
+      const endTime =
+        $dateSelect.value != ""
+          ? convertStringToTimestamp($dateSelect.value)
+          : null;
+
+      addTodoItem({ content, endTime, parentId: null, groupId }).then(
+        (result) => {
+          if (result.ok) {
+            $addTodoInput.value = "";
+            $updateView();
+          } else {
+            throw result.error_message;
+          }
+        }
+      );
+    }
+  }
+}
+
+function $updateTitle(filter: Filter, groups: Group[]) {
   const $title = document.getElementById(`todo-container-title`) as HTMLElement;
 
   let title: string = "Todo title not recognized ";
@@ -201,8 +245,6 @@ async function $initialTodoContainer(todoItems: TodoItem[], groups: Group[]) {
     title = `All Todos`;
   }
   $title.textContent = title;
-
-  $updateTodolist(todoItems, filter);
 }
 
 async function $updateTodolist(todoItems: TodoItem[], filter: Filter) {
@@ -234,11 +276,7 @@ function $createTodoItemElement(todo: TodoItem): HTMLElement {
   $todoItem.innerHTML = `
     <div id="todo-content-container">
       <p id="date">
-        ${
-          todo.end_time
-            ? convertTimestampToString(todo.end_time)
-            : "not selected"
-        }
+        ${todo.end_time ? convertTimestampToString(todo.end_time) : "-"}
       </p>
       <p id="content">${todo.content}</p>
       <div id="content-edit-container" class="unactive">
