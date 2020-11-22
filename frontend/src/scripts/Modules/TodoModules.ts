@@ -9,10 +9,7 @@ export function testReq() {
   }
 }
 
-export const getTodoItemsFromLoggedInUser = async (props: {
-  groupId?: string;
-  endTime?: number | null;
-}): Promise<TodoItem[]> => {
+export const getTodoItemsFromLoggedInUser = async (): Promise<TodoItem[]> => {
   console.log("get todoItems");
   const url = serverUrl + "todo";
 
@@ -40,8 +37,9 @@ export const addTodoItem = async (props: {
   content: string;
   parentId?: string;
   endTime?: number;
+  groupId?: string;
 }): Promise<ActionResult> => {
-  const { content, endTime, parentId } = props;
+  const { content, endTime, parentId, groupId } = props;
   console.log("adding todo");
   const url = serverUrl + "todo";
   const user = await getUser();
@@ -56,6 +54,7 @@ export const addTodoItem = async (props: {
     isComplete: false,
     owner: user.uid,
     endTime: endTime || null,
+    groupId: groupId || null,
   };
 
   const result = await fetch(url, createAuthPostOption(request)).then(
