@@ -19,4 +19,4 @@ module.exports=function(t){return fetch(t).then(function(t){return t.text()})};
 },{}],0:[function(require,module,exports) {
 var b=require("dsVf");b.register("html",require("Mmsi"));b.load([["index.html","s8zH"]]).then(function(){require("cXqv");});
 },{}]},{},[0], null)
-//# sourceMappingURL=scheduler/pages.d0f3b72d.js.map
+//# sourceMappingURL=pages.d0f3b72d.js.map

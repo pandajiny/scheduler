@@ -7,4 +7,4 @@ parcelRequire=function(e,r,t,n){var i,o="function"==typeof parcelRequire&&parcel
 },{"../App":"Zmr0"}],"PUL4":[function(require,module,exports) {
 "use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=require("../../constants/paths"),t=require("../Modules/AuthModules"),n=document.getElementById("email-input"),o=document.getElementById("password-input"),i=document.getElementById("login-button");i.addEventListener("click",s);var l=document.getElementById("signup-button");l.addEventListener("click",function(){return e.navigateTo(e.SIGNUP_PATH)});var u=document.getElementById("login-message");function r(e,t){return""!=e&&""!=t}function s(){var i=n.value,l=o.value;r(i,l)?t.doLoginWithEmailAndPassword({email:i,password:l}).catch(function(e){throw u.textContent=e,e}).then(function(){console.log("login passed, will redirect to home"),e.navigateTo(e.HOME_PATH)}):(u.textContent="Please fill blanks",console.error("user not filled input"))}
 },{"../../constants/paths":"ooTL","../Modules/AuthModules":"SFuy"}]},{},["PUL4"], null)
-//# sourceMappingURL=scheduler/login.243caf24.js.map
+//# sourceMappingURL=login.243caf24.js.map
