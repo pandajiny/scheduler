@@ -35,12 +35,6 @@ export class TodoController {
     return todoItems;
   }
 
-  // @Get('groups/:uid')
-  // async getGroupIds(@Param('uid') uid) {
-  //   console.log(`groups`);
-  //   this.groupService.getGroupLists(uid);
-  // }
-
   @Post()
   async addTodo(
     @Request() req,

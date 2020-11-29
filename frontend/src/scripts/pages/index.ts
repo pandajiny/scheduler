@@ -3,6 +3,7 @@ import { getUser } from "../Modules/AuthModules";
 import {
   addGroup,
   addTodoItem,
+  completeTodos,
   deleteTodoItem,
   editTodo,
   getEndTimeListFromTodos,
@@ -203,7 +204,13 @@ function $initialAddTodoForm(groupId: string | null) {
   $addTodoInput.addEventListener("keypress", handleAddTodoInputKeypress);
   function handleAddTodoInputKeypress(ev: KeyboardEvent) {
     if (ev.key == "Enter") {
+      $setAlertMessage("");
       const content = $addTodoInput.value;
+      if (!content) {
+        $setAlertMessage("Can't create todo with no content");
+        return;
+      }
+
       const endTime =
         $dateSelect.value != ""
           ? convertStringToTimestamp($dateSelect.value)
@@ -221,6 +228,13 @@ function $initialAddTodoForm(groupId: string | null) {
       );
     }
   }
+}
+
+const $alertMessage = document.getElementById(
+  "alert-message"
+) as HTMLParagraphElement;
+function $setAlertMessage(message: string) {
+  $alertMessage.textContent = message;
 }
 
 function $updateTitle(filter: Filter, groups: Group[]) {
@@ -274,7 +288,7 @@ function $createTodoItemElement(todo: TodoItem): HTMLElement {
   $todoItem.id = `todo-${todo.id}`;
   $todoItem.className = `todo`;
   $todoItem.innerHTML = `
-    <div id="todo-content-container">
+    <div id="todo-content-container" class="${todo.isComplete ? "done" : ""}">
       <p id="date">
         ${todo.end_time ? convertTimestampToString(todo.end_time) : "-"}
       </p>
@@ -286,7 +300,7 @@ function $createTodoItemElement(todo: TodoItem): HTMLElement {
         }" placeholder="...content here" />
       </div>
     </div>
-    <div id="action-buttons">
+    <div id="action-buttons" class="${todo.isComplete ? "done" : ""}">
       <button id="edit-button" class="text-button">✎</button>
       <button id="done-button" class="text-button">✓</button>
       <button id="delete-button" class="text-button">✖</button>
@@ -301,10 +315,15 @@ function $createTodoItemElement(todo: TodoItem): HTMLElement {
   const $contentEdit = $todoItem.querySelector(
     "#content-edit"
   ) as HTMLInputElement;
+  $contentEdit.onblur = unsetContentEditMode;
   $contentEdit.addEventListener("keypress", (ev) => {
     keyInputListener(ev, () => {
-      todo.content = $contentEdit.value;
-      editTodo(todo).then();
+      if (todo.content != $contentEdit.value) {
+        todo.content = $contentEdit.value;
+        editTodo(todo).then($updateView);
+      } else {
+        unsetContentEditMode();
+      }
     });
   });
 
@@ -323,23 +342,41 @@ function $createTodoItemElement(todo: TodoItem): HTMLElement {
   ) as HTMLButtonElement;
 
   $editButton.addEventListener("click", () => {
-    handleEditButtonClick($content, $contentEditContainer);
+    handleEditButtonClick();
   });
+
+  const $doneButton = $todoItem.querySelector(
+    `#done-button`
+  ) as HTMLButtonElement;
+  $doneButton.addEventListener("click", handleDoneButtonClick);
 
   function handleDeleteButtonClick(id: string) {
     deleteTodoItem({ id }).then($updateView);
   }
 
-  function handleEditButtonClick(
-    $content: HTMLElement,
-    $contentEditContainer: HTMLElement
-  ) {
+  function handleEditButtonClick() {
+    setContentEditMode();
+  }
+
+  function setContentEditMode() {
     $contentEditContainer.className = "active";
     $contentEditContainer.style.display = "flex";
     $content.className = "unactive";
+    $contentEdit.value = todo.content;
+    $contentEdit.focus();
   }
 
-  // function handleDoneButtonClick(id: string) {}
+  function unsetContentEditMode() {
+    $contentEditContainer.className = "unactive";
+    $contentEditContainer.style.display = "none";
+    $content.className = "active";
+  }
+
+  function handleDoneButtonClick() {
+    if (todo.id) {
+      completeTodos([todo.id]).then($updateView);
+    }
+  }
   return $todoItem;
 }
 
