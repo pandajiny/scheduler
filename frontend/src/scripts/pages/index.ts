@@ -95,7 +95,7 @@ function $updateNavItems(props: {
   const navItems: NavItem[] = [];
   const { endTimes, groups } = props;
 
-  endTimes.forEach((endTime) => {
+  endTimes.sort().forEach((endTime) => {
     const navItem: NavItem = {
       type: "TIME",
       title: endTime ? convertTimestampToString(endTime) : `Not Selected`,
