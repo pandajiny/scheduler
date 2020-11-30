@@ -41,7 +41,7 @@ export class TodoController {
     @Body() addRequest: AddTodoItemRequest,
   ): Promise<ActionResult> {
     const user = req.user as User;
-    console.log(`adding todo with ${user.email}`, addRequest);
+    console.log(`adding todo witxh ${user.email}`, addRequest);
 
     const result = await this.todoService.addTodoItem(addRequest);
     console.log(`adding todo done : ${result.message}`);

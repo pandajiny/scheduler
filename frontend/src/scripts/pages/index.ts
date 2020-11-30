@@ -95,52 +95,73 @@ function $updateNavItems(props: {
   const navItems: NavItem[] = [];
   const { endTimes, groups } = props;
 
-  endTimes.sort().forEach((endTime) => {
-    const navItem: NavItem = {
-      type: "TIME",
-      title: endTime ? convertTimestampToString(endTime) : `Not Selected`,
-      pathname: endTime ? `${endTime}` : `NONE`,
-    };
-    navItems.push(navItem);
-  });
+  // update group items
+  if (groups) {
+    const $groupList = document.getElementById("group-list") as HTMLElement;
+    $groupList.innerHTML = ``;
+    $groupList.style.display = `block`;
 
-  groups.forEach((group) => {
-    const navItem: NavItem = {
-      type: "GROUP",
-      pathname: group.group_id,
-      title: group.group_name,
-    };
-    navItems.push(navItem);
-  });
+    const $groupNavMessage = document.querySelector(
+      "#nav-group-container > .nav-message"
+    ) as HTMLParagraphElement;
+    $groupNavMessage.textContent = "";
+    $groupNavMessage.style.display = `none`;
 
-  const $navList = document.getElementById("nav-list") as HTMLDListElement;
-  $navList.innerHTML = ``;
+    groups.forEach((group) => {
+      const navItem: NavItem = {
+        type: "GROUP",
+        pathname: group.group_id,
+        title: group.group_name,
+      };
 
-  const $navAllTodo = document.createElement(`li`);
-  $navAllTodo.id = `nav-all`;
-  $navAllTodo.textContent = `All Todos`;
-  $navAllTodo.addEventListener(`click`, () => {
-    navigateTo(HOME_PATH);
-    window.location.search = ``;
-  });
-  $navList.appendChild($navAllTodo);
-
-  navItems.forEach((navItem) => {
-    const $navItem = document.createElement("li") as HTMLElement;
-    $navItem.id = `nav-${navItem.pathname}`;
-    $navItem.textContent = navItem.title;
-    $navItem.addEventListener("click", () => {
-      switch (navItem.type) {
-        case "GROUP":
-          window.location.search = `?group=${navItem.pathname}`;
-          return;
-        case "TIME":
-          window.location.search = `?time=${navItem.pathname}`;
-          return;
-      }
+      const $navItem = document.createElement("li") as HTMLElement;
+      $navItem.className = "nav-item";
+      $navItem.id = `nav-${navItem.pathname}`;
+      $navItem.innerHTML = `
+        <label class="nav-symbol">🗹</label>
+        <p>${navItem.title}</p>
+      `;
+      $navItem.addEventListener("click", () => {
+        window.location.search = `?group=${navItem.pathname}`;
+      });
+      $groupList.appendChild($navItem);
     });
-    $navList.appendChild($navItem);
-  });
+  }
+
+  // update upcoming items
+  if (endTimes) {
+    const $upcomingList = document.getElementById(
+      "upcoming-list"
+    ) as HTMLDivElement;
+    $upcomingList.style.display = "block";
+
+    endTimes.sort().forEach((endTime) => {
+      const navItem: NavItem = {
+        type: "TIME",
+        title: endTime ? convertTimestampToString(endTime) : `Not Selected`,
+        pathname: endTime ? `${endTime}` : `NONE`,
+      };
+
+      const $navItem = document.createElement("li") as HTMLElement;
+      $navItem.className = "nav-item";
+      $navItem.id = `nav-${navItem.pathname}`;
+      $navItem.textContent = navItem.title;
+      $navItem.addEventListener("click", () => {
+        window.location.search = `?time=${navItem.pathname}`;
+      });
+
+      $upcomingList.appendChild($navItem);
+    });
+  }
+
+  // const $navAllTodo = document.createElement(`li`);
+  // $navAllTodo.id = `nav-all`;
+  // $navAllTodo.textContent = `All Todos`;
+  // $navAllTodo.addEventListener(`click`, () => {
+  //   navigateTo(HOME_PATH);
+  //   window.location.search = ``;
+  // });
+  // $navList.appendChild($navAllTodo);
 
   $highlightNavItemFromUrl();
 }
@@ -155,7 +176,7 @@ function $highlightNavItemFromUrl() {
       .join("") || "all";
 
   const navItem = document.getElementById(`nav-${path}`) as HTMLElement;
-  navItem.className = `selected`;
+  navItem.className += ` selected`;
 }
 
 interface Filter {
@@ -190,6 +211,7 @@ async function $initialTodoContainer(todoItems: TodoItem[], groups: Group[]) {
 
   $updateTodolist(todoItems, filter);
 }
+
 function $initialAddTodoForm(groupId: string | null) {
   const $addingForm = document.getElementById(
     "add-todo-container"
@@ -288,7 +310,7 @@ function $createTodoItemElement(todo: TodoItem): HTMLElement {
   $todoItem.id = `todo-${todo.id}`;
   $todoItem.className = `todo`;
   $todoItem.innerHTML = `
-    <div id="todo-content-container" class="${todo.isComplete ? "done" : ""}">
+    <label id="todo-content-container" class="${todo.isComplete ? "done" : ""}">
       <p id="date">
         ${todo.end_time ? convertTimestampToString(todo.end_time) : "-"}
       </p>
@@ -299,7 +321,7 @@ function $createTodoItemElement(todo: TodoItem): HTMLElement {
           todo.content
         }" placeholder="...content here" />
       </div>
-    </div>
+    </label>
     <div id="action-buttons" class="${todo.isComplete ? "done" : ""}">
       <button id="edit-button" class="text-button">✎</button>
       <button id="done-button" class="text-button">✓</button>
