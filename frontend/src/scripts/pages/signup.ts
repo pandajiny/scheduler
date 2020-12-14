@@ -1,60 +1,59 @@
-import { HOME_PATH, LOGIN_PATH, navigateTo } from "../../constants/paths";
-import { doSignUp } from "../Modules/AuthModules";
+// import { doSignUp } from "../modules/AuthModules";
 
-const $message = document.getElementById(
-  "signup-message"
-) as HTMLParagraphElement;
-const $name = document.getElementById("name-input") as HTMLInputElement;
-const $email = document.getElementById("email-input") as HTMLInputElement;
-const $password = document.getElementById("password-input") as HTMLInputElement;
-const $passwordConfirm = document.getElementById(
-  "password-confirm"
-) as HTMLInputElement;
+// const $message = document.getElementById(
+//   "signup-message"
+// ) as HTMLParagraphElement;
+// const $name = document.getElementById("name-input") as HTMLInputElement;
+// const $email = document.getElementById("email-input") as HTMLInputElement;
+// const $password = document.getElementById("password-input") as HTMLInputElement;
+// const $passwordConfirm = document.getElementById(
+//   "password-confirm"
+// ) as HTMLInputElement;
 
-const $signupButton = document.getElementById(
-  "signup-button"
-) as HTMLButtonElement;
+// const $signupButton = document.getElementById(
+//   "signup-button"
+// ) as HTMLButtonElement;
 
-const validate = (props: {
-  email: string;
-  password: string;
-  passwordConfirm: string;
-}): Boolean => {
-  const { email, password, passwordConfirm } = props;
-  //   todo : need to add email validator
-  if (!email) {
-    return false;
-  }
-  if (!password) {
-    return false;
-  }
-  if (!passwordConfirm || password != passwordConfirm) {
-    return false;
-  }
-  return true;
-};
+// const validate = (props: {
+//   email: string;
+//   password: string;
+//   passwordConfirm: string;
+// }): Boolean => {
+//   const { email, password, passwordConfirm } = props;
+//   //   todo : need to add email validator
+//   if (!email) {
+//     return false;
+//   }
+//   if (!password) {
+//     return false;
+//   }
+//   if (!passwordConfirm || password != passwordConfirm) {
+//     return false;
+//   }
+//   return true;
+// };
 
-$signupButton.addEventListener("click", () => {
-  const name = $name.value;
-  const email = $email.value;
-  const password = $password.value;
-  const passwordConfirm = $passwordConfirm.value;
-  if (validate({ email, password, passwordConfirm })) {
-    doSignUp({ name, email, password })
-      .then(() => {
-        navigateTo(HOME_PATH);
-      })
-      .catch((err) => {
-        $message.textContent = `${err.message}`;
-        $password.value = ``;
-        $passwordConfirm.value = ``;
-      });
-  }
-});
+// $signupButton.addEventListener("click", () => {
+//   const name = $name.value;
+//   const email = $email.value;
+//   const password = $password.value;
+//   const passwordConfirm = $passwordConfirm.value;
+//   if (validate({ email, password, passwordConfirm })) {
+//     doSignUp({ name, email, password })
+//       .then(() => {
+//         navigateTo(HOME_PATH);
+//       })
+//       .catch((err) => {
+//         $message.textContent = `${err.message}`;
+//         $password.value = ``;
+//         $passwordConfirm.value = ``;
+//       });
+//   }
+// });
 
-const $loginButton = document.getElementById(
-  "login-button"
-) as HTMLButtonElement;
-$loginButton.addEventListener("click", () => {
-  navigateTo(LOGIN_PATH);
-});
+// const $loginButton = document.getElementById(
+//   "login-button"
+// ) as HTMLButtonElement;
+// $loginButton.addEventListener("click", () => {
+//   navigateTo(LOGIN_PATH);
+// });

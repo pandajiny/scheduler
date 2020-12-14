@@ -1,0 +1,24 @@
+@import "./classes.scss";
+
+@import "./components/top-banner.scss";
+
+// import pages
+@import "./pages/login.page.scss";
+@import "./pages/login-require.page.scss";
+@import "./pages/main.page.scss";
+
+.page {
+  display: none;
+
+  width: 100%;
+  height: 100%;
+}
+
+.page.active {
+  display: block;
+}
+
+.main {
+  width: 100%;
+  height: 100%;
+}

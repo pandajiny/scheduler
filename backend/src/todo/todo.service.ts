@@ -1,11 +1,23 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { defaultCipherList } from 'constants';
 import { DbService } from 'src/db/db.service';
-import { GroupService } from 'src/group/group.service';
+import { ApiService } from 'src/api/api.service';
 
 @Injectable()
 export class TodoService {
-  constructor(private dbService: DbService) {}
+  constructor(private dbService: DbService, private apiService: ApiService) {}
+
+  async getTodos(filter: TodosFilter): Promise<TodoItem[]> {
+    const { userId, groupId } = filter;
+
+    let query = `SELECT * FROM TodoItems WHERE owner = "${userId}"`;
+    if (groupId) {
+      query += `and group_id = "${groupId}"`;
+    }
+
+    const todoItems = await this.dbService.doGetQuery<TodoItem>(query);
+    console.log(`got ${todoItems.length} of todos `);
+    return todoItems;
+  }
   async addTodoItem(request: AddTodoItemRequest): Promise<ActionResult> {
     const id = this.dbService.getUniqueString();
     const { owner, content, isComplete, parentId, endTime, groupId } = request;
@@ -29,18 +41,6 @@ export class TodoService {
       ok: true,
       message: 'successfully added todoItem ' + content,
     };
-  }
-
-  async getTodosFromDb(uid: string): Promise<TodoItem[]> {
-    const query = `SELECT * FROM TodoItems WHERE owner = "${uid}"`;
-    const todoItems = await this.dbService.doGetQuery<TodoItem>(query);
-    if (todoItems) {
-      console.log(`got ${todoItems.length} of todos `);
-      return todoItems;
-    } else {
-      console.log(`todo item're empty`);
-      return [];
-    }
   }
 
   async deleteTodoItem(request: {

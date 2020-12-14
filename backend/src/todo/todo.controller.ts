@@ -10,30 +10,42 @@ import {
   HttpException,
   Put,
   HttpStatus,
+  Query,
+  RequestMethod,
 } from '@nestjs/common';
+import { ApiService } from 'src/api/api.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { GroupService } from 'src/group/group.service';
 import { TodoService } from './todo.service';
 
-@UseGuards(JwtAuthGuard)
-@Controller('todo')
+// @UseGuards(JwtAuthGuard)
+@Controller('todos')
 export class TodoController {
-  constructor(private todoService: TodoService) {}
+  constructor(
+    private todoService: TodoService,
+    private apiService: ApiService,
+  ) {}
 
   @Get()
-  async getTodos(@Request() req): Promise<TodoItem[]> {
-    const user = req.user as User;
-    console.log(`get todo with ${user.email}`);
-    const todoItems = await this.todoService
-      .getTodosFromDb(user.uid)
-      .catch(err => {
-        console.log(`cannot query todo`, err);
-        throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
-      });
+  async getTodos(@Request() req): Promise<HttpResponse<TodoItem[]>> {
+    const { user_id, group_id } = req.query;
+
+    const filter: TodosFilter = {
+      userId: user_id,
+      groupId: group_id,
+    };
+
+    const todoItems = await this.todoService.getTodos(filter).catch(err => {
+      console.log(`cannot query todo`, err);
+      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+    });
     console.log(`${todoItems.length} of todo Items have queried`);
 
-    return todoItems;
+    return this.apiService.httpResponse(todoItems);
   }
+
+  @Get('/:todoId')
+  async getTodo() {}
 
   @Post()
   async addTodo(
@@ -52,10 +64,10 @@ export class TodoController {
     };
   }
 
-  @Delete(':id')
+  @Delete('/:todoId')
   async deleteTodo(@Request() req, @Param() params): Promise<ActionResult> {
     const user = req.user as User;
-    const id = params.id;
+    const id = params.todoId;
     console.log(`delete request from ${user.email} id : ${id}`);
 
     return await this.todoService.deleteTodoItem({ id, user }).catch(err => {
@@ -66,7 +78,7 @@ export class TodoController {
     });
   }
 
-  @Put(`:id`)
+  @Put(`/:todoId`)
   async editTodo(@Body() todo: TodoItem): Promise<ActionResult> {
     console.log(`-----update todo requested ${todo.id}-----`);
     return await this.todoService.editTodoItem(todo).catch(err => {
@@ -75,28 +87,6 @@ export class TodoController {
       return {
         ok: false,
         error_message: err.message,
-      };
-    });
-  }
-
-  @Post(`complete`)
-  async setCompleteTodos(@Body() ids: string[]): Promise<ActionResult> {
-    console.log(`----- complete ${ids.length} todos requeted -----`);
-    return this.todoService.completeTodoItems(ids).catch(err => {
-      return {
-        ok: false,
-        error_message: err,
-      };
-    });
-  }
-
-  @Post(`uncomplete`)
-  async setUncompleteTodos(@Body() ids: string[]): Promise<ActionResult> {
-    console.log(`----- uncomplete ${ids.length} todos requeted -----`);
-    return this.todoService.uncompleteTodoItems(ids).catch(err => {
-      return {
-        ok: false,
-        error_message: err,
       };
     });
   }

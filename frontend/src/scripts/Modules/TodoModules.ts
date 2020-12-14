@@ -1,37 +1,32 @@
 import { serverUrl } from "../App";
-import { createAuthPostOption, getAuthHeader, getUser } from "./AuthModules";
+import { getAuthHeader, getUser, createAuthPostOption } from "./AuthModules";
+import { doGetRequest } from "./HttpsModles";
 
-export function testReq() {
-  const url = serverUrl + `group`;
-  const headers = getAuthHeader();
-  if (headers) {
-    fetch(url, { headers });
+export function getFilter(query: string): TodosFilter {
+  const urlParams = new URLSearchParams(query);
+  const userId = urlParams.get("user_id");
+  if (!userId) {
+    throw new Error("Cannot parse user id");
   }
+  const filter: TodosFilter = {
+    userId,
+  };
+  const groupId = urlParams.get("group_id");
+  if (groupId) {
+    filter.groupId = groupId;
+  }
+  return filter;
 }
 
-export const getTodoItemsFromLoggedInUser = async (): Promise<TodoItem[]> => {
-  console.log("get todoItems");
-  const url = serverUrl + "todo";
-
-  const headers = getAuthHeader();
-  if (!headers) {
-    return [];
+export async function getTodos(filter: TodosFilter): Promise<TodoItem[]> {
+  let url = `${serverUrl}/todos?user_id=${filter.userId}`;
+  if (filter.groupId) {
+    url += `&group_id=${filter.groupId}`;
   }
 
-  const result = await fetch(url, {
-    method: "GET",
-    headers,
-  });
-
-  if (!result.ok) {
-    return [];
-  }
-
-  const todoItems = ((await result.json()) as unknown) as TodoItem[];
-  console.log(`${todoItems.length} todo items updated`);
-
+  const todoItems = await doGetRequest<TodoItem[]>(url);
   return todoItems;
-};
+}
 
 export const addTodoItem = async (props: {
   content: string;
@@ -41,7 +36,7 @@ export const addTodoItem = async (props: {
 }): Promise<ActionResult> => {
   const { content, endTime, parentId, groupId } = props;
   console.log("adding todo");
-  const url = serverUrl + "todo";
+  const url = serverUrl + "/todo";
   const user = await getUser();
 
   if (!user) {
@@ -168,17 +163,10 @@ export function getEndTimeListFromTodos(
   return [...new Set(todoItems.map((todoItem) => todoItem.end_time))];
 }
 
-export async function getGroupList(): Promise<Group[]> {
-  const url = serverUrl + `group`;
-  const headers = getAuthHeader();
-  if (!headers) {
-    throw new Error(`please login first`);
-  }
-  const response = await fetch(url, { headers });
-  const result = (await response.json()) as Group[];
-  console.log(`getting ${result.length} of group list done`);
-
-  return result;
+export async function getGroupsFromUser(userId: string): Promise<Group[]> {
+  const url = `${serverUrl}/users/${userId}/groups`;
+  const groups = await doGetRequest<Group[]>(url);
+  return groups;
 }
 
 export async function addGroup(props: {

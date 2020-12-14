@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as fs from 'fs';
-import { CERT_PATH, KEY_PATH } from './contants';
+import { CERT_PATH, KEY_PATH } from './secret/secrets';
 
 const HTTP_PORT = 80;
 const HTTPS_PORT = 443;

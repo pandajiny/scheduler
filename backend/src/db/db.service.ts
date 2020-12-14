@@ -16,23 +16,31 @@ export class DbService {
     database: 'scheduler_db',
   };
 
-  async doGetQuery<T>(query: string): Promise<T[] | null> {
+  async doGetQuery<T>(query: string): Promise<T[]> {
     console.log(`get query with ${query}`);
 
-    const queryResult = await new Promise<T[]>((res, rej) => {
+    const queryResult = await new Promise<T[]>((res, reject) => {
       const connection = mysql.createConnection(this.connectOptions);
       connection.connect(err => {
-        if (err) rej(err);
+        if (err) {
+          reject(err);
+          return;
+        }
+
         connection.query(query, (err, results) => {
-          if (err) rej(err);
+          if (err) {
+            reject(err);
+            return;
+          }
           connection.end();
-          res(results);
+          if (results) {
+            res(results);
+          } else {
+            res([]);
+          }
+          return;
         });
       });
-    }).catch(err => {
-      console.log(`------catched`);
-      console.log(err);
-      throw err;
     });
 
     return queryResult;

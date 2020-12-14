@@ -1,5 +1,5 @@
-import { LOGIN_PATH, navigateTo } from "../constants/paths";
-import { doSignOut } from "./Modules/AuthModules";
+import { doSignOut } from "./modules/AuthModules";
+import { updatePage } from "./navigate-page";
 
 export function $renderAccountState(props: {
   $container: HTMLElement;
@@ -33,7 +33,7 @@ function $renderUserState(props: { $container: HTMLElement; user: User }) {
   const handleSignUpButtonClick = () => {
     doSignOut().then((result) => {
       if (result.ok) {
-        navigateTo(LOGIN_PATH);
+        updatePage("/login");
       }
     });
   };
@@ -52,7 +52,7 @@ function $renderLoginRequire(props: { $container: HTMLElement }) {
     "login-button"
   ) as HTMLButtonElement;
   const handleLoginButtonClick = () => {
-    navigateTo(LOGIN_PATH);
+    updatePage("/login");
   };
   $loginButton.addEventListener("click", handleLoginButtonClick);
 }
@@ -158,7 +158,8 @@ export function $createContainer(props: {
   return $container;
 }
 
-export let serverUrl = "https://pandajiny.shop/";
+export let serverUrl = process.env.SERVER_URL as string;
+console.log(serverUrl);
 export const isDevMode: boolean =
   process.env.NODE_ENV?.includes("DEV") || false;
 
@@ -166,7 +167,7 @@ export const isLocalMode: boolean =
   process.env.NODE_ENV?.toString().includes("LOCAL") || false;
 
 if (isLocalMode) {
-  serverUrl = "http://localhost/";
+  serverUrl = "http://localhost";
   console.log(`app is local mode server url : ${serverUrl}`);
 } else if (isDevMode) {
   // init dev mode
@@ -176,7 +177,7 @@ if (isLocalMode) {
       console.log(`server activated`);
     } else {
       console.log(`server not responde, using localhost`);
-      serverUrl = "http://localhost/";
+      serverUrl = "http://localhost";
     }
   });
 }

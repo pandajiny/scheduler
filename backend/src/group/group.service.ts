@@ -1,20 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Action } from 'rxjs/internal/scheduler/Action';
 import { DbService } from 'src/db/db.service';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class GroupService {
-  constructor(private dbService: DbService) {}
-  async getGroupLists(uid: string): Promise<Group[]> {
-    console.log(uid);
-    console.log(`----groups`);
-    const query = `SELECT * FROM scheduler_db.Groups WHERE owner_id = "${uid}"`;
-    const groups = await this.dbService.doGetQuery(query);
-    if (groups) {
-      return groups as Group[];
-    } else {
-      return [];
+  constructor(
+    private dbService: DbService,
+    @Inject(forwardRef(() => UsersService))
+    private userService: UsersService,
+  ) {}
+  async getGroupsFromUid(uid: string): Promise<Group[]> {
+    const isUserExist = await this.userService.isUserExist(uid);
+    if (!isUserExist) {
+      throw `User Not Exist`;
     }
+
+    const query = `SELECT * FROM scheduler_db.Groups WHERE owner_id = "${uid}"`;
+    const groups = await this.dbService.doGetQuery<Group>(query);
+    return groups;
   }
 
   async addGroup(ownerId: string, groupName: string): Promise<ActionResult> {

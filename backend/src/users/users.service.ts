@@ -36,4 +36,14 @@ export class UsersService {
       }
     });
   }
+
+  async isUserExist(uid: string): Promise<boolean> {
+    const query = `SELECT email FROM Users WHERE uid = "${uid}"`;
+    const result = await this.dbService.doGetQuery(query);
+    if (result.length == 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

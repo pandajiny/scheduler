@@ -1,0 +1,19 @@
+.top-banner {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+
+  justify-content: space-between;
+
+  border-bottom: 1px white solid;
+
+  #title {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 16px;
+  }
+
+  #account-container {
+    margin-right: 8px;
+  }
+}

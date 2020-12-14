@@ -12,7 +12,10 @@ export function getAuthHeader(): AuthHeader | null {
 }
 
 export async function doLoginWithEmailAndPassword(request: LoginRequest) {
-  const url = serverUrl + "auth/login";
+  if (!isLoginFormFormatted(request)) {
+    throw "Please fill the blanks";
+  }
+  const url = `${serverUrl}/auth`;
   const response = await fetch(url, createPostOption(request));
 
   if (response.ok) {
@@ -50,8 +53,12 @@ export const doSignUp = async (
   };
 };
 
+export function isLoggedIn(user: User | null): boolean {
+  return user ? true : false;
+}
+
 export const getUser = async (): Promise<User | null> => {
-  const url = serverUrl + "auth/user";
+  const url = `${serverUrl}/auth/user`;
   const headers = getAuthHeader();
   if (!headers) {
     return null;
@@ -62,7 +69,6 @@ export const getUser = async (): Promise<User | null> => {
   });
 
   const result = (await response.json()) as User;
-  console.log(result);
   return result.email && result.uid ? result : null;
 };
 
@@ -87,3 +93,8 @@ export const createAuthPostOption = (body: Object): RequestInit => {
     body: JSON.stringify(body),
   };
 };
+
+export function isLoginFormFormatted(args: LoginRequest): boolean {
+  const { email, password } = args;
+  return email != "" && password != "";
+}
