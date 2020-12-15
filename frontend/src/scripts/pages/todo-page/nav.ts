@@ -1,7 +1,11 @@
 import { getGroupIdFromUrl } from ".";
 import { addGroup } from "../../modules/TodoModules";
 
-export function $initialNavContainer(args: { onUpdate: () => void }) {
+export function $initialNavContainer(args: {
+  userId: string;
+  onUpdate: () => void;
+}) {
+  const { userId } = args;
   const $createGroupButton = document.getElementById(
     "create-group-button"
   ) as HTMLButtonElement;
@@ -9,7 +13,7 @@ export function $initialNavContainer(args: { onUpdate: () => void }) {
   $createGroupButton.addEventListener("click", () => {
     const groupName = prompt(`new group name`, `GROUP NAME`);
     if (groupName) {
-      addGroup({ groupName }).then(args.onUpdate);
+      addGroup({ groupName, userId }).then(args.onUpdate);
     }
   });
 }

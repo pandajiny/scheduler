@@ -1,4 +1,6 @@
-#main-page {
+@use '../colors.scss';
+
+#todo-page {
   .nav-container {
     width: 100%;
 
@@ -17,6 +19,7 @@
     .nav-title {
       padding-left: 8px;
       text-align: left;
+      color: colors.$color-text-secondary;
     }
 
     .nav-message {
@@ -42,14 +45,18 @@
           padding-left: 8px;
           padding-top: 2px;
         }
-        color: colors.$color-gray;
+
         cursor: pointer;
         text-align: left;
+        * {
+          color: colors.$color-gray;
+        }
       }
 
       .nav-item.selected {
-        // font-size: 20px;
-        color: white;
+        * {
+          color: colors.$color-text-primary;
+        }
       }
     }
   }

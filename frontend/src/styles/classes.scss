@@ -2,7 +2,7 @@
 
 html {
   background-color: colors.$color-primary;
-  color: colors.$color-text;
+  color: colors.$color-text-primary;
 
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -30,7 +30,7 @@ button {
 .text-button {
   background-color: transparent;
   border: none;
-  color: colors.$color-text;
+  color: colors.$color-text-primary;
   min-width: unset;
   padding: 4px;
   margin: 0px;
@@ -38,13 +38,13 @@ button {
 
 input {
   width: 100%;
-  border: 1px colors.$color-text solid;
+  border: 1px colors.$color-text-primary solid;
   border-radius: 8px;
   outline: none;
   background-color: transparent;
   padding: 8px;
   margin: 4px;
-  color: colors.$color-text;
+  color: colors.$color-text-primary;
   font-size: 16px;
 }
 

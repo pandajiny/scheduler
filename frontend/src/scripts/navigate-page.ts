@@ -4,7 +4,7 @@ import { initTodoPage } from "./pages/todo-page";
 
 type PagePath = "todos" | "login" | "login-require";
 
-export const $mainPage = document.getElementById("main-page") as HTMLDivElement;
+export const $mainPage = document.getElementById("todo-page") as HTMLDivElement;
 
 export const $loginPage = document.getElementById(
   "login-page"
@@ -24,7 +24,6 @@ export function getPagePath(search: string): PagePath {
 }
 
 export function updatePage(page: PagePath) {
-  console.log(`ver 1.111`);
   const isLocal = location.hostname == "localhost";
   console.log(`isLocal : ${isLocal}`);
 
@@ -35,8 +34,6 @@ export function updatePage(page: PagePath) {
   });
 
   const path = getPagePath(location.search);
-  console.log(path);
-
   switch (path) {
     case "todos":
       $mainPage.classList.add("active");

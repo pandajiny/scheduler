@@ -14,8 +14,6 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { ApiService } from 'src/api/api.service';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { GroupService } from 'src/group/group.service';
 import { TodoService } from './todo.service';
 
 // @UseGuards(JwtAuthGuard)
@@ -27,7 +25,7 @@ export class TodoController {
   ) {}
 
   @Get()
-  async getTodos(@Request() req): Promise<HttpResponse<TodoItem[]>> {
+  async getTodos(@Request() req): Promise<HttpResponse<Todo[]>> {
     const { user_id, group_id } = req.query;
 
     const filter: TodosFilter = {
@@ -55,7 +53,7 @@ export class TodoController {
     const user = req.user as User;
     console.log(`adding todo witxh ${user.email}`, addRequest);
 
-    const result = await this.todoService.addTodoItem(addRequest);
+    const result = await this.todoService.createTodo(addRequest);
     console.log(`adding todo done : ${result.message}`);
 
     return {
@@ -70,7 +68,7 @@ export class TodoController {
     const id = params.todoId;
     console.log(`delete request from ${user.email} id : ${id}`);
 
-    return await this.todoService.deleteTodoItem({ id, user }).catch(err => {
+    return await this.todoService.deleteTodoItem({ todoId: id }).catch(err => {
       return {
         ok: false,
         error_message: err.message,
@@ -79,15 +77,17 @@ export class TodoController {
   }
 
   @Put(`/:todoId`)
-  async editTodo(@Body() todo: TodoItem): Promise<ActionResult> {
-    console.log(`-----update todo requested ${todo.id}-----`);
-    return await this.todoService.editTodoItem(todo).catch(err => {
-      console.log(`fucked`);
+  async updateTodo(@Body() todo: Todo): Promise<ActionResult> {
+    console.log(`-----update todo requested ${todo.todo_id}-----`);
 
-      return {
-        ok: false,
-        error_message: err.message,
-      };
-    });
+    const result = await this.todoService.updateTodo(todo);
+    if (!result.ok) {
+      throw new HttpException(
+        `err : ${result.error_message}`,
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    return result;
   }
 }

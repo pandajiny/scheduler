@@ -1,4 +1,4 @@
-import { doLoginWithEmailAndPassword } from "../../modules/AuthModules";
+import { doLoginWithEmailAndPassword } from "../../modules/auth/login";
 import { $loginPage, updatePage } from "../../navigate-page";
 
 export function initLoginPage() {

@@ -12,7 +12,7 @@
       margin-top: 4px;
       font-size: 16px;
       font-style: italic;
-      color: colors.$color-lightgray;
+      color: colors.$color-text-secondary;
     }
   }
 
@@ -21,7 +21,7 @@
     z-index: 1;
     display: none;
     flex-direction: column;
-    background-color: colors.$color-text;
+    background-color: colors.$color-text-primary;
     width: 150px;
     border-radius: 4px;
 
@@ -29,9 +29,9 @@
       padding: 6px;
       text-align: center;
       text-decoration: none;
-      color: colors.$color-primary;
+      color: colors.$color-text-primary;
       font-size: 18px;
-      border-bottom: 1px colors.$color-gray solid;
+      border-bottom: 1px colors.$color-text-secondary solid;
       cursor: pointer;
     }
   }

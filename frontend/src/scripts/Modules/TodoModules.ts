@@ -1,6 +1,10 @@
 import { serverUrl } from "../App";
-import { getAuthHeader, createAuthPostOption } from "./AuthModules";
-import { doGetRequest } from "./HttpsModles";
+import {
+  doDeleteRequest,
+  doGetRequest,
+  doPostRequest,
+  doPutRequest,
+} from "./HttpsModles";
 
 export function getFilter(query: string): TodosFilter {
   const urlParams = new URLSearchParams(query);
@@ -18,131 +22,28 @@ export function getFilter(query: string): TodosFilter {
   return filter;
 }
 
-export async function getTodos(filter: TodosFilter): Promise<TodoItem[]> {
-  let url = `${serverUrl}/todos?user_id=${filter.userId}`;
-  if (filter.groupId) {
-    url += `&group_id=${filter.groupId}`;
-  }
-
-  const todoItems = await doGetRequest<TodoItem[]>(url);
-  return todoItems;
-}
-
-export const addTodo = async (
-  request: AddTodoItemRequest
-): Promise<ActionResult> => {
-  console.log("adding todo");
-  const url = `${serverUrl}/todo`;
-
-  const result = await fetch(url, createAuthPostOption(request)).then(
-    async (resp) => await resp.json()
-  );
-  console.log(`adding todo done`, result);
-
-  return {
-    ok: true,
-    message: "adding todo done",
-  };
-};
-
-export const deleteTodoItem = async (request: { id: string }) => {
-  const { id } = request;
-  const url = serverUrl + `todo/${id}`;
-
-  const headers = getAuthHeader();
-  if (!headers) {
-    throw "please login first";
-  }
-
-  const resp = await fetch(url, {
-    method: "DELETE",
-    headers,
+export async function editTodo(todo: Todo): Promise<ActionResult> {
+  const url = `${serverUrl}/todos/${todo.todo_id}`;
+  const result = await doPutRequest<ActionResult>({
+    url,
+    body: todo,
   });
-  const result = await resp.json();
-
-  console.log(`delete result`, result);
-  return result as ActionResult;
-};
-
-export async function editTodo(todo: TodoItem): Promise<ActionResult> {
-  const url = serverUrl + `todo/${todo.id}`;
-
-  const headers = Object.assign(
-    { "Content-Type": "application/json" },
-    getAuthHeader()
-  );
-
-  const resp = await fetch(url, {
-    headers,
-    method: "PUT",
-    body: JSON.stringify(todo),
-  });
-
-  if (!resp.ok) {
-    return {
-      ok: false,
-      error_message: await resp.json().then((r) => r.message),
-    };
-  }
-
-  const result = await resp.json();
-  console.log(`edit todo result`, result);
 
   return result;
 }
 
-export async function completeTodos(ids: string[]): Promise<ActionResult> {
-  const url = serverUrl + `todo/complete`;
-
-  const headers = Object.assign(
-    { "Content-Type": "application/json" },
-    getAuthHeader()
-  );
-
-  const resp = await fetch(url, {
-    headers,
-    method: "POST",
-    body: JSON.stringify(ids),
+export async function deleteTodo(todoId: string): Promise<ActionResult> {
+  const url = `${serverUrl}/todos/${todoId}`;
+  const result = await doDeleteRequest<ActionResult>({
+    url,
   });
-
-  if (!resp.ok) {
-    throw new Error(await resp.json());
-  }
-
-  const result = await resp.json();
-  console.log(`complete todos result`, result);
-
-  return result;
-}
-
-export async function uncompleteTodos(ids: string[]): Promise<ActionResult> {
-  const url = serverUrl + `todo/uncomplete`;
-
-  const headers = Object.assign(
-    { "Content-Type": "application/json" },
-    getAuthHeader()
-  );
-
-  const resp = await fetch(url, {
-    headers,
-    method: "POST",
-    body: JSON.stringify(ids),
-  });
-
-  if (!resp.ok) {
-    throw new Error(await resp.json());
-  }
-
-  const result = await resp.json();
-  console.log(`uncomplete todos result`, result);
-
   return result;
 }
 
 export function getEndTimeListFromTodos(
-  todoItems: TodoItem[]
+  todoItems: Todo[]
 ): Array<number | null> {
-  return [...new Set(todoItems.map((todoItem) => todoItem.end_time))];
+  return [...new Set(todoItems.map((todoItem) => todoItem.limit_datetime))];
 }
 
 export async function getGroupsFromUser(userId: string): Promise<Group[]> {
@@ -152,26 +53,21 @@ export async function getGroupsFromUser(userId: string): Promise<Group[]> {
 }
 
 export async function addGroup(props: {
+  userId: string;
   groupName: string;
 }): Promise<ActionResult> {
-  const { groupName } = props;
+  const { groupName, userId } = props;
   console.log(`add group with : ${groupName}`);
-  const url = serverUrl + `group`;
-  const headers = Object.assign(POST_HEADERS, getAuthHeader());
+  const url = `${serverUrl}/users/${userId}/groups`;
+
   const request: AddGroupRequest = {
     groupName,
   };
-  const response = await fetch(url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(request),
+  const result = await doPostRequest<ActionResult>({
+    url,
+    body: request,
   });
 
-  const result = (await response.json()) as ActionResult;
   console.log(`add group done, ${result.message}`);
   return result;
 }
-
-const POST_HEADERS = {
-  "Content-Type": "application/json",
-};

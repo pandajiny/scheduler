@@ -1,4 +1,4 @@
-import { doSignOut } from "./modules/AuthModules";
+import { doSignOut } from "./modules/auth";
 import { updatePage } from "./navigate-page";
 
 export function $renderAccountState(props: {

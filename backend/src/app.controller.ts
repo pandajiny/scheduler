@@ -12,7 +12,7 @@ export class AppController {
   @Get()
   async isServerActivated(): Promise<string> {
     const connection = this.dbService.dbInstance.createConnection(
-      this.dbService.connectOptions,
+      this.dbService.getConnectOptions('scheduler_db'),
     );
     console.log(`server running check`);
 

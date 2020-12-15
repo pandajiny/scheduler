@@ -8,6 +8,7 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
+import { ApiService } from 'src/api/api.service';
 import { UsersService } from 'src/users/users.service';
 import { resourceLimits } from 'worker_threads';
 import { AuthService } from './auth.service';
@@ -19,31 +20,38 @@ export class AuthController {
   constructor(
     private usersService: UsersService,
     private authService: AuthService,
+    private apiService: ApiService,
   ) {}
 
+  // get user information from jwt token
   @UseGuards(JwtAuthGuard)
   @Get('user')
-  async getUser(@Request() req): Promise<User> {
+  async getUser(@Request() req): Promise<HttpResponse<User>> {
     const email = req.user.email;
     console.log(`user information requested from ${email}`);
     const user = await this.usersService.findUserFromEmail(email).catch(err => {
       throw new HttpException(err, HttpStatus.UNAUTHORIZED);
     });
+    console.log(`user found ${user.email}`);
 
-    return user;
+    return this.apiService.httpResponse(user);
   }
 
+  // request : LoginRequest
+  // result : LoginResult
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async doLogin(@Request() req) {
-    console.log(`login requested`, req.user);
-    return this.authService.doLogin(req.user).catch(err => {
-      throw new HttpException(err, HttpStatus.UNAUTHORIZED);
-    });
+  async doLogin(@Request() req): Promise<HttpResponse<LoginResult>> {
+    const user: User = req.user;
+    console.log(`login requested from ${user.email}`);
+    const result = await this.authService.doLogin(user);
+    return this.apiService.httpResponse<LoginResult>(result);
   }
 
   @Post('signup')
-  async signup(@Body() request: SignUpRequest): Promise<LoginResult> {
+  async signup(
+    @Body() request: SignUpRequest,
+  ): Promise<HttpResponse<LoginResult>> {
     console.log(`signup requested`, request);
 
     const { email, name, password } = request;
@@ -60,7 +68,6 @@ export class AuthController {
         throw new HttpException(err, HttpStatus.FORBIDDEN);
       });
 
-    console.log(`signup passed`, result);
-    return result;
+    return this.apiService.httpResponse(result);
   }
 }

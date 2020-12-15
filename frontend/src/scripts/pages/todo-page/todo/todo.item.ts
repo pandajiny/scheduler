@@ -1,21 +1,24 @@
 import { keyInputListener } from "../../../App";
 import { convertTimestampToString } from "../../../modules/TimeModules";
 import {
-  editTodo,
-  deleteTodoItem,
-  completeTodos,
+  deleteTodo,
+  editTodo as updateTodo,
 } from "../../../modules/TodoModules";
 
-export function $TodoItem(todo: TodoItem, onUpdate: () => void): HTMLElement {
+export function $TodoItem(todo: Todo, onUpdate: () => void): HTMLElement {
   const $todoItem = document.createElement("div");
-  $todoItem.id = `todo-${todo.id}`;
+  $todoItem.id = `todo-${todo.todo_id}`;
   $todoItem.className = `todo`;
   $todoItem.innerHTML = `
     <label class="todo-content-container" class="${
-      todo.isComplete ? "done" : ""
+      todo.complete_datetime ? "done" : ""
     }">
       <p class="date">
-        ${todo.end_time ? convertTimestampToString(todo.end_time) : "-"}
+        ${
+          todo.limit_datetime
+            ? convertTimestampToString(todo.limit_datetime)
+            : "-"
+        }
       </p>
       <p class="content">${todo.content}</p>
       <div class="content-edit-container unactive">
@@ -25,7 +28,7 @@ export function $TodoItem(todo: TodoItem, onUpdate: () => void): HTMLElement {
         }" placeholder="...content here" />
       </div>
     </label>
-    <div class="action-buttons" class="${todo.isComplete ? "done" : ""}">
+    <div class="action-buttons" class="${todo.complete_datetime ? "done" : ""}">
       <button class="edit-button text-button">✎</button>
       <button class="done-button text-button">✓</button>
       <button class="delete-button text-button">✖</button>
@@ -45,7 +48,7 @@ export function $TodoItem(todo: TodoItem, onUpdate: () => void): HTMLElement {
     keyInputListener(ev, () => {
       if (todo.content != $contentEdit.value) {
         todo.content = $contentEdit.value;
-        editTodo(todo).then(onUpdate);
+        updateTodo(todo).then(onUpdate);
       } else {
         unsetContentEditMode();
       }
@@ -58,7 +61,7 @@ export function $TodoItem(todo: TodoItem, onUpdate: () => void): HTMLElement {
   ) as HTMLButtonElement;
 
   $deleteButton.addEventListener("click", () =>
-    handleDeleteButtonClick(todo.id!)
+    deleteTodo(todo.todo_id).then(onUpdate)
   );
 
   // edit button
@@ -67,21 +70,8 @@ export function $TodoItem(todo: TodoItem, onUpdate: () => void): HTMLElement {
   ) as HTMLButtonElement;
 
   $editButton.addEventListener("click", () => {
-    handleEditButtonClick();
-  });
-
-  const $doneButton = $todoItem.querySelector(
-    `.done-button`
-  ) as HTMLButtonElement;
-  $doneButton.addEventListener("click", handleDoneButtonClick);
-
-  function handleDeleteButtonClick(id: string) {
-    deleteTodoItem({ id }).then(onUpdate);
-  }
-
-  function handleEditButtonClick() {
     setContentEditMode();
-  }
+  });
 
   function setContentEditMode() {
     $contentEditContainer.className = "active";
@@ -97,10 +87,13 @@ export function $TodoItem(todo: TodoItem, onUpdate: () => void): HTMLElement {
     $content.className = "active";
   }
 
-  function handleDoneButtonClick() {
-    if (todo.id) {
-      completeTodos([todo.id]).then(onUpdate);
-    }
-  }
+  const $doneButton = $todoItem.querySelector(
+    `.done-button`
+  ) as HTMLButtonElement;
+  $doneButton.addEventListener("click", () => {
+    todo.complete_datetime = new Date().getTime();
+    updateTodo(todo).then(onUpdate);
+  });
+
   return $todoItem;
 }

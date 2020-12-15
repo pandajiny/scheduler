@@ -1,15 +1,14 @@
+import { group } from "console";
+import { stringify } from "querystring";
 import { $renderAccountState } from "../../App";
-import { getUser } from "../../modules/AuthModules";
-import {
-  getTodos,
-  getGroupsFromUser,
-  getFilter,
-} from "../../modules/TodoModules";
+import { getUser } from "../../modules/auth";
+import { getTodos } from "../../modules/todo";
+import { getGroupsFromUser, getFilter } from "../../modules/TodoModules";
 import { updatePage } from "../../navigate-page";
 import { $initialNavContainer, $updateNavItems } from "./nav";
 
 import { $initialAddTodoForm } from "./todo/todo.add-form";
-import { $updateTodolist } from "./todo/todo.list";
+import { $updateTitle, $updateTodolist } from "./todo/todo.list";
 
 let user: User | null;
 
@@ -20,7 +19,7 @@ export async function initTodoPage() {
     history.pushState({}, "", `?page=todos&user_id=${user.uid}`);
 
     $initialAccountState(user);
-    $initialNavContainer({ onUpdate: $updateView });
+    $initialNavContainer({ userId: user.uid, onUpdate: $updateView });
 
     $updateView();
   } else {
@@ -29,7 +28,7 @@ export async function initTodoPage() {
 }
 
 function $initialAccountState(user: User) {
-  (document.getElementById("main-page") as HTMLElement).style.display = "flex";
+  (document.getElementById("todo-page") as HTMLElement).style.display = "flex";
   const $accountContainer = document.getElementById(
     "account-container"
   ) as HTMLElement;
@@ -42,16 +41,31 @@ async function $updateView() {
     return;
   }
 
-  const groups = await getGroupsFromUser(user.uid);
+  const filter = getFilter(window.location.search);
+  const [groups, todos] = await Promise.all([
+    getGroupsFromUser(user.uid),
+    getTodos(filter),
+  ]);
+
   $updateNavItems({
     groups,
     userId: user.uid,
     onUpdate: $updateView,
   });
 
-  const filter = getFilter(window.location.search);
-  const todos = await getTodos(filter);
   $updateTodolist({ todos, onUpdate: $updateView });
+  const group = groups.find((g) => g.group_id == filter.groupId);
+  if (group) {
+    $updateTitle({
+      title: group.group_name,
+      groupId: group.group_id,
+    });
+  } else {
+    $updateTitle({
+      title: "All todos",
+    });
+  }
+
   $initialAddTodoForm({ onUpdate: $updateView });
 }
 

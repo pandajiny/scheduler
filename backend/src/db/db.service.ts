@@ -3,24 +3,27 @@ import * as mysql from 'mysql';
 import { dbHost, dbPassword } from 'src/secret/secrets';
 import { v4 as uuidv4 } from 'uuid';
 
+type DbName = 'scheduler_db';
 @Injectable()
 export class DbService {
   dbInstance = mysql;
 
-  connectOptions: mysql.ConnectionConfig = {
-    host: dbHost,
-    // socketPath: '/var/run/mysqld/mysqld.sock',
-    port: 3306,
-    user: 'root',
-    password: dbPassword,
-    database: 'scheduler_db',
-  };
+  getConnectOptions(dbName: DbName): mysql.ConnectionConfig {
+    return {
+      host: dbHost,
+      port: 3306,
+      user: 'root',
+      password: dbPassword,
+      database: dbName,
+    };
+  }
 
-  async doGetQuery<T>(query: string): Promise<T[]> {
+  async doGetQuery<T>(query: string, dbName: DbName): Promise<T[]> {
     console.log(`get query with ${query}`);
 
     const queryResult = await new Promise<T[]>((res, reject) => {
-      const connection = mysql.createConnection(this.connectOptions);
+      const options = this.getConnectOptions(dbName);
+      const connection = mysql.createConnection(options);
       connection.connect(err => {
         if (err) {
           reject(err);
@@ -32,7 +35,9 @@ export class DbService {
             reject(err);
             return;
           }
+
           connection.end();
+
           if (results) {
             res(results);
           } else {
@@ -43,16 +48,19 @@ export class DbService {
       });
     });
 
+    console.log(`get query done`);
     return queryResult;
   }
 
-  async doWriteQuery(query: string): Promise<ActionResult> {
+  async doWriteQuery(query: string, dbName: DbName): Promise<ActionResult> {
     console.log(`write query with ${query}`);
     const queryResult = await new Promise<ActionResult>((res, rej) => {
-      const connection = mysql.createConnection(this.connectOptions);
+      const options = this.getConnectOptions(dbName);
+      const connection = mysql.createConnection(options);
       connection.query(query, (err, results) => {
         if (err) {
           rej(err);
+          return;
         }
 
         res({
@@ -61,8 +69,7 @@ export class DbService {
         });
       });
     });
-
-    console.log(`writing query done`);
+    console.log(`write query done`);
     return queryResult;
   }
 

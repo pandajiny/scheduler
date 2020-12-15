@@ -3,7 +3,7 @@ import { $mainPage } from "../../../navigate-page";
 import { $TodoItem } from "./todo.item";
 
 export async function $updateTodolist(args: {
-  todos: TodoItem[];
+  todos: Todo[];
   onUpdate: () => void;
 }) {
   const { todos } = args;
@@ -17,25 +17,13 @@ export async function $updateTodolist(args: {
   });
 }
 
-export function $updateTitle(filter: TodosFilter, groups: Group[]) {
+export function $updateTitle(args: { title: string; groupId?: string }) {
+  const { title } = args;
   const $title = document.getElementById(`todo-container-title`) as HTMLElement;
   const $editTitle = document.getElementById(
     `todo-container-title-edit`
   ) as HTMLInputElement;
 
-  let title: string = "Todo title not recognized ";
-
-  if (filter.groupId) {
-    const group = groups.find((group) => group.group_id == filter.groupId);
-    console.log(group);
-    if (group) {
-      title = group.group_name;
-    } else {
-      title = `unrecognized Group`;
-    }
-  } else {
-    title = `All Todos`;
-  }
   $title.textContent = title;
   $editTitle.value = title;
   $editTitle.onblur = unsetEditTitleMode;

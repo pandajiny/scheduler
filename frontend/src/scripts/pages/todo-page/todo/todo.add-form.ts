@@ -1,6 +1,6 @@
 import { $setAlertMessage, getUserIdFromUrl, getGroupIdFromUrl } from "..";
 import { convertStringToTimestamp } from "../../../modules/TimeModules";
-import { addTodo } from "../../../modules/TodoModules";
+import { addTodo } from "../../../modules/todo";
 
 export function $initialAddTodoForm(args: { onUpdate: () => void }) {
   const $addingForm = document.getElementById(

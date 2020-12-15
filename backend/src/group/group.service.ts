@@ -16,25 +16,29 @@ export class GroupService {
       throw `User Not Exist`;
     }
 
-    const query = `SELECT * FROM scheduler_db.Groups WHERE owner_id = "${uid}"`;
-    const groups = await this.dbService.doGetQuery<Group>(query);
+    const query = `SELECT * FROM todo_groups WHERE owner_id="${uid}"`;
+    const groups = await this.dbService.doGetQuery<Group>(
+      query,
+      'scheduler_db',
+    );
     return groups;
   }
 
   async addGroup(ownerId: string, groupName: string): Promise<ActionResult> {
     const groupId = this.dbService.getUniqueString();
     const createTime = this.dbService.getCurrentTime();
+
     const query = `
-        INSERT INTO scheduler_db.Groups (group_id, group_name, owner_id, create_time)
+        INSERT INTO todo_groups
+        (group_id, group_name, owner_id, create_time)
         VALUES ("${groupId}", "${groupName}", "${ownerId}", ${createTime});
       `;
 
-    const dbResult = await this.dbService.doWriteQuery(query);
-    console.log(`adding group query :  ${query} has done`, dbResult);
+    const dbResult = await this.dbService.doWriteQuery(query, 'scheduler_db');
 
     return {
       ok: true,
-      message: `successfully create new Group ${groupName}`,
+      message: dbResult.message,
     };
   }
 }
