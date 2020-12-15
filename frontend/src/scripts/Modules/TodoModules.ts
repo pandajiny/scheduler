@@ -1,5 +1,5 @@
 import { serverUrl } from "../App";
-import { getAuthHeader, getUser, createAuthPostOption } from "./AuthModules";
+import { getAuthHeader, createAuthPostOption } from "./AuthModules";
 import { doGetRequest } from "./HttpsModles";
 
 export function getFilter(query: string): TodosFilter {
@@ -28,29 +28,11 @@ export async function getTodos(filter: TodosFilter): Promise<TodoItem[]> {
   return todoItems;
 }
 
-export const addTodoItem = async (props: {
-  content: string;
-  parentId: string | null;
-  endTime: number | null;
-  groupId: string | null;
-}): Promise<ActionResult> => {
-  const { content, endTime, parentId, groupId } = props;
+export const addTodo = async (
+  request: AddTodoItemRequest
+): Promise<ActionResult> => {
   console.log("adding todo");
-  const url = serverUrl + "/todo";
-  const user = await getUser();
-
-  if (!user) {
-    throw new Error("please login first");
-  }
-
-  const request: AddTodoItemRequest = {
-    content,
-    parentId: parentId || null,
-    isComplete: false,
-    owner: user.uid,
-    endTime: endTime || null,
-    groupId: groupId || null,
-  };
+  const url = `${serverUrl}/todo`;
 
   const result = await fetch(url, createAuthPostOption(request)).then(
     async (resp) => await resp.json()

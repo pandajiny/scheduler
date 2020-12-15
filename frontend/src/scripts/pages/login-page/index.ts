@@ -27,12 +27,12 @@ export function initLoginPage() {
         throw err;
       })
       .then(() => {
-        updatePage("/todos");
+        updatePage("todos");
       });
   }
 
   const $signupButton = document.getElementById(
     "signup-button"
   ) as HTMLButtonElement;
-  $signupButton.addEventListener("click", () => updatePage("/login"));
+  $signupButton.addEventListener("click", () => updatePage("login"));
 }

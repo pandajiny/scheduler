@@ -33,7 +33,7 @@ function $renderUserState(props: { $container: HTMLElement; user: User }) {
   const handleSignUpButtonClick = () => {
     doSignOut().then((result) => {
       if (result.ok) {
-        updatePage("/login");
+        updatePage("login");
       }
     });
   };
@@ -52,7 +52,7 @@ function $renderLoginRequire(props: { $container: HTMLElement }) {
     "login-button"
   ) as HTMLButtonElement;
   const handleLoginButtonClick = () => {
-    updatePage("/login");
+    updatePage("login");
   };
   $loginButton.addEventListener("click", handleLoginButtonClick);
 }

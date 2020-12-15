@@ -2,7 +2,7 @@ import { initLoginPage } from "./pages/login-page";
 import { initLoginRequirePage } from "./pages/login-require-page";
 import { initTodoPage } from "./pages/todo-page";
 
-type Path = "/todos" | "/login" | "/login-require";
+type PagePath = "todos" | "login" | "login-require";
 
 export const $mainPage = document.getElementById("main-page") as HTMLDivElement;
 
@@ -17,32 +17,44 @@ export const $loginRequirePage = document.getElementById(
 const $pages = [$mainPage, $loginPage, $loginRequirePage];
 
 // initial script
-updatePage(location.pathname as Path);
+updatePage("todos");
 
-export function updatePage(path: Path) {
-  history.pushState({ hello: "world" }, "hello", path);
+export function getPagePath(search: string): PagePath {
+  return new URLSearchParams(search).get("page") as PagePath;
+}
+
+export function updatePage(page: PagePath) {
+  console.log(`ver 1.111`);
+  const isLocal = location.hostname == "localhost";
+  console.log(`isLocal : ${isLocal}`);
+
+  history.pushState({ hello: "world" }, "hello", `?page=${page}`);
 
   $pages.forEach(($page) => {
     $page.className = "page";
   });
 
+  const path = getPagePath(location.search);
+  console.log(path);
+
   switch (path) {
-    case "/todos":
+    case "todos":
       $mainPage.classList.add("active");
       initTodoPage();
       break;
 
-    case "/login":
+    case "login":
       $loginPage.classList.add("active");
       initLoginPage();
       break;
 
-    case "/login-require":
+    case "login-require":
       $loginRequirePage.classList.add("active");
       initLoginRequirePage();
       break;
 
-    default:
-      console.log("404");
+    // default:
+    //   console.log("404");
+    //   updatePage("todos");
   }
 }

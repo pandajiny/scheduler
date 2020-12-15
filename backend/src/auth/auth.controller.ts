@@ -35,7 +35,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req) {
+  async doLogin(@Request() req) {
     console.log(`login requested`, req.user);
     return this.authService.doLogin(req.user).catch(err => {
       throw new HttpException(err, HttpStatus.UNAUTHORIZED);

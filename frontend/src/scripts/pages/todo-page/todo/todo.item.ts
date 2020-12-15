@@ -1,10 +1,10 @@
-import { keyInputListener } from "../../App";
-import { convertTimestampToString } from "../../modules/TimeModules";
+import { keyInputListener } from "../../../App";
+import { convertTimestampToString } from "../../../modules/TimeModules";
 import {
   editTodo,
   deleteTodoItem,
   completeTodos,
-} from "../../modules/TodoModules";
+} from "../../../modules/TodoModules";
 
 export function $TodoItem(todo: TodoItem, onUpdate: () => void): HTMLElement {
   const $todoItem = document.createElement("div");

@@ -15,7 +15,7 @@ export async function doLoginWithEmailAndPassword(request: LoginRequest) {
   if (!isLoginFormFormatted(request)) {
     throw "Please fill the blanks";
   }
-  const url = `${serverUrl}/auth`;
+  const url = `${serverUrl}/auth/login`;
   const response = await fetch(url, createPostOption(request));
 
   if (response.ok) {

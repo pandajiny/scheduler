@@ -8,6 +8,6 @@ export function initLoginRequirePage() {
   $loginButton.addEventListener("click", handleLoginButtonClick);
 
   function handleLoginButtonClick() {
-    updatePage("/login");
+    updatePage("login");
   }
 }
