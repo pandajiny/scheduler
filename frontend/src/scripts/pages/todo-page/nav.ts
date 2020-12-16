@@ -1,5 +1,5 @@
 import { getGroupIdFromUrl } from ".";
-import { addGroup } from "../../modules/TodoModules";
+import { addGroup } from "../../modules/groups";
 
 export function $initialNavContainer(args: {
   userId: string;

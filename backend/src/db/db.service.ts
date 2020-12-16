@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import * as mysql from 'mysql';
 import { dbHost, dbPassword } from 'src/secret/secrets';
-import { v4 as uuidv4 } from 'uuid';
+import { DbName } from './query';
 
-type DbName = 'scheduler_db';
 @Injectable()
 export class DbService {
   dbInstance = mysql;
 
-  getConnectOptions(dbName: DbName): mysql.ConnectionConfig {
+  getConnectOptions(dbName: string): mysql.ConnectionConfig {
     return {
       host: dbHost,
       port: 3306,
@@ -18,7 +17,7 @@ export class DbService {
     };
   }
 
-  async doGetQuery<T>(query: string, dbName: DbName): Promise<T[]> {
+  async doGetQuery<T>(query: string, dbName: string): Promise<T[]> {
     console.log(`get query with ${query}`);
 
     const queryResult = await new Promise<T[]>((res, reject) => {
@@ -52,7 +51,7 @@ export class DbService {
     return queryResult;
   }
 
-  async doWriteQuery(query: string, dbName: DbName): Promise<ActionResult> {
+  async doWriteQuery(query: string, dbName: string): Promise<ActionResult> {
     console.log(`write query with ${query}`);
     const queryResult = await new Promise<ActionResult>((res, rej) => {
       const options = this.getConnectOptions(dbName);
@@ -71,13 +70,5 @@ export class DbService {
     });
     console.log(`write query done`);
     return queryResult;
-  }
-
-  getUniqueString(): string {
-    return uuidv4();
-  }
-
-  getCurrentTime(): number {
-    return new Date().getTime();
   }
 }

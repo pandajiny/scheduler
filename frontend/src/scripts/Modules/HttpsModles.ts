@@ -64,6 +64,7 @@ export async function doPostRequest<T>(args: {
 
 export async function doDeleteRequest<T>(args: { url: string }) {
   const { url } = args;
+  console.log(`delete request to ${url}`);
   const response = await fetch(url, getRequestOptions("DELETE"));
 
   if (!response.ok) {
@@ -81,7 +82,7 @@ export async function doDeleteRequest<T>(args: { url: string }) {
 
 export async function doPutRequest<T>(args: { url: string; body: Object }) {
   const { body, url } = args;
-  console.log(`post request to ${url}`);
+  console.log(`put request to ${url}`);
   const response = await fetch(url, getRequestOptions("PUT", body));
 
   if (!response.ok) {
@@ -93,6 +94,7 @@ export async function doPutRequest<T>(args: { url: string; body: Object }) {
   if (!result.ok || !result.data) {
     throw new Error(result.error_message);
   }
+  console.log(`put request done / ${url}`);
 
   return result.data;
 }

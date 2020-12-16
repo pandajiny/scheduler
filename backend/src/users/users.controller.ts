@@ -66,17 +66,39 @@ export class UsersController {
   async getGroup() {}
 
   @Post('/:uid/groups')
-  async createGroup() {}
+  async addGroup(@Request() req): Promise<HttpResponse<ActionResult>> {
+    const request = req.body as AddGroupRequest;
+
+    const result = await this.groupService.addGroup(request).catch(err => {
+      console.error(err);
+      throw new HttpException(`${err}`, HttpStatus.FORBIDDEN);
+    });
+
+    return this.apiService.httpResponse(result);
+  }
 
   @Delete('/:uid/groups/:groupId')
   async deleteGroup(@Request() req) {
-    const { group_id: groupId } = req.params;
-    console.log(groupId);
-    return 'not yet';
+    const { groupId } = req.params;
+    const result = await this.groupService.deleteGroup(groupId).catch(err => {
+      console.error(err);
+      throw new HttpException(`${err}`, HttpStatus.FORBIDDEN);
+    });
+
+    return this.apiService.httpResponse(result);
   }
 
   @Put('/:uid/groups/:groupId')
-  async updateGroup(@Request() req) {}
+  async updateGroup(@Request() req): Promise<HttpResponse<ActionResult>> {
+    const group: Group = req.body;
+    console.log(`update group reques / group id :  ${group.group_id}`);
+    const result = await this.groupService.updateGroup(group).catch(err => {
+      console.error(err);
+      throw new HttpException(`${err}`, HttpStatus.FORBIDDEN);
+    });
+    console.log(`update group done / group id : ${group.group_id}`);
+    return this.apiService.httpResponse(result);
+  }
 
   @Get('/:uid/groups/:groupId/todos')
   async getTodosFromGroup() {}

@@ -1,4 +1,5 @@
 import { $setAlertMessage, getUserIdFromUrl, getGroupIdFromUrl } from "..";
+import { setEnterInputListener } from "../../../modules/DocumnetModules";
 import { convertStringToTimestamp } from "../../../modules/TimeModules";
 import { addTodo } from "../../../modules/todo";
 
@@ -13,44 +14,44 @@ export function $initialAddTodoForm(args: { onUpdate: () => void }) {
     "#date-select"
   ) as HTMLInputElement;
 
-  $addTodoInput.addEventListener("keypress", handleAddTodoInputKeypress);
-  function handleAddTodoInputKeypress(ev: KeyboardEvent) {
-    if (ev.key == "Enter") {
-      $setAlertMessage("");
+  $addTodoInput.addEventListener("keypress", (ev) =>
+    setEnterInputListener(ev, submitTodo)
+  );
 
-      const userId = getUserIdFromUrl();
-      if (!userId) {
-        throw `cannot parse user id`;
-      }
+  function submitTodo() {
+    $setAlertMessage("");
 
-      const groupId = getGroupIdFromUrl();
-
-      const content = $addTodoInput.value;
-      if (!content) {
-        $setAlertMessage("Can't create todo with no content");
-        return;
-      }
-
-      const endTime =
-        $dateSelect.value != ""
-          ? convertStringToTimestamp($dateSelect.value)
-          : null;
-
-      addTodo({
-        content,
-        endTime,
-        groupId,
-        isComplete: false,
-        owner: userId,
-        parentId: null,
-      }).then((result) => {
-        if (result.ok) {
-          $addTodoInput.value = "";
-          args.onUpdate();
-        } else {
-          throw result.error_message;
-        }
-      });
+    const userId = getUserIdFromUrl();
+    if (!userId) {
+      throw `cannot parse user id`;
     }
+
+    const groupId = getGroupIdFromUrl();
+
+    const content = $addTodoInput.value;
+    $addTodoInput.value = "";
+    if (!content) {
+      $setAlertMessage("Can't create todo with no content");
+      return;
+    }
+
+    const limitDatetime =
+      $dateSelect.value != ""
+        ? convertStringToTimestamp($dateSelect.value)
+        : null;
+
+    addTodo({
+      content,
+      limitDatetime,
+      groupId,
+      ownerId: userId,
+      parentTodoId: null,
+    }).then((result) => {
+      if (result.ok) {
+        args.onUpdate();
+      } else {
+        throw result.error_message;
+      }
+    });
   }
 }

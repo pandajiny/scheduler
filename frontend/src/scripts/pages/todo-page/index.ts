@@ -2,8 +2,8 @@ import { group } from "console";
 import { stringify } from "querystring";
 import { $renderAccountState } from "../../App";
 import { getUser } from "../../modules/auth";
-import { getTodos } from "../../modules/todo";
-import { getGroupsFromUser, getFilter } from "../../modules/TodoModules";
+import { getGroupsFromUser } from "../../modules/groups";
+import { getFilter, getTodos } from "../../modules/todo";
 import { updatePage } from "../../navigate-page";
 import { $initialNavContainer, $updateNavItems } from "./nav";
 
@@ -58,11 +58,13 @@ async function $updateView() {
   if (group) {
     $updateTitle({
       title: group.group_name,
-      groupId: group.group_id,
+      group: group,
+      onUpdate: $updateView,
     });
   } else {
     $updateTitle({
       title: "All todos",
+      onUpdate: $updateView,
     });
   }
 

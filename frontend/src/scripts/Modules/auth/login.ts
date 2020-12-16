@@ -1,6 +1,5 @@
 import { isLoginFormFormatted } from ".";
 import { serverUrl } from "../../App";
-import { doPostRequest } from "../HttpsModles";
 
 export async function doLoginWithEmailAndPassword(
   request: LoginRequest
@@ -10,16 +9,27 @@ export async function doLoginWithEmailAndPassword(
   }
 
   const url = `${serverUrl}/auth/login`;
-  const result = await doPostRequest<LoginResult>({
-    url,
-    body: request,
-  }).catch((e) => {
-    throw e;
+  const response = await fetch(url, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
   });
 
-  localStorage.setItem("jwtToken", result.access_token);
-  return {
-    ok: true,
-    message: `Login Success, Welcome ${request.email}`,
-  };
+  const result = (await response.json()) as HttpResponse<LoginResult>;
+
+  const token = result.data?.access_token;
+  if (token) {
+    localStorage.setItem("jwtToken", token);
+    return {
+      ok: true,
+      message: `Login Success, Welcome ${request.email}`,
+    };
+  } else {
+    return {
+      ok: false,
+      error_message: `cannot login`,
+    };
+  }
 }

@@ -13,6 +13,7 @@ import {
   Query,
   RequestMethod,
 } from '@nestjs/common';
+import { timeStamp } from 'console';
 import { ApiService } from 'src/api/api.service';
 import { TodoService } from './todo.service';
 
@@ -46,34 +47,30 @@ export class TodoController {
   async getTodo() {}
 
   @Post()
-  async addTodo(
-    @Request() req,
-    @Body() addRequest: AddTodoItemRequest,
-  ): Promise<ActionResult> {
-    const user = req.user as User;
-    console.log(`adding todo witxh ${user.email}`, addRequest);
+  async addTodo(@Request() req): Promise<HttpResponse<ActionResult>> {
+    const request: AddTodoRequest = req.body;
+    console.log(`adding todo / content  : ${request.content}`);
 
-    const result = await this.todoService.createTodo(addRequest);
+    const result = await this.todoService.createTodo(request).catch(err => {
+      console.error(err);
+      throw new HttpException(`${err}`, HttpStatus.FORBIDDEN);
+    });
     console.log(`adding todo done : ${result.message}`);
 
-    return {
-      ok: true,
-      message: 'testing api',
-    };
+    return this.apiService.httpResponse(result);
   }
 
   @Delete('/:todoId')
-  async deleteTodo(@Request() req, @Param() params): Promise<ActionResult> {
-    const user = req.user as User;
-    const id = params.todoId;
-    console.log(`delete request from ${user.email} id : ${id}`);
+  async deleteTodo(@Request() req): Promise<HttpResponse<ActionResult>> {
+    const { todoId } = req.params;
+    console.log(`delete todo requestid / todoId : ${todoId}`);
 
-    return await this.todoService.deleteTodoItem({ todoId: id }).catch(err => {
-      return {
-        ok: false,
-        error_message: err.message,
-      };
+    const result = await this.todoService.deleteTodo({ todoId }).catch(err => {
+      console.error(err);
+      throw new HttpException(`${err}`, HttpStatus.FORBIDDEN);
     });
+
+    return this.apiService.httpResponse(result);
   }
 
   @Put(`/:todoId`)

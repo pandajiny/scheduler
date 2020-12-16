@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { DbService } from 'src/db/db.service';
+import { getUniqueString } from 'src/db/query';
 @Injectable()
 export class UsersService {
   constructor(private dbService: DbService) {}
@@ -8,7 +9,7 @@ export class UsersService {
   async addUser(request: HashedSignUpRequest): Promise<User> {
     const { name, email, _password } = request;
 
-    const uid = this.dbService.getUniqueString();
+    const uid = getUniqueString();
     const query = `
       INSERT INTO users
       (uid, name, email, _password)

@@ -1,5 +1,7 @@
 import { setEnterInputListener } from "../../../modules/DocumnetModules";
-import { $mainPage } from "../../../navigate-page";
+import { updateGroup } from "../../../modules/groups";
+import { deleteGroup } from "../../../modules/groups/delete-group";
+import { $mainPage, updatePage } from "../../../navigate-page";
 import { $TodoItem } from "./todo.item";
 
 export async function $updateTodolist(args: {
@@ -8,17 +10,19 @@ export async function $updateTodolist(args: {
 }) {
   const { todos } = args;
   const $todolist = $mainPage.querySelector(".todolist") as HTMLDivElement;
-  console.log($todolist);
   $todolist.innerHTML = "";
-  console.log(todos);
 
   todos.map((todoItem) => {
     $todolist.appendChild($TodoItem(todoItem, args.onUpdate));
   });
 }
 
-export function $updateTitle(args: { title: string; groupId?: string }) {
-  const { title } = args;
+export function $updateTitle(args: {
+  title: string;
+  group?: Group;
+  onUpdate: () => void;
+}) {
+  const { title, group } = args;
   const $title = document.getElementById(`todo-container-title`) as HTMLElement;
   const $editTitle = document.getElementById(
     `todo-container-title-edit`
@@ -27,26 +31,30 @@ export function $updateTitle(args: { title: string; groupId?: string }) {
   $title.textContent = title;
   $editTitle.value = title;
   $editTitle.onblur = unsetEditTitleMode;
+  unsetEditTitleMode();
   $editTitle.addEventListener("keypress", (ev) => {
-    setEnterInputListener(ev, $updateGroupTitle);
+    setEnterInputListener(ev, () => {
+      if (group) {
+        const title = $editTitle.value;
+        group.group_name = title;
+        updateGroup(group)
+          .then(args.onUpdate)
+          .catch((e) => {
+            console.error(e);
+          });
+      }
+    });
   });
-
-  function $updateGroupTitle() {
-    const title = $editTitle.value;
-    if (title != "") {
-    }
-  }
 
   const $editButton = document.getElementById(
     "title-edit-button"
   ) as HTMLButtonElement;
-  const $deleteButton = document.getElementById(
-    "title-delete-button"
-  ) as HTMLButtonElement;
-
   $editButton.addEventListener("click", setEditTitleMode);
 
   function setEditTitleMode() {
+    if (!group) {
+      return;
+    }
     $title.style.display = "none";
     $editTitle.style.display = `block`;
 
@@ -56,5 +64,18 @@ export function $updateTitle(args: { title: string; groupId?: string }) {
   function unsetEditTitleMode() {
     $title.style.display = `block`;
     $editTitle.style.display = `none`;
+    $editTitle.value = title;
   }
+
+  const $deleteButton = document.getElementById(
+    "title-delete-button"
+  ) as HTMLButtonElement;
+
+  $deleteButton.addEventListener("click", () => {
+    if (group) {
+      deleteGroup(group.owner_id, group.group_id).then(() => {
+        updatePage("todos");
+      });
+    }
+  });
 }

@@ -27,6 +27,10 @@
       color: colors.$color-gray;
     }
 
+    .nav-item {
+      color: colors.$color-text-secondary;
+    }
+
     .nav-list {
       margin-top: 8px;
       margin-bottom: 8px;
@@ -49,7 +53,7 @@
         cursor: pointer;
         text-align: left;
         * {
-          color: colors.$color-gray;
+          color: colors.$color-text-secondary;
         }
       }
 
