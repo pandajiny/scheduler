@@ -32,9 +32,10 @@ export function $updateTitle(args: {
   $editTitle.value = title;
   $editTitle.onblur = unsetEditTitleMode;
   unsetEditTitleMode();
-  $editTitle.addEventListener("keypress", (ev) => {
+  $editTitle.onkeypress = (ev) => {
     setEnterInputListener(ev, () => {
       if (group) {
+        console.log(`update group`);
         const title = $editTitle.value;
         group.group_name = title;
         updateGroup(group)
@@ -44,13 +45,13 @@ export function $updateTitle(args: {
           });
       }
     });
-  });
+  };
 
   const $editButton = document.getElementById(
     "title-edit-button"
   ) as HTMLButtonElement;
-  $editButton.addEventListener("click", setEditTitleMode);
 
+  $editButton.onclick = setEditTitleMode;
   function setEditTitleMode() {
     if (!group) {
       return;
@@ -70,12 +71,14 @@ export function $updateTitle(args: {
   const $deleteButton = document.getElementById(
     "title-delete-button"
   ) as HTMLButtonElement;
-
-  $deleteButton.addEventListener("click", () => {
+  $deleteButton.onclick = () => {
+    console.log(`damn`);
     if (group) {
+      console.log(`delete todo`);
       deleteGroup(group.owner_id, group.group_id).then(() => {
         updatePage("todos");
       });
     }
-  });
+  };
+  // $deleteButton.addEventListener("click", , {});
 }
