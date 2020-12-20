@@ -43,9 +43,6 @@ export class TodoController {
     return this.apiService.httpResponse(todoItems);
   }
 
-  @Get('/:todoId')
-  async getTodo() {}
-
   @Post()
   async addTodo(@Request() req): Promise<HttpResponse<ActionResult>> {
     const request: AddTodoRequest = req.body;
@@ -59,6 +56,9 @@ export class TodoController {
 
     return this.apiService.httpResponse(result);
   }
+
+  @Get('/:todoId')
+  async getTodo() {}
 
   @Delete('/:todoId')
   async deleteTodo(@Request() req): Promise<HttpResponse<ActionResult>> {

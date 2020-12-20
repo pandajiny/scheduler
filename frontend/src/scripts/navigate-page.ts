@@ -49,9 +49,5 @@ export function updatePage(page: PagePath) {
       $loginRequirePage.classList.add("active");
       initLoginRequirePage();
       break;
-
-    // default:
-    //   console.log("404");
-    //   updatePage("todos");
   }
 }

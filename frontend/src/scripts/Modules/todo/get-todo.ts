@@ -12,7 +12,7 @@ export async function getTodos(filter: TodosFilter): Promise<Todo[]> {
 }
 
 export async function getTodo(todoId: string): Promise<Todo> {
-  let url = `${serverUrl}/todos/${todoId}`;
+  const url = `${serverUrl}/todos/${todoId}`;
 
   const todo = await doGetRequest<Todo>(url);
   return todo;
