@@ -1,5 +1,44 @@
+import { updatePage, navigateTo } from "./router";
+
+type RunningMode = "DEV" | "LOCAL" | "PRODUCTION";
+export let RUNNING_MODE: RunningMode = "PRODUCTION";
+if (process.env.NODE_ENV?.includes("DEV") || false) {
+  RUNNING_MODE = "DEV";
+} else if (process.env.NODE_ENV?.toString().includes("LOCAL") || false) {
+  RUNNING_MODE = "LOCAL";
+}
+if (RUNNING_MODE != "PRODUCTION") {
+  console.log(`server is running as ${RUNNING_MODE}`);
+}
+
+if (!process.env.SERVER_URL) {
+  throw "cannot parse serverUrl";
+}
+
+const SERVER_URLS: Record<RunningMode, string> = {
+  DEV: `http://${location.hostname}`,
+  LOCAL: `http://${location.hostname}`,
+  PRODUCTION: process.env.SERVER_URL,
+};
+
+export const serverUrl = SERVER_URLS[RUNNING_MODE];
+
+initialApp();
+
+function initialApp() {
+  updatePage();
+
+  const $modalContainer = document.querySelector(
+    ".modal-container"
+  ) as HTMLElement;
+  $modalContainer.onclick = (ev) => {
+    console.log(`hi`);
+    ev.cancelBubble = false;
+  };
+}
+
+// ----------- need to move document modules
 import { doSignOut } from "./modules/auth";
-import { updatePage } from "./navigate-page";
 
 export function $renderAccountState(props: {
   $container: HTMLElement;
@@ -33,7 +72,7 @@ function $renderUserState(props: { $container: HTMLElement; user: User }) {
   const handleSignUpButtonClick = () => {
     doSignOut().then((result) => {
       if (result.ok) {
-        updatePage("login");
+        navigateTo.login();
       }
     });
   };
@@ -52,79 +91,9 @@ function $renderLoginRequire(props: { $container: HTMLElement }) {
     "login-button"
   ) as HTMLButtonElement;
   const handleLoginButtonClick = () => {
-    updatePage("login");
+    navigateTo.login();
   };
   $loginButton.addEventListener("click", handleLoginButtonClick);
-}
-
-export function $createButtonElement(props: {
-  id?: string;
-  className?: string;
-  onClick?: () => void;
-  content: string;
-}): HTMLButtonElement {
-  const { id, className, onClick, content } = props;
-  const $button = document.createElement("button");
-  if (id) {
-    $button.id = id;
-  }
-  if (className) {
-    $button.className = className;
-  }
-  if (onClick) {
-    $button.addEventListener("click", onClick);
-  }
-  $button.appendChild(document.createTextNode(content));
-  return $button;
-}
-
-export function $createParagraphElement(props: {
-  id?: string;
-  className?: string;
-  text: string;
-  type: string;
-}) {
-  const { className, text, type } = props;
-  const $element = document.createElement(type);
-  if (className) {
-    $element.className = className;
-  }
-  $element.appendChild(document.createTextNode(text));
-  return $element;
-}
-
-export function $createInputElement(props: {
-  id?: string;
-  className?: string;
-  placeholder?: string;
-  value?: string;
-  onSubmit?: (v: string) => Promise<void>;
-}): HTMLInputElement {
-  const { id, className, placeholder, value, onSubmit } = props;
-  const $input = document.createElement(`input`);
-  if (id) {
-    $input.id = id;
-  }
-  if (className) {
-    $input.className = className;
-  }
-  if (placeholder) {
-    $input.placeholder = placeholder;
-  }
-  if (value) {
-    $input.value = value;
-  }
-  if (onSubmit) {
-    $input.addEventListener("keypress", (ev: KeyboardEvent) => {
-      if (ev.key == "Enter") {
-        onSubmit($input.value).then(() => {
-          $input.value = ``;
-        });
-      }
-    });
-  }
-
-  return $input;
 }
 
 export function keyInputListener(ev: KeyboardEvent, onSubmit: () => void) {
@@ -133,51 +102,18 @@ export function keyInputListener(ev: KeyboardEvent, onSubmit: () => void) {
   }
 }
 
-export function $createContainer(props: {
-  id?: string;
-  className?: string;
-  $elements?: HTMLElement[];
-}): HTMLElement {
-  const { $elements, className, id } = props;
-  const $container = document.createElement("div");
-
-  if (id) {
-    $container.id = id;
-  }
-
-  if (className) {
-    $container.className = className;
-  }
-
-  if ($elements) {
-    $elements.map(($element) => {
-      $container.appendChild($element);
-    });
-  }
-
-  return $container;
-}
-
-export let serverUrl = process.env.SERVER_URL as string;
-console.log(serverUrl);
-export const isDevMode: boolean =
-  process.env.NODE_ENV?.includes("DEV") || false;
-
-export const isLocalMode: boolean =
-  process.env.NODE_ENV?.toString().includes("LOCAL") || false;
-
-if (isLocalMode) {
-  serverUrl = "http://localhost";
-  console.log(`app is local mode server url : ${serverUrl}`);
-} else if (isDevMode) {
-  // init dev mode
-  console.log(`app is dev mode`);
-  fetch(serverUrl).then((res) => {
-    if (res.ok) {
-      console.log(`server activated`);
-    } else {
-      console.log(`server not responde, using localhost`);
-      serverUrl = "http://localhost";
-    }
-  });
-}
+// if (RUNNING_MODE == ) {
+//   serverUrl = "http://localhost";
+//   console.log(`app is local mode server url : ${serverUrl}`);
+// } else if (isDevMode) {
+//   // init dev mode
+//   console.log(`app is dev mode`);
+//   fetch(serverUrl).then((res) => {
+//     if (res.ok) {
+//       console.log(`server activated`);
+//     } else {
+//       console.log(`server not responde, using localhost`);
+//       serverUrl = "http://localhost";
+//     }
+//   });
+// }

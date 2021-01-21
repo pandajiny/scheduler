@@ -1,17 +1,8 @@
-import { serverUrl } from "../../App";
-import { doGetRequest } from "../HttpsModles";
+import { serverUrl } from "../../app";
+import { doGetRequest } from "../http";
 
-export async function doSignOut(): Promise<ActionResult> {
-  localStorage.removeItem("jwtToken");
-  return {
-    ok: true,
-    message: `user sign out`,
-  };
-}
-
-export function isLoggedIn(user: User | null): boolean {
-  return user ? true : false;
-}
+export * from "./login";
+export * from "./sign-up";
 
 export const getUser = async (): Promise<User | null> => {
   const url = `${serverUrl}/auth/user`;
@@ -22,8 +13,3 @@ export const getUser = async (): Promise<User | null> => {
 
   return result;
 };
-
-export function isLoginFormFormatted(args: LoginRequest): boolean {
-  const { email, password } = args;
-  return email != "" && password != "";
-}

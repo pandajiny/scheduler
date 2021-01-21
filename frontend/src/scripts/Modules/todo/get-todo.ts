@@ -1,5 +1,5 @@
-import { serverUrl } from "../../App";
-import { doGetRequest } from "../HttpsModles";
+import { serverUrl } from "../../app";
+import { doGetRequest } from "../http";
 
 export async function getTodos(filter: TodosFilter): Promise<Todo[]> {
   let url = `${serverUrl}/todos?user_id=${filter.userId}`;

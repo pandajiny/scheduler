@@ -6,7 +6,9 @@
   },
   "dependencies": {
     "@types/node": "^14.11.10",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "module-alias": "^2.2.2",
+    "scripts": "^0.1.0"
   },
   "scripts": {
     "start": "parcel src/index.html",

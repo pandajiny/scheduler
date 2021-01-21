@@ -1,5 +1,5 @@
-import { serverUrl } from "../../App";
-import { doDeleteRequest } from "../HttpsModles";
+import { serverUrl } from "../../app";
+import { doDeleteRequest } from "..//http";
 
 export async function deleteGroup(userId: string, groupId: string) {
   const url = `${serverUrl}/users/${userId}/groups/${groupId}`;

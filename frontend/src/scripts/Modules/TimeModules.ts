@@ -1,6 +1,37 @@
-export function convertTimestampToString(timestamp: number): string {
+export function getMonthString(monthIndex: number, isShort?: boolean) {
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  if (isShort) {
+    return monthNames[monthIndex].slice(0, 3);
+  }
+  return monthNames[monthIndex];
+}
+
+export function convertTimestampToString(
+  timestamp: number | null,
+  displayYear = false
+): string {
+  if (!timestamp) {
+    return "";
+  }
   const date = new Date(timestamp);
-  return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+  if (displayYear) {
+    return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+  } else {
+    return `${date.getMonth() + 1}/${date.getDate()}`;
+  }
 }
 
 export function convertStringToTimestamp(dateString: string): number {

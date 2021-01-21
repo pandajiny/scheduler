@@ -1,5 +1,5 @@
-import { serverUrl } from "../../App";
-import { doPostRequest } from "../HttpsModles";
+import { serverUrl } from "../../app";
+import { doPostRequest } from "..//http";
 
 export const doSignUp = async (
   request: SignUpRequest

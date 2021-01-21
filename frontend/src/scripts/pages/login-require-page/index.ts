@@ -1,13 +1,15 @@
-import { $loginRequirePage, updatePage } from "../../navigate-page";
+import { $welcomePage, navigateTo } from "../../router";
 
 export function initLoginRequirePage() {
-  const $loginButton = $loginRequirePage.querySelector(
+  $welcomePage.classList.add("active");
+
+  const $loginButton = $welcomePage.querySelector(
     "#login-button"
   ) as HTMLButtonElement;
 
   $loginButton.addEventListener("click", handleLoginButtonClick);
 
   function handleLoginButtonClick() {
-    updatePage("login");
+    navigateTo.login();
   }
 }

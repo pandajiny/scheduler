@@ -1,5 +1,6 @@
-import { getGroupIdFromUrl } from ".";
+import { getGroupIdFromUrl } from "../../modules/DocumnetModules";
 import { addGroup } from "../../modules/groups";
+import { $todosPage } from "../../router";
 
 export function $initialNavContainer(args: {
   userId: string;
@@ -25,15 +26,29 @@ export function $updateNavItems(props: {
 }) {
   const { groups, userId } = props;
 
-  const $groups = document.getElementById("group-list") as HTMLElement;
-  $groups.innerHTML = ``;
-  $groups.style.display = `block`;
+  const $sideContainer = $todosPage.querySelector(
+    "#side-container"
+  ) as HTMLDivElement;
 
-  const $groupNavMessage = document.querySelector(
-    "#nav-group-container > .nav-message"
-  ) as HTMLParagraphElement;
-  $groupNavMessage.textContent = "";
-  $groupNavMessage.style.display = `none`;
+  const $container = $sideContainer.querySelector(
+    ".container"
+  ) as HTMLDivElement;
+
+  const $navTemplate = document.getElementById(
+    "nav-template"
+  ) as HTMLTemplateElement;
+
+  const $groups = document.createElement("div");
+  $groups.className = "nav-groups";
+  $groups.appendChild($navTemplate.content.cloneNode(true));
+
+  $container.appendChild($groups);
+
+  // const $groupNavMessage = document.querySelector(
+  //   "#nav-group-container > .nav-message"
+  // ) as HTMLParagraphElement;
+  // $groupNavMessage.textContent = "";
+  // $groupNavMessage.style.display = `none`;
 
   groups.forEach((group) => {
     const $navItem = document.createElement("li") as HTMLElement;

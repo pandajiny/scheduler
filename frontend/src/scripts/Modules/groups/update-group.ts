@@ -1,5 +1,5 @@
-import { serverUrl } from "../../App";
-import { doPutRequest } from "../HttpsModles";
+import { serverUrl } from "../../app";
+import { doPutRequest } from "..//http";
 
 export async function updateGroup(group: Group): Promise<ActionResult> {
   const url = `${serverUrl}/users/${group.owner_id}/groups/${group.group_id}`;

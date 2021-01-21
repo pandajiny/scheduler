@@ -1,88 +1,136 @@
 <html>
 
 <head>
-  <link rel="stylesheet" href="./styles/styles.scss">
+  <title>scheduler</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ios pwa -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+
+  <link rel="stylesheet" href="styles/styles.scss">
+  <script defer src="./scripts/app.ts"></script>
 </head>
 
 <body>
-  <div class="top-banner">
-    <h1 id="title">SCHEDULER</h1>
-    <div id="account-container"></div>
+  <div class="modal-container">
+    <div id="add-todo-modal" class="modal">
+      <div class="container">
+        <div class="top-bar">
+          <button class="button-cancel">Cancel</button>
+          <h3 class="title">New Event</h3>
+          <button class="button-submit">Add</button>
+        </div>
+        <div class="content-container">
+          <img class="icon" src="./images/icons/icon_event_gray.png">
+          <input id="input-content" type="text" placeholder="Content">
+
+          <img class="icon" src="./images/icons/icon_calendar_gray.png">
+          <input id="input-date" type="date" placeholder="not selected">
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="main">
-    <div id="login-page" class="page">
-      <h3 id="login-message" class="message">Login with the email</h3>
-      <div class="input-container">
-        <label>email</label>
-        <input id="email-input" />
-      </div>
-      <div class="input-container">
-        <label>password</label>
-        <input id="password-input" type="password" />
-      </div>
-      <button id="login-button" class="text-button">LOGIN</button>
-      <div id="signup-container">
-        <label>Don't have account?</label>
-        <button id="signup-button">signup</button>
+    <div id="welcome-page" class="page">
+      <div class="container">
+        <h1 class="title">Welcome</h1>
+        <p>
+          To use scheduler, Please Login first.
+        </p>
+        <button id="login-button" class="text-button">I already have account.</button>
+        <button id="signup-button" class="text-button">or sign-up</button>
       </div>
     </div>
 
-    <div id="login-require-page" class="page">
-      <div id="introduce">
-        <h1 id="welcome-text">Welcome to JINIUS SCHEDULER</h1>
-        <p>
-          If you want to use it, Please Login first.
-          <button id="login-button">Login</button>
-        </p>
-        <p>Don't have account?<button id="signup-button">Sign Up</button></p>
+    <div id="login-page" class="page">
+      <div class="container">
+        <p id="login-title" class="title">Please login with your email</p>
+
+        <div class="input-form">
+          <img class="icon" src="./images/icons/icon_email_gray.png">
+          <input id="email-input" type="email" placeholder="example@gmail.com" />
+
+          <img class="icon" src="./images/icons/icon_lock_gray.png">
+          <input id="password-input" type="password" placeholder="your password" />
+        </div>
+
+        <button id="login-button" class="text-button">LOGIN</button>
+        <div id="login-signup">
+          <label>Don't have account?</label>
+          <button id="signup-button">signup</button>
+        </div>
       </div>
     </div>
 
     <div id="todo-page" class="page">
-      <div class="main-container">
+      <div class="container">
+        <!-- mobile elements -->
+        <div class="top mobile" style="display: none;">
+          <div class="container">
+            <img id="todo-menu-button" class="button" src="./images/icons/icon_menu_white.png" />
+            <h3 id="todo-page-title">category</h3>
+            <img class="button account-button" src="./images/icons/icon_account_white.png" />
+          </div>
+        </div>
+
+
         <div id="side-container">
-          <div class="nav-container" id="nav-common-container">
-            <h3 class="nav-item">All Todos</h3>
-            <h3 class="nav-item">Upcomings</h3>
-            <h3 class="nav-item">Completed Items</h3>
+        </div>
+
+        <div class="todolist"></div>
+
+        <img id="fab-add-todo" class="fab" src="./images/icons/icon_plus_white.png" />
+
+        <div class="nav-bar">
+          <div class="nav-item">
+            <img class="icon" src="./images/icons/icon_list_gray.svg">
+            <label>Account</label>
           </div>
 
-          <div class="nav-container" id="nav-group-container">
-            <h3 class="nav-title">Your Groups</h3>
-            <p class="nav-message">Don't have Group Items</p>
-            <ul class="nav-list" id="group-list" style="display: none;"></ul>
+          <div class="nav-item">
+            <img class="icon" src="./images/icons/icon_todos_gray.svg">
+            <label>Todos</label>
           </div>
 
-          <button id="create-group-button">
-            <label class="icon">+</label>
-            <p>Create New Group</p>
-          </button>
-        </div>
-        <div id="todolist-container">
-          <div class="title-container">
-            <h2 id="todo-container-title" class="title"></h2>
-            <input id="todo-container-title-edit" style="display: none;">
-            <div class="action-buttons">
-              <button id="title-edit-button" class="text-button">edit</button>
-              <button id="title-delete-button" class="text-button">delete</button>
-            </div>
+          <div class="nav-item">
+            <img class="icon" src="./images/icons/icon_account_gray.svg">
+            <label>Account</label>
           </div>
-          <div class="todolist"></div>
-          <div id="add-todo-container" class="input-form">
-            <input id="date-select" placeholder="Unselected" type="date" />
-            <input id="add-todo-input" placeholder="...todo content" />
-            <button id="submit-button" class="text-button">✓</button>
-          </div>
-          <p id="alert-message"></p>
-        </div>
-        <div id="additional-container">
-          <h2>Upcommings</h2>
         </div>
       </div>
     </div>
   </div>
+
+
+  <template id="todo-item-template">
+    <div class="content-container">
+      <p class="content"></p>
+
+      <div class="content-edit-container unactive">
+        <p class="icon">✎ </p>
+        <input class="content-edit" value="${
+          todo.content
+        }" placeholder="...content here" />
+      </div>
+    </div>
+    <div class="actions">
+      <img class="edit-button" src="./images/icons/icon_edit_gray.png" />
+      <img class="done-button" src="./images/icons/icon_done_gray.png" />
+      <img class="delete-button" src="./images/icons/icon_delete_gray.png" />
+    </div>
+  </template>
+
+
+  <template id="nav-template">
+    <div class="nav-container">
+      <h3 class="title"></h3>
+      <ul class="nav-list">
+        <li class="nav-item"></li>
+      </ul>
+    </div>
+  </template>
 </body>
-<script src="./scripts/index.ts"></script>
 
 </html>

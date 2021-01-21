@@ -12,8 +12,7 @@ import {
 
 @Injectable()
 export class TodoService {
-  constructor(private dbService: DbService, private apiService: ApiService) {}
-
+  constructor(private dbService: DbService) {}
   async getTodos(filter: TodosFilter): Promise<Todo[]> {
     const { userId, groupId } = filter;
 

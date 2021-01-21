@@ -1,0 +1,94 @@
+@use '../../colors.scss';
+@use '../../sizes.scss';
+
+#todo-page {
+  > .container {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    > .top {
+      flex: 0;
+      background-color: colors.$color-primary-light;
+      color: colors.$color-white;
+      > .container {
+        padding: 8px;
+
+        display: flex;
+        flex-direction: row;
+
+        justify-content: space-between;
+        align-items: center;
+
+        img {
+          width: 24px;
+          height: 24px;
+
+          padding: 8px;
+        }
+      }
+    }
+
+    > .fab {
+      width: 20px;
+      height: 20px;
+
+      position: fixed;
+      bottom: 16px;
+      right: 8px;
+
+      margin: 8px;
+      padding: 12px;
+
+      border-radius: 50%;
+      background-color: colors.$color-accent;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    > #side-container {
+      display: none;
+      // display: flex;
+      position: fixed;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5),
+        0 6px 20px 0 rgba(0, 0, 0, 0.49);
+      width: 100%;
+      height: 100%;
+      flex-direction: row;
+      > .container {
+        background-color: colors.$color-primary-dark;
+        width: 280px;
+        display: flex;
+        flex-direction: column;
+      }
+      > .empty {
+        flex: 1;
+      }
+    }
+
+    > #side-container.active {
+      display: flex;
+    }
+
+    > .todolist {
+      flex: 1;
+    }
+    > .nav-bar {
+      flex: 0;
+    }
+
+    // tablet
+    @media (min-width: sizes.$tablet) and (max-width: sizes.$labtop) {
+      // width: 400px;
+      // margin: 0px auto;
+    }
+
+    // desktop
+    @media (min-width: sizes.$labtop) {
+      // width: 400px;
+      // margin: 0px auto;
+    }
+  }
+}

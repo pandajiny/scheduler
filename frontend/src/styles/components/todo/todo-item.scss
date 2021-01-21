@@ -1,0 +1,41 @@
+@use '../../colors.scss';
+@use '../../sizes.scss';
+
+.todo-item {
+  margin: 8px;
+
+  > .content-container {
+    padding: 14px 12px;
+
+    $border-radius: 6px;
+    border-left: 2px solid colors.$color-primary;
+    border-top-right-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+
+    background-color: colors.$color-bg-primary;
+
+    p {
+      color: colors.$color-primary-dark;
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+
+  > .actions {
+    display: none;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    padding: 4px;
+
+    img {
+      padding: 8px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  > .actions.active {
+    display: flex;
+  }
+}

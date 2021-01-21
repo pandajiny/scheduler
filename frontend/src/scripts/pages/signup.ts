@@ -1,4 +1,4 @@
-// import { doSignUp } from "../modules/AuthModules";
+// import { doSignUp } from "../modules/Auth../";
 
 // const $message = document.getElementById(
 //   "signup-message"

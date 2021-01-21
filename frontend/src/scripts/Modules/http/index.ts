@@ -1,9 +1,11 @@
+import { getCookie } from "../DocumnetModules";
+
 type RestMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 function getRequestOptions(method: RestMethod, body?: Object): RequestInit {
-  const token = localStorage.getItem("jwtToken");
+  const token = getCookie("token");
   if (!token) {
-    throw `please login first`;
+    throw `token not exist`;
   }
   const headers: AuthHeader = {
     Authorization: `Bearer ${token}`,
@@ -19,6 +21,7 @@ function getRequestOptions(method: RestMethod, body?: Object): RequestInit {
       body: JSON.stringify(body),
     };
   } else {
+    console.log(`get request`);
     return {
       method,
       headers,

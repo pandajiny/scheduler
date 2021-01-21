@@ -6,7 +6,10 @@ export function getSelectTodoQuery(args: {
   groupId?: string;
 }): string {
   const { userId, groupId, parentId } = args;
-  let query = `SELECT * from ${DB_TABLES.TODO_TABLE} WHERE todo_id like '%' `;
+  let query = `
+    SELECT * FROM ${DB_TABLES.TODO_TABLE}
+    WHERE todo_id like '%'
+  `;
 
   if (userId) {
     query += `AND owner_user_id = "${userId}"`;
@@ -19,6 +22,8 @@ export function getSelectTodoQuery(args: {
   if (parentId) {
     query += `AND parent_todo_id = "${parentId}"`;
   }
+
+  query += `ORDER BY limit_datetime ASC;`;
 
   return query;
 }

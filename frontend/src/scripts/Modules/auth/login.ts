@@ -1,5 +1,14 @@
-import { isLoginFormFormatted } from ".";
-import { serverUrl } from "../../App";
+import { serverUrl } from "../../app";
+import { setCookie } from "../DocumnetModules";
+
+export function isLoggedIn(user: User | null): boolean {
+  return user ? true : false;
+}
+
+export function isLoginFormFormatted(args: LoginRequest): boolean {
+  const { email, password } = args;
+  return email != "" && password != "";
+}
 
 export async function doLoginWithEmailAndPassword(
   request: LoginRequest
@@ -9,6 +18,7 @@ export async function doLoginWithEmailAndPassword(
   }
 
   const url = `${serverUrl}/auth/login`;
+  console.log(url);
   const response = await fetch(url, {
     method: "post",
     headers: {
@@ -21,7 +31,7 @@ export async function doLoginWithEmailAndPassword(
 
   const token = result.data?.access_token;
   if (token) {
-    localStorage.setItem("jwtToken", token);
+    setCookie("token", token);
     return {
       ok: true,
       message: `Login Success, Welcome ${request.email}`,
@@ -32,4 +42,12 @@ export async function doLoginWithEmailAndPassword(
       error_message: `cannot login`,
     };
   }
+}
+
+export async function doSignOut(): Promise<ActionResult> {
+  localStorage.removeItem("jwtToken");
+  return {
+    ok: true,
+    message: `user sign out`,
+  };
 }
