@@ -3,10 +3,10 @@ import { initLoginPage } from "./pages/login-page";
 import { initLoginRequirePage as initWelcomePage } from "./pages/login-require-page";
 import { initTodoPage } from "./pages/todo-page";
 
-type PagePath = "todos" | "login" | "welcome";
+export type RouterPath = "todos" | "login" | "welcome";
 
-export function getPagePath(search: string): PagePath {
-  return new URLSearchParams(search).get("page") as PagePath;
+export function getPagePath(search: string): RouterPath {
+  return new URLSearchParams(search).get("page") as RouterPath;
 }
 
 export function updatePage() {
@@ -28,12 +28,13 @@ export function updatePage() {
   }
 }
 
-function navigate(page: PagePath) {
+type RouteOptions = Record<string, string>;
+function navigate(page: RouterPath) {
   history.pushState({}, "", `?page=${page}`);
   updatePage();
 }
 
-export const navigateTo: Record<PagePath, Function> = {
+export const navigateTo: Record<RouterPath, () => void> = {
   login: () => navigate("login"),
   todos: () => navigate("todos"),
   welcome: () => navigate("welcome"),
@@ -57,13 +58,13 @@ export const $loginPage = document.getElementById(
   "login-page"
 ) as HTMLDivElement;
 
-const $pages: Record<PagePath, HTMLElement> = {
+const $pages: Record<RouterPath, HTMLElement> = {
   welcome: $welcomePage,
   login: $loginPage,
   todos: $todosPage,
 };
 
-const initPages: Record<PagePath, Function> = {
+const initPages: Record<RouterPath, Function> = {
   welcome: initWelcomePage,
   login: initLoginPage,
   todos: initTodoPage,

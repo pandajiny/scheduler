@@ -2,37 +2,14 @@
 
 .todolist {
   overflow: scroll;
-  > .date-divider {
-    height: 8px;
-    // margin: 16px 8px;
-    // border-top: 0.5px solid colors.$color-lightgray;
-    position: relative;
-
-    > .container {
-      height: 32px;
-      position: absolute;
-      padding: 8px;
-      margin-top: 12px;
-      margin-left: 12px;
-
-      color: colors.$color-primary-dark;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      > h3 {
-        font-size: 20px;
-        font-weight: 500;
-      }
-
-      > p {
-        font-size: 15px;
-      }
-    }
-  }
+  box-sizing: content-box;
 
   > .todo-item {
     margin-left: 72px;
   }
+}
+
+.todolist::-webkit-scrollbar {
+  width: 0px; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
 }

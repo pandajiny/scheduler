@@ -14,6 +14,18 @@
 
 <body>
   <div class="modal-container">
+    <div id="account-info-modal" class="modal">
+      <div class="container">
+        <div class="top-bar">
+          <button class="button-cancel">Back</button>
+          <h3 class="title">Account</h3>
+        </div>
+        <div class="content-container">
+          <div class="account-state"></div>
+          <button class="button-signout">Sign-out</button>
+        </div>
+      </div>
+    </div>
     <div id="add-todo-modal" class="modal">
       <div class="container">
         <div class="top-bar">
@@ -76,34 +88,56 @@
         </div>
 
 
-        <div id="side-container">
-        </div>
+        <div class="side-bar-container"></div>
 
-        <div class="todolist"></div>
-
-        <img id="fab-add-todo" class="fab" src="./images/icons/icon_plus_white.png" />
+        <div class="todolist-container"></div>
 
         <div class="nav-bar">
-          <div class="nav-item">
+          <div id="nav-list" class="nav-item">
             <img class="icon" src="./images/icons/icon_list_gray.svg">
-            <label>Account</label>
+            <label>List</label>
           </div>
 
-          <div class="nav-item">
+          <div id="nav-todos" class="nav-item">
             <img class="icon" src="./images/icons/icon_todos_gray.svg">
             <label>Todos</label>
           </div>
 
-          <div class="nav-item">
+          <div id="nav-account" class="nav-item">
             <img class="icon" src="./images/icons/icon_account_gray.svg">
             <label>Account</label>
+          </div>
+
+          <div id="nav-new" class="nav-item">
+            <img class="icon" src="./images/icons/icon_plus_gray.svg">
+            <label>New</label>
           </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- templates -->
 
+  <!-- account template -->
+  <template id="account-state-template">
+    <img class="icon" src="./images/icons/icon_account_gray.svg">
+
+    <div class="account-container">
+      <p class="name"></p>
+      <p class="email"></p>
+    </div>
+
+    <div class="login-container">
+      <h3>Please login first.</h3>
+      <p>Click here to go login page</p>
+    </div>
+  </template>
+
+  <!-- todo template -->
+  <template id="todo-list-tenplate">
+
+  </template>
   <template id="todo-item-template">
     <div class="content-container">
       <p class="content"></p>
@@ -122,14 +156,13 @@
     </div>
   </template>
 
-
-  <template id="nav-template">
-    <div class="nav-container">
-      <h3 class="title"></h3>
-      <ul class="nav-list">
-        <li class="nav-item"></li>
-      </ul>
+  <!--  -->
+  <template id="side-bar-template">
+    <div class="container">
+      <div class="account-state-container"></div>
+      <div class="menu-container"></div>
     </div>
+    <div class="empty-space"></div>
   </template>
 </body>
 

@@ -45,7 +45,7 @@ export async function doLoginWithEmailAndPassword(
 }
 
 export async function doSignOut(): Promise<ActionResult> {
-  localStorage.removeItem("jwtToken");
+  setCookie("token", "");
   return {
     ok: true,
     message: `user sign out`,

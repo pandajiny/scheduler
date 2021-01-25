@@ -81,14 +81,32 @@ ul {
 }
 
 .top-bar {
-  display: flex;
-  flex-direction: row;
-
-  justify-content: space-between;
+  position: relative;
   padding: 12px;
 
   color: colors.$color-white;
   background-color: colors.$color-primary-light;
+
+  .title {
+    margin-left: auto;
+    margin-right: auto;
+
+    width: fit-content;
+  }
+
+  $margin: 8px;
+  .button-cancel {
+    position: absolute;
+
+    left: $margin;
+    top: $margin;
+  }
+
+  .button-submit {
+    position: absolute;
+    right: $margin;
+    top: $margin;
+  }
 
   button {
     @extend .text-button;
@@ -97,6 +115,6 @@ ul {
     font-size: 14px;
 
     margin: 0px;
-    margin-top: 4px;
+    margin-top: 8px;
   }
 }

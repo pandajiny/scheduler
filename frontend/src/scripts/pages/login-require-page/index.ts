@@ -7,9 +7,5 @@ export function initLoginRequirePage() {
     "#login-button"
   ) as HTMLButtonElement;
 
-  $loginButton.addEventListener("click", handleLoginButtonClick);
-
-  function handleLoginButtonClick() {
-    navigateTo.login();
-  }
+  $loginButton.onclick = navigateTo.login;
 }

@@ -2,12 +2,14 @@ import { getUser } from "../../modules/auth";
 
 const $modal = document.getElementById("add-todo-modal") as HTMLElement;
 
-export const setAddTodoModal = function (props: ModalProps<AddTodoRequest>) {
+export const setAddTodoModal = function (
+  props: ActionModalProps<AddTodoRequest>
+) {
   $modal.classList.add("active");
   initModal(props);
 };
 
-async function initModal(props: ModalProps<AddTodoRequest>) {
+async function initModal(props: ActionModalProps<AddTodoRequest>) {
   const $btnCancel = $modal.querySelector(
     ".button-cancel"
   ) as HTMLButtonElement;
