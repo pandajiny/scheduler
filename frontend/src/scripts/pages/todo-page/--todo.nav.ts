@@ -1,7 +1,8 @@
 import { getGroupIdFromUrl } from "../../modules/DocumnetModules";
 import { addGroup } from "../../modules/groups";
-import { $todosPage } from "../../router";
+import { $pages } from "../../router";
 
+const $todosPage = $pages.todos;
 export function $initialNavContainer(args: {
   userId: string;
   onUpdate: () => void;

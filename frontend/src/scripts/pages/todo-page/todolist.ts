@@ -1,6 +1,8 @@
 import { $updateView } from ".";
 import { $Todolist } from "../../components/todo/todo-list";
-import { $todosPage } from "../../router";
+import { $pages } from "../../router";
+
+const $todosPage = $pages.todos;
 
 export function updateTodolist(todos: Todo[]) {
   const $todolist = $todosPage.querySelector(

@@ -1,9 +1,10 @@
 import { setAccountInfoModal } from "../../modals/account/account-info-modal";
 import { setAddTodoModal } from "../../modals/todo/add-todo-modal";
 import { addTodo } from "../../modules/todo";
-import { $todosPage } from "../../router";
+import { $pages } from "../../router";
 
-export function initNavBar() {
+const $todosPage = $pages.todos;
+export function initNavBar(user: User) {
   const $navList = $todosPage.querySelector("#nav-list") as HTMLDivElement;
   const $navTodos = $todosPage.querySelector("#nav-todos") as HTMLDivElement;
   const $navAccount = $todosPage.querySelector(
@@ -19,11 +20,12 @@ export function initNavBar() {
   };
 
   $navAccount.onclick = () => {
-    setAccountInfoModal();
+    setAccountInfoModal(user);
   };
 
   $navNew.onclick = () => {
     setAddTodoModal({
+      user,
       handleCancel: async () => {},
       handleSubmit: async (request: AddTodoRequest) => {
         try {

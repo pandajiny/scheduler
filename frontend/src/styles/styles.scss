@@ -28,6 +28,28 @@ body {
   overflow: hidden;
 }
 
+@media (max-width: sizes.$tablet) {
+  ::-webkit-scrollbar {
+    width: 0px; /* Remove scrollbar space */
+    background: transparent; /* Optional: just make scrollbar invisible */
+  }
+}
+@media (min-width: sizes.$tablet) {
+  *::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+    padding: 8px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: colors.$color-lightgray;
+    border-radius: 8px;
+  }
+}
+
 h1,
 h2,
 h3,

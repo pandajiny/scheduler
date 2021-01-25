@@ -1,41 +1,35 @@
-import { getUser } from "../../modules/auth";
+import { userInfo } from "os";
 import { getGroupsFromUser } from "../../modules/groups";
-import { getFilter, getTodos } from "../../modules/todo";
-import { $todosPage, navigateTo } from "../../router";
+import { getTodos } from "../../modules/todo";
+import { $pages, redirect } from "../../router";
 import { initNavBar as updateNavBar } from "./nav-bar";
 import { updateSideBar } from "./side-bar";
 import { updateTodolist } from "./todolist";
 
-let user: User | null;
-
-export async function initTodoPage() {
-  user = await getUser();
-
-  if (!user) {
-    navigateTo.login();
-    return;
-  }
-
-  history.pushState({}, "", `?page=todos&user_id=${user.uid}`);
+let currentUser: User | null;
+const $todosPage = $pages.todos;
+export async function startTodoPage(user: User) {
   $todosPage.classList.add("active");
-
+  currentUser = user;
   $updateView();
 }
 
 export async function $updateView() {
-  if (!user) {
-    navigateTo.todos();
+  if (!currentUser) {
+    redirect.todos();
     return;
   }
 
-  const groups = await getGroupsFromUser(user.uid);
-  const filter = getFilter(location.search);
+  const groups = await getGroupsFromUser(currentUser.uid);
+  const filter: TodosFilter = {
+    userId: currentUser.uid,
+  };
   const todos = await getTodos(filter);
 
   updateSideBar({
     groups,
-    user,
+    user: currentUser,
   });
-  updateNavBar();
+  updateNavBar(currentUser);
   updateTodolist(todos);
 }

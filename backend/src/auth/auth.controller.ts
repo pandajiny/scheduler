@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { ApiService } from 'src/api/api.service';
 import { UsersService } from 'src/users/users.service';
-import { resourceLimits } from 'worker_threads';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -27,13 +26,13 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('user')
   async getUser(@Request() req): Promise<HttpResponse<User>> {
+    // throw new HttpException('dev', HttpStatus.BAD_REQUEST);
     const email = req.user.email;
     console.log(`user information requested from ${email}`);
     const user = await this.usersService.findUserFromEmail(email).catch(err => {
       throw new HttpException(err, HttpStatus.UNAUTHORIZED);
     });
     console.log(`user found ${user.email}`);
-
     return this.apiService.httpResponse(user);
   }
 

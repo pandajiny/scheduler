@@ -1,15 +1,12 @@
 @use '../../colors.scss';
 
 .todolist {
-  overflow: scroll;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
   box-sizing: content-box;
 
   > .todo-item {
     margin-left: 72px;
   }
-}
-
-.todolist::-webkit-scrollbar {
-  width: 0px; /* Remove scrollbar space */
-  background: transparent; /* Optional: just make scrollbar invisible */
 }

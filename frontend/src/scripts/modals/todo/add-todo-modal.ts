@@ -1,5 +1,3 @@
-import { getUser } from "../../modules/auth";
-
 const $modal = document.getElementById("add-todo-modal") as HTMLElement;
 
 export const setAddTodoModal = function (
@@ -10,6 +8,8 @@ export const setAddTodoModal = function (
 };
 
 async function initModal(props: ActionModalProps<AddTodoRequest>) {
+  const { user } = props;
+
   const $btnCancel = $modal.querySelector(
     ".button-cancel"
   ) as HTMLButtonElement;
@@ -24,21 +24,15 @@ async function initModal(props: ActionModalProps<AddTodoRequest>) {
   };
 
   $btnAdd.onclick = () => {
-    getUser().then((user) => {
-      if (!user) {
-        throw `cannot get user information`;
-      }
+    const request: AddTodoRequest = {
+      content: $inputContent.value,
+      groupId: null,
+      limitDatetime: new Date($inputDate.value).getTime(),
+      ownerId: user.uid,
+      parentTodoId: null,
+    };
 
-      const request: AddTodoRequest = {
-        content: $inputContent.value,
-        groupId: null,
-        limitDatetime: new Date($inputDate.value).getTime(),
-        ownerId: user.uid,
-        parentTodoId: null,
-      };
-
-      props.handleSubmit(request).then(closeModal);
-    });
+    props.handleSubmit(request).then(closeModal);
   };
 
   $btnCancel.onclick = () => {

@@ -1,9 +1,8 @@
-import { setEnterInputListener } from "../../modules/DocumnetModules";
-import { updateGroup } from "../../modules/groups";
-import { getMonthString } from "../../modules/TimeModules";
-import { $todosPage } from "../../router";
+import { $pages } from "../../router";
 import { $DateDivider } from "./date-divider";
 import { $TodoItem } from "./todo-item";
+
+const $todosPage = $pages.todos;
 
 export function $Todolist(
   todos: Todo[],
@@ -38,68 +37,3 @@ const isDateChanged = (prev: number | null, now: number | null): boolean => {
 
   return new Date(prev).toDateString() != new Date(now).toDateString();
 };
-
-// export function $updateTitle(args: {
-//   title: string;
-//   group?: Group;
-//   onUpdate: () => void;
-// }) {
-//   const { title, group } = args;
-//   const $title = document.getElementById(`todo-page-title`) as HTMLElement;
-//   const $editTitle = document.getElementById(
-//     `todo-container-title-edit`
-//   ) as HTMLInputElement;
-
-//   $title.textContent = title;
-//   $editTitle.value = title;
-//   $editTitle.onblur = unsetEditTitleMode;
-//   unsetEditTitleMode();
-//   $editTitle.onkeypress = (ev) => {
-//     setEnterInputListener(ev, () => {
-//       if (group) {
-//         console.log(`update group`);
-//         const title = $editTitle.value;
-//         group.group_name = title;
-//         updateGroup(group)
-//           .then(args.onUpdate)
-//           .catch((e) => {
-//             console.error(e);
-//           });
-//       }
-//     });
-//   };
-
-//   const $editButton = document.getElementById(
-//     "title-edit-button"
-//   ) as HTMLButtonElement;
-
-//   $editButton.onclick = setEditTitleMode;
-//   function setEditTitleMode() {
-//     if (!group) {
-//       return;
-//     }
-//     $title.style.display = "none";
-//     $editTitle.style.display = `block`;
-
-//     $editTitle.focus();
-//   }
-
-//   function unsetEditTitleMode() {
-//     $title.style.display = `block`;
-//     $editTitle.style.display = `none`;
-//     $editTitle.value = title;
-//   }
-
-//   // const $deleteButton = document.getElementById(
-//   //   "title-delete-button"
-//   // ) as HTMLButtonElement;
-//   // $deleteButton.onclick = () => {
-//   //   console.log(`damn`);
-//   //   if (group) {
-//   //     console.log(`delete todo`);
-//   //     deleteGroup(group.owner_id, group.group_id).then(() => {
-//   //       navigateTo.todos();
-//   //     });
-//   //   }
-//   // };
-// }

@@ -1,71 +1,67 @@
-import { getUser } from "./modules/auth";
-import { initLoginPage } from "./pages/login-page";
-import { initLoginRequirePage as initWelcomePage } from "./pages/login-require-page";
-import { initTodoPage } from "./pages/todo-page";
+const $welcomePage = document.getElementById("welcome-page") as HTMLDivElement;
 
-export type RouterPath = "todos" | "login" | "welcome";
+const $todosPage = document.getElementById("todo-page") as HTMLDivElement;
 
-export function getPagePath(search: string): RouterPath {
-  return new URLSearchParams(search).get("page") as RouterPath;
-}
+const $loginPage = document.getElementById("login-page") as HTMLDivElement;
 
-export function updatePage() {
-  const path = getPagePath(location.search);
-
-  if (path) {
-    $disablePages();
-    initPages[path]();
-  } else {
-    getUser().then((user) => {
-      console.log(`user is`);
-      console.log(user);
-      if (user) {
-        navigateTo.todos();
-      } else {
-        navigateTo.welcome();
-      }
-    });
-  }
-}
-
-type RouteOptions = Record<string, string>;
-function navigate(page: RouterPath) {
-  history.pushState({}, "", `?page=${page}`);
-  updatePage();
-}
-
-export const navigateTo: Record<RouterPath, () => void> = {
-  login: () => navigate("login"),
-  todos: () => navigate("todos"),
-  welcome: () => navigate("welcome"),
+export const $pages: Record<PageNames, HTMLElement> = {
+  todos: $todosPage,
+  login: $loginPage,
+  welcome: $welcomePage,
 };
 
-function $disablePages() {
+import { getUser } from "./modules/auth";
+import { startLoginPage } from "./pages/login-page";
+import { initLoginRequirePage as startWelcomePage } from "./pages/login-require-page";
+import { startTodoPage } from "./pages/todo-page";
+
+export type PageNames = "todos" | "login" | "welcome";
+type PagePaths = "/" | "/login" | "/welcome";
+
+const startPages: Record<PagePaths, (user: User | null) => void> = {
+  "/": function (user) {
+    if (user) {
+      startTodoPage(user);
+    } else {
+      redirect.login();
+    }
+  },
+  "/login": function (user) {
+    if (!user) {
+      startLoginPage();
+    } else {
+      redirect.todos();
+    }
+  },
+  "/welcome": function (user) {
+    if (!user) {
+      startWelcomePage();
+    } else {
+      redirect.todos();
+    }
+  },
+};
+
+function clearPages() {
   Object.values($pages).forEach(($page) => {
     $page.className = "page";
   });
 }
 
-export const $welcomePage = document.getElementById(
-  "welcome-page"
-) as HTMLDivElement;
+export async function updatePage() {
+  clearPages();
+  const path = location.pathname as PagePaths;
+  const user = await getUser();
+  startPages[path](user);
+}
 
-export const $todosPage = document.getElementById(
-  "todo-page"
-) as HTMLDivElement;
+function updatePath(path: PagePaths) {
+  history.pushState({}, "", path);
+  updatePage();
+}
 
-export const $loginPage = document.getElementById(
-  "login-page"
-) as HTMLDivElement;
-
-const $pages: Record<RouterPath, HTMLElement> = {
-  welcome: $welcomePage,
-  login: $loginPage,
-  todos: $todosPage,
-};
-
-const initPages: Record<RouterPath, Function> = {
-  welcome: initWelcomePage,
-  login: initLoginPage,
-  todos: initTodoPage,
+export const redirect: Record<PageNames, () => void> = {
+  login: () => updatePath("/login"),
+  todos: () => updatePath("/"),
+  welcome: () => updatePath("/welcome"),
 };

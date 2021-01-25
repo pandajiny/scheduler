@@ -1,21 +1,20 @@
 import { $AccountState } from "../../components/account/account-state";
-import { doSignOut, getUser } from "../../modules/auth";
-import { navigateTo, updatePage } from "../../router";
+import { doSignOut } from "../../modules/auth";
+import { redirect } from "../../router";
 
 const $modal = document.getElementById("account-info-modal") as HTMLElement;
 
-export const setAccountInfoModal = function () {
+export const setAccountInfoModal = function (user: User | null = null) {
   $modal.classList.add("active");
-  initModal();
+  initModal(user);
 };
 
 const closeModal = () => {
   $modal.classList.remove("active");
 };
 
-async function initModal() {
+async function initModal(user: User | null) {
   const $account = $modal.querySelector(".account-state") as HTMLElement;
-  const user = await getUser();
   $account.innerHTML = $AccountState(user).innerHTML;
 
   const $buttonCancel = $modal.querySelector(
@@ -31,6 +30,6 @@ async function initModal() {
   };
 
   $buttonSignout.onclick = () => {
-    doSignOut().then(closeModal).then(navigateTo.login);
+    doSignOut().then(closeModal).then(redirect.login);
   };
 }

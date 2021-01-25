@@ -16,7 +16,7 @@
     "start:local": "set NODE_ENV=LOCAL && npm run start",
     "predeploy": "npm run build",
     "deploy": "git add ../docs && git commit -m \"update hosting\" && git push origin main",
-    "build": "rimraf ../docs && parcel build src/index.html -d ../docs --public-url ./",
+    "build": "rimraf ../docs && parcel build src/*.html -d ../docs --public-url ./ && copyfiles ../CNAME ../docs/CNAME",
     "compile": "tsc --noEmit -w",
     "update-types": "cd src/types && (git add . && git commit -m '' && git push) & git pull"
   }

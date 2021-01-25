@@ -1,11 +1,13 @@
-import { $welcomePage, navigateTo } from "../../router";
+import { $pages, redirect } from "../../router";
+
+const $page = $pages.welcome;
 
 export function initLoginRequirePage() {
-  $welcomePage.classList.add("active");
+  $page.classList.add("active");
 
-  const $loginButton = $welcomePage.querySelector(
+  const $loginButton = $page.querySelector(
     "#login-button"
   ) as HTMLButtonElement;
 
-  $loginButton.onclick = navigateTo.login;
+  $loginButton.onclick = redirect.login;
 }

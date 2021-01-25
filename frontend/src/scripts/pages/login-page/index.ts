@@ -1,7 +1,8 @@
 import { doLoginWithEmailAndPassword } from "../../modules/auth/login";
-import { $loginPage, navigateTo } from "../../router";
+import { $pages, redirect } from "../../router";
 
-export function initLoginPage() {
+const $loginPage = $pages.login;
+export function startLoginPage() {
   $loginPage.classList.add("active");
 
   const $email = $loginPage.querySelector("#email-input") as HTMLInputElement;
@@ -15,6 +16,7 @@ export function initLoginPage() {
   const $loginButton = $loginPage.querySelector(
     "#login-button"
   ) as HTMLButtonElement;
+
   $loginButton.onclick = doLogin;
 
   function doLogin() {
@@ -28,9 +30,7 @@ export function initLoginPage() {
         $message.textContent = err;
         throw err;
       })
-      .then(() => {
-        navigateTo.todos();
-      });
+      .then(redirect.todos);
   }
 
   const $signupButton = document.getElementById(

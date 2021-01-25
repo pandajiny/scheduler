@@ -1,5 +1,5 @@
 import { $AccountState } from "../../components/account/account-state";
-import { $todosPage } from "../../router";
+import { $pages } from "../../router";
 
 interface ListProps {
   title?: string;
@@ -15,6 +15,7 @@ interface SideBarProps {
   groups: Group[];
 }
 
+const $todosPage = $pages.todos;
 export async function updateSideBar(props: SideBarProps) {
   const { user, groups } = props;
   const $container = $todosPage.querySelector(
