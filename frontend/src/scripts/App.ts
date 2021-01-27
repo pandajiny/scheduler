@@ -1,3 +1,5 @@
+import axios from "axios";
+import { getCookie } from "./modules/DocumnetModules";
 import { updatePage } from "./router";
 
 type RunningMode = "DEV" | "LOCAL" | "PRODUCTION";
@@ -26,6 +28,9 @@ export const serverUrl = SERVER_URLS[RUNNING_MODE];
 initialApp();
 
 function initialApp() {
+  const token = getCookie("token");
+  axios.defaults.baseURL = serverUrl;
+  axios.defaults.headers.common[`Authorization`] = `Bearer ${token}`;
   updatePage();
 }
 

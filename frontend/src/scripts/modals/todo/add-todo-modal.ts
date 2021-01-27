@@ -1,3 +1,5 @@
+import { $updateView } from "../../pages/todo-page";
+
 const $modal = document.getElementById("add-todo-modal") as HTMLElement;
 
 export const setAddTodoModal = function (

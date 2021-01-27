@@ -1,3 +1,4 @@
+import { $updateView } from ".";
 import { setAccountInfoModal } from "../../modals/account/account-info-modal";
 import { setAddTodoModal } from "../../modals/todo/add-todo-modal";
 import { addTodo } from "../../modules/todo";
@@ -30,6 +31,7 @@ export function initNavBar(user: User) {
       handleSubmit: async (request: AddTodoRequest) => {
         try {
           await addTodo(request);
+          $updateView();
           //   await $updateView();
         } catch (e) {
           console.error(e);

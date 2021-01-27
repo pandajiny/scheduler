@@ -12,16 +12,15 @@ import {
 import { ApiService } from 'src/api/api.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { GroupService } from 'src/group/group.service';
-import { UsersService } from './users.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(
-    private usersService: UsersService,
     private groupService: GroupService,
     private apiService: ApiService,
   ) {}
+
   @Get('/:uid/groups')
   async getGroupsFromUser(@Request() req): Promise<HttpResponse<Group[]>> {
     const { uid } = req.params;

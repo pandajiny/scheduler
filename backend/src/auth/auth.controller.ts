@@ -25,16 +25,16 @@ export class AuthController {
   // get user information from jwt token
   @UseGuards(JwtAuthGuard)
   @Get('user')
-  async getUser(@Request() req): Promise<HttpResponse<User>> {
+  async getUser(@Request() req): Promise<User> {
     try {
       const email = req.user.email;
       console.log(`user information requested from ${email}`);
       const user = await this.usersService.findUserFromEmail(email);
       if (!user) {
-        throw `Can't get user from email`;
+        throw `Can't get user from email ${email}`;
       }
       console.log(`user found ${user.email}`);
-      return this.apiService.httpResponse(user);
+      return user;
     } catch (err) {
       throw new HttpException(err, HttpStatus.UNAUTHORIZED);
     }

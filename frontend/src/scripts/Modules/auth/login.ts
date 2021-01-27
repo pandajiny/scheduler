@@ -35,6 +35,7 @@ export async function doLoginWithEmailAndPassword(
 
   if (token) {
     setCookie("token", token);
+    axios.defaults.headers.common[`Authorization`] = `Bearer ${token}`;
   } else {
     throw `Can't login`;
   }

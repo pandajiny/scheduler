@@ -1,8 +1,5 @@
-import { $pages } from "../../router";
 import { $DateDivider } from "./date-divider";
 import { $TodoItem } from "./todo-item";
-
-const $todosPage = $pages.todos;
 
 export function $Todolist(
   todos: Todo[],

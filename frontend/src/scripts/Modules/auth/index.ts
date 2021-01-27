@@ -1,15 +1,15 @@
-import { serverUrl } from "../../app";
-import { doGetRequest } from "../http";
+import axios from "axios";
 
 export * from "./login";
 export * from "./sign-up";
 
 export const getUser = async (): Promise<User | null> => {
-  const url = `${serverUrl}/auth/user`;
-  const result = await doGetRequest<User>(url).catch((err_message) => {
-    console.error(err_message);
-    return null;
-  });
-
-  return result;
+  const user = await axios
+    .get<User>(`/auth/user`)
+    .then((res) => res.data)
+    .catch((err) => {
+      console.log(err);
+      return null;
+    });
+  return user;
 };
