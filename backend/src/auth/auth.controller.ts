@@ -26,47 +26,49 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('user')
   async getUser(@Request() req): Promise<HttpResponse<User>> {
-    // throw new HttpException('dev', HttpStatus.BAD_REQUEST);
-    const email = req.user.email;
-    console.log(`user information requested from ${email}`);
-    const user = await this.usersService.findUserFromEmail(email).catch(err => {
+    try {
+      const email = req.user.email;
+      console.log(`user information requested from ${email}`);
+      const user = await this.usersService.findUserFromEmail(email);
+      if (!user) {
+        throw `Can't get user from email`;
+      }
+      console.log(`user found ${user.email}`);
+      return this.apiService.httpResponse(user);
+    } catch (err) {
       throw new HttpException(err, HttpStatus.UNAUTHORIZED);
-    });
-    console.log(`user found ${user.email}`);
-    return this.apiService.httpResponse(user);
+    }
   }
 
   // request : LoginRequest
   // result : LoginResult
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async doLogin(@Request() req): Promise<HttpResponse<LoginResult>> {
-    const user: User = req.user;
-    console.log(`login requested from ${user.email}`);
-    const result = await this.authService.doLogin(user);
-    return this.apiService.httpResponse<LoginResult>(result);
+  async doLogin(@Request() req): Promise<LoginResult> {
+    try {
+      const user: User = req.user;
+      console.log(`login requested from ${user.email}`);
+      const token = this.authService.getToken(user);
+      return token;
+    } catch (err) {
+      console.log(`got error`);
+      throw new HttpException(err, HttpStatus.UNAUTHORIZED);
+    }
   }
 
   @Post('signup')
-  async signup(
-    @Body() request: SignUpRequest,
-  ): Promise<HttpResponse<LoginResult>> {
+  async signup(@Body() request: SignUpRequest): Promise<LoginResult> {
     console.log(`signup requested`, request);
-
     const { email, name, password } = request;
-    const _password = this.authService.hashPassword(password);
-
-    const result = await this.authService
-      .doSignup({
+    try {
+      const _password = this.authService.hashPassword(password);
+      return await this.authService.doSignup({
         email,
         name,
         _password,
-      })
-      .catch(err => {
-        console.log(`Sign up Error`, err);
-        throw new HttpException(err, HttpStatus.FORBIDDEN);
       });
-
-    return this.apiService.httpResponse(result);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
   }
 }

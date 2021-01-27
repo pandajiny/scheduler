@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { createHmac } from 'crypto';
@@ -23,11 +18,11 @@ export class AuthService {
     const user = await this.usersService.findUserFromEmail(email);
 
     if (!user) {
-      throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
+      throw `Can't find user from email`;
     }
 
     if (user._password != password) {
-      throw new HttpException('password incorrect', HttpStatus.BAD_REQUEST);
+      throw `Password incorrect`;
     }
 
     return user;
@@ -39,7 +34,7 @@ export class AuthService {
       .digest('hex');
   }
 
-  async doLogin(user: User): Promise<LoginResult> {
+  getToken(user: User): LoginResult {
     const payload: JwtPayload = { email: user.email, uid: user.uid };
     const token = this.jwtService.sign(payload);
     console.log(`tokken issued : ${token} with payload`, payload);
@@ -55,6 +50,6 @@ export class AuthService {
   }): Promise<LoginResult> {
     const { email, name, _password } = props;
     const user = await this.usersService.addUser({ email, name, _password });
-    return this.doLogin(user);
+    return this.getToken(user);
   }
 }

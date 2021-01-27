@@ -33,17 +33,15 @@ async function startWithHttps() {
   console.log(`server is listening on  ${serverUrl}`);
 }
 
-// if (isFileExists([KEY_PATH, CERT_PATH])) {
-//   console.log(`server updated`);
-//   console.log(`cert exist, start https server`);
-//   startWithHttps();
-// } else {
-//   console.log(`cert not exist, start http server`);
-//   startWithHttp();
-// }
+if (isFileExists([KEY_PATH, CERT_PATH])) {
+  console.log(`server updated`);
+  console.log(`cert exist, start https server`);
+  startWithHttps();
+} else {
+  console.log(`cert not exist, start http server`);
+  startWithHttp();
+}
 
 function isFileExists(paths: string[]): boolean {
   return paths.every(path => fs.existsSync(path));
 }
-
-startWithHttp();

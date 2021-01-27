@@ -58,20 +58,48 @@
 
     <div id="login-page" class="page">
       <div class="container">
-        <p id="login-title" class="title">Please login with your email</p>
+        <p class="title">Please login with your email</p>
 
         <div class="input-form">
           <img class="icon" src="./images/icons/icon_email_gray.png">
-          <input id="email-input" type="email" placeholder="example@gmail.com" />
+          <input class="input-email" type="email" placeholder="example@gmail.com" />
 
           <img class="icon" src="./images/icons/icon_lock_gray.png">
-          <input id="password-input" type="password" placeholder="your password" />
+          <input class="iuput-password" type="password" placeholder="your password" />
         </div>
 
-        <button id="login-button" class="text-button">LOGIN</button>
-        <div id="login-signup">
+        <button class="button-submit text-button">Login</button>
+
+        <div class="signup-container">
           <label>Don't have account?</label>
-          <button id="signup-button">signup</button>
+          <button class="button-signup">Sign-up</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="signup-page" class="page">
+      <div class="container">
+        <p class="title">Please Sign up with email</p>
+
+        <div class="input-form">
+          <img class="icon" src="./images/icons/icon_account_gray.svg">
+          <input class="input-name" type="email" placeholder="홍길동" />
+
+          <img class="icon" src="./images/icons/icon_email_gray.png">
+          <input class="input-email" type="email" placeholder="example@gmail.com" />
+
+          <img class="icon" src="./images/icons/icon_lock_gray.png">
+          <input class="iuput-password" type="password" placeholder="your password" />
+
+          <img class="icon" src="./images/icons/icon_again_gray.svg">
+          <input class="iuput-password-confirm" type="password" placeholder="confirm your password" />
+        </div>
+
+        <button class="button-submit text-button">Sign up</button>
+
+        <div class="signup-container">
+          <label>Already have account?</label>
+          <button class="button-signup">Login</button>
         </div>
       </div>
     </div>

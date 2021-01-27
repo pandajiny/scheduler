@@ -1,4 +1,4 @@
-import { updatePage, redirect } from "./router";
+import { updatePage } from "./router";
 
 type RunningMode = "DEV" | "LOCAL" | "PRODUCTION";
 export let RUNNING_MODE: RunningMode = "PRODUCTION";

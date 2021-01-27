@@ -2,38 +2,40 @@ import { doLoginWithEmailAndPassword } from "../../modules/auth/login";
 import { $pages, redirect } from "../../router";
 
 const $loginPage = $pages.login;
+
 export function startLoginPage() {
   $loginPage.classList.add("active");
+  const $title = $loginPage.querySelector(".title") as HTMLParagraphElement;
 
-  const $email = $loginPage.querySelector("#email-input") as HTMLInputElement;
+  const $email = $loginPage.querySelector(".input-email") as HTMLInputElement;
   const $password = $loginPage.querySelector(
-    "#password-input"
+    ".iuput-password"
   ) as HTMLInputElement;
 
-  const $message = document.getElementById(
-    "login-title"
-  ) as HTMLParagraphElement;
-  const $loginButton = $loginPage.querySelector(
-    "#login-button"
+  const $buttonSubmit = $loginPage.querySelector(
+    ".button-submit"
   ) as HTMLButtonElement;
 
-  $loginButton.onclick = doLogin;
+  const $buttonsignup = $loginPage.querySelector(
+    ".button-signup"
+  ) as HTMLButtonElement;
 
-  function doLogin() {
+  $email.value = "";
+  $password.value = "";
+
+  $buttonSubmit.onclick = async () => {
     const email = $email.value;
     const password = $password.value;
-    doLoginWithEmailAndPassword({
-      email,
-      password,
-    })
-      .catch((err) => {
-        $message.textContent = err;
-        throw err;
-      })
-      .then(redirect.todos);
-  }
 
-  const $signupButton = document.getElementById(
-    "signup-button"
-  ) as HTMLButtonElement;
+    try {
+      await doLoginWithEmailAndPassword({
+        email,
+        password,
+      }).then(redirect.todos);
+    } catch (err) {
+      $title.textContent = err;
+    }
+  };
+
+  $buttonsignup.onclick = redirect.signup;
 }

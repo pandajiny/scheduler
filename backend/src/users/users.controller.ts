@@ -22,28 +22,6 @@ export class UsersController {
     private groupService: GroupService,
     private apiService: ApiService,
   ) {}
-  // @Get()
-  // async getUsers()
-
-  @Get()
-  async getUsers(@Request() req): Promise<HttpResponse<User>> {
-    const { email } = req.query;
-
-    console.log(`users requested from ${email}`);
-    const user = await this.usersService.findUserFromEmail(email).catch(err => {
-      throw new HttpException(err, HttpStatus.UNAUTHORIZED);
-    });
-
-    return this.apiService.httpResponse(user);
-  }
-
-  // @Get('/:uid')
-  // async getUser(@Request() req) {
-  //   const { uid } = req.params;
-  //   console.log(`get user from uid : ${uid}`);
-  //   const user = await this.usersService
-  // }
-
   @Get('/:uid/groups')
   async getGroupsFromUser(@Request() req): Promise<HttpResponse<Group[]>> {
     const { uid } = req.params;

@@ -4,42 +4,29 @@ const $todosPage = document.getElementById("todo-page") as HTMLDivElement;
 
 const $loginPage = document.getElementById("login-page") as HTMLDivElement;
 
+const $signupPage = document.getElementById("signup-page") as HTMLDivElement;
+
+export type PageNames = "todos" | "welcome" | "login" | "signup";
+type PagePaths = "/" | "/welcome" | "/login" | "/signup";
+
 export const $pages: Record<PageNames, HTMLElement> = {
   todos: $todosPage,
   login: $loginPage,
   welcome: $welcomePage,
+  signup: $signupPage,
 };
 
 import { getUser } from "./modules/auth";
 import { startLoginPage } from "./pages/login-page";
-import { initLoginRequirePage as startWelcomePage } from "./pages/login-require-page";
+import { initLoginRequirePage as startWelcomePage } from "./pages/welcome-page";
 import { startTodoPage } from "./pages/todo-page";
-
-export type PageNames = "todos" | "login" | "welcome";
-type PagePaths = "/" | "/login" | "/welcome";
+import { startSignupPage } from "./pages/signup-page";
 
 const startPages: Record<PagePaths, (user: User | null) => void> = {
-  "/": function (user) {
-    if (user) {
-      startTodoPage(user);
-    } else {
-      redirect.login();
-    }
-  },
-  "/login": function (user) {
-    if (!user) {
-      startLoginPage();
-    } else {
-      redirect.todos();
-    }
-  },
-  "/welcome": function (user) {
-    if (!user) {
-      startWelcomePage();
-    } else {
-      redirect.todos();
-    }
-  },
+  "/": (user) => (user ? startTodoPage(user) : redirect.welcome()),
+  "/welcome": (user) => (user ? redirect.todos() : startWelcomePage()),
+  "/login": (user) => (user ? redirect.todos() : startLoginPage()),
+  "/signup": (user) => (user ? redirect.todos() : startSignupPage()),
 };
 
 function clearPages() {
@@ -61,7 +48,8 @@ function updatePath(path: PagePaths) {
 }
 
 export const redirect: Record<PageNames, () => void> = {
-  login: () => updatePath("/login"),
   todos: () => updatePath("/"),
   welcome: () => updatePath("/welcome"),
+  login: () => updatePath("/login"),
+  signup: () => updatePath("/signup"),
 };

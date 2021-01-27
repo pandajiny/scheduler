@@ -1,3 +1,4 @@
+import axios from "axios";
 import { serverUrl } from "../../app";
 import { setCookie } from "../DocumnetModules";
 
@@ -5,42 +6,37 @@ export function isLoggedIn(user: User | null): boolean {
   return user ? true : false;
 }
 
-export function isLoginFormFormatted(args: LoginRequest): boolean {
-  const { email, password } = args;
-  return email != "" && password != "";
-}
+const validateForm = (request: LoginRequest) => {
+  const { email, password } = request;
+  if (!email) {
+    throw `Please fill email form`;
+  }
+
+  if (!password) {
+    throw `Please fill password form`;
+  }
+
+  // Todo : add email validation
+
+  // Todo : add password rule validation
+};
 
 export async function doLoginWithEmailAndPassword(
   request: LoginRequest
-): Promise<ActionResult> {
-  if (!isLoginFormFormatted(request)) {
-    throw "Please fill the blanks";
-  }
+): Promise<void> {
+  validateForm(request);
+  const token = await axios
+    .post<LoginResult>(`${serverUrl}/auth/login`, request)
+    .then((res) => res.data)
+    .then((data) => data.access_token)
+    .catch((err: HttpError) => {
+      throw err.response.data.message;
+    });
 
-  const url = `${serverUrl}/auth/login`;
-  console.log(url);
-  const response = await fetch(url, {
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(request),
-  });
-
-  const result = (await response.json()) as HttpResponse<LoginResult>;
-
-  const token = result.data?.access_token;
   if (token) {
     setCookie("token", token);
-    return {
-      ok: true,
-      message: `Login Success, Welcome ${request.email}`,
-    };
   } else {
-    return {
-      ok: false,
-      error_message: `cannot login`,
-    };
+    throw `Can't login`;
   }
 }
 

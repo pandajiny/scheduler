@@ -1,18 +1,38 @@
+import axios from "axios";
 import { serverUrl } from "../../app";
-import { doPostRequest } from "..//http";
+import { setCookie } from "../DocumnetModules";
 
-export const doSignUp = async (
-  request: SignUpRequest
-): Promise<ActionResult> => {
-  const url = `${serverUrl}/auth/signup`;
-  const result = await doPostRequest<LoginResult>({
-    url,
-    body: request,
-  });
+const validateForm = (request: SignUpRequest) => {
+  const { email, name, password } = request;
+  if (!email) {
+    throw `Please fill email form`;
+  }
+  if (!name) {
+    throw `Please fill name form`;
+  }
+  if (!password) {
+    throw `Please fill password form`;
+  }
 
-  localStorage.setItem("jwtToken", result.access_token);
-  return {
-    ok: true,
-    message: `signup done ${request.email}`,
-  };
+  // Todo : Add validate email
+
+  // Todo : Add validate password from rule
+};
+
+export const doSignUp = async (request: SignUpRequest): Promise<void> => {
+  validateForm(request);
+
+  const token = await axios
+    .post<LoginResult>(`${serverUrl}/auth/signup`, request)
+    .then((resp) => resp.data)
+    .then((data) => data.access_token)
+    .catch((err: HttpError) => {
+      throw err.response.data.message;
+    });
+
+  if (token) {
+    setCookie("token", token);
+  } else {
+    throw `Can't signup`;
+  }
 };
