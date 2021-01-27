@@ -36,10 +36,14 @@ function clearPages() {
 }
 
 export async function updatePage() {
-  clearPages();
-  const path = location.pathname as PagePaths;
-  const user = await getUser();
-  startPages[path](user);
+  try {
+    clearPages();
+    const path = location.pathname as PagePaths;
+    const user = await getUser();
+    startPages[path](user);
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 function updatePath(path: PagePaths) {

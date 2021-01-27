@@ -1,4 +1,3 @@
-import { userInfo } from "os";
 import { getGroupsFromUser } from "../../modules/groups";
 import { getTodos } from "../../modules/todo";
 import { $pages, redirect } from "../../router";
@@ -20,6 +19,7 @@ export async function $updateView() {
     return;
   }
 
+  console.log(currentUser);
   const groups = await getGroupsFromUser(currentUser.uid);
   const filter: TodosFilter = {
     userId: currentUser.uid,

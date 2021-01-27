@@ -22,6 +22,8 @@ export async function updateSideBar(props: SideBarProps) {
     ".side-bar-container"
   ) as HTMLDivElement;
 
+  $container.innerHTML = ``;
+
   const $sidebar = document.createElement("div");
   $sidebar.className = "side-bar";
 

@@ -28,6 +28,7 @@ export const serverUrl = SERVER_URLS[RUNNING_MODE];
 initialApp();
 
 function initialApp() {
+  console.log(`init app`);
   const token = getCookie("token");
   axios.defaults.baseURL = serverUrl;
   axios.defaults.headers.common[`Authorization`] = `Bearer ${token}`;
