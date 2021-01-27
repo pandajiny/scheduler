@@ -40,11 +40,3 @@ export async function doLoginWithEmailAndPassword(
     throw `Can't login`;
   }
 }
-
-export async function doSignOut(): Promise<ActionResult> {
-  setCookie("token", "");
-  return {
-    ok: true,
-    message: `user sign out`,
-  };
-}

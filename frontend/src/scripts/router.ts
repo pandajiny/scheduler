@@ -48,6 +48,7 @@ export async function updatePage() {
 
 function updatePath(path: PagePaths) {
   history.pushState({}, "", path);
+  console.log(path);
   updatePage();
 }
 

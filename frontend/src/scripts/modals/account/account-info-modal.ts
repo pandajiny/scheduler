@@ -1,6 +1,5 @@
 import { $AccountState } from "../../components/account/account-state";
-import { doSignOut } from "../../modules/auth";
-import { redirect } from "../../router";
+import { doSignout } from "../../modules/auth/signout";
 
 const $modal = document.getElementById("account-info-modal") as HTMLElement;
 
@@ -30,6 +29,7 @@ async function initModal(user: User | null) {
   };
 
   $buttonSignout.onclick = () => {
-    doSignOut().then(closeModal).then(redirect.login);
+    doSignout();
+    closeModal();
   };
 }
