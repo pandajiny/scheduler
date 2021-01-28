@@ -1,6 +1,6 @@
 import axios from "axios";
-import { serverUrl } from "../../app";
-import { setCookie } from "../DocumnetModules";
+import { serverUrl } from "../../App";
+import { setCookie } from "../document";
 
 const validateForm = (request: SignUpRequest) => {
   const { email, name, password } = request;

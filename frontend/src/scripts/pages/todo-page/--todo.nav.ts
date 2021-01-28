@@ -1,4 +1,4 @@
-import { getGroupIdFromUrl } from "../../modules/DocumnetModules";
+import { getGroupIdFromUrl } from "../../modules/document";
 import { addGroup } from "../../modules/groups";
 import { $pages } from "../../router";
 

@@ -1,4 +1,4 @@
-import { getCookie } from "../DocumnetModules";
+import { getCookie } from "../document";
 
 type RestMethod = "GET" | "POST" | "PUT" | "DELETE";
 

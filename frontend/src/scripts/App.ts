@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getCookie } from "./modules/DocumnetModules";
+import { getCookie } from "./modules/document";
 import { handleGithubPages, updatePage } from "./router";
 
 type RunningMode = "DEV" | "LOCAL" | "PRODUCTION";

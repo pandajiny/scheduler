@@ -1,6 +1,5 @@
-import { $TodoItem } from "../../components/todo/todo-item";
 import { getGroupsFromUser } from "../../modules/groups";
-import { getTodos } from "../../modules/todo";
+import { getTodo, getTodos } from "../../modules/todo";
 import { $pages, redirect } from "../../router";
 import { initNavBar as updateNavBar } from "./nav-bar";
 import { updateSideBar } from "./side-bar";
@@ -25,11 +24,14 @@ export async function $updateView() {
     redirect.todos();
     return;
   }
-  const groups = await getGroupsFromUser(currentUser.uid);
   const filter: TodosFilter = {
     userId: currentUser.uid,
   };
-  const todos = await getTodos(filter);
+
+  const [groups, todos] = await Promise.all([
+    getGroupsFromUser(currentUser.uid),
+    getTodos(filter),
+  ]);
 
   updateSideBar({
     groups,

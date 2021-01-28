@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getCookie } from "../DocumnetModules";
+import { getCookie } from "../document";
 
 export * from "./login";
 export * from "./signup";

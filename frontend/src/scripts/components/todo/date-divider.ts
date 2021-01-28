@@ -1,4 +1,4 @@
-import { getMonthString } from "../../modules/TimeModules";
+import { getMonthString } from "../../modules/time";
 
 export const $DateDivider = (datetime: number | null): HTMLElement => {
   const $divider = document.createElement("div");

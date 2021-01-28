@@ -29,12 +29,6 @@ const startPages: Record<PagePaths, (user: User | null) => void> = {
   "/signup": (user) => (user ? redirect.todos() : startSignupPage()),
 };
 
-function clearPages() {
-  Object.values($pages).forEach(($page) => {
-    $page.className = "page";
-  });
-}
-
 export async function updatePage() {
   try {
     clearPages();
@@ -49,6 +43,13 @@ export async function updatePage() {
 function updatePath(path: PagePaths) {
   history.pushState({}, "", path);
   updatePage();
+}
+
+function clearPages() {
+  Object.values($pages).forEach(($page) => {
+    $page.className = "page";
+    $page.innerHTML = ``;
+  });
 }
 
 export const redirect: Record<PageNames, () => void> = {

@@ -1,4 +1,4 @@
-import { keyInputListener } from "../../app";
+import { keyInputListener } from "../../App";
 import { updateTodo, deleteTodo } from "../../modules/todo";
 
 export function $TodoItem(todo: Todo, handleUpdate: () => void): HTMLElement {

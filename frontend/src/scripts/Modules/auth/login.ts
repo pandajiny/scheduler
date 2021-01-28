@@ -1,6 +1,6 @@
 import axios from "axios";
-import { serverUrl } from "../../app";
-import { setCookie } from "../DocumnetModules";
+import { serverUrl } from "../../App";
+import { setCookie } from "../document";
 
 export function isLoggedIn(user: User | null): boolean {
   return user ? true : false;

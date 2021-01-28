@@ -1,6 +1,6 @@
 import axios from "axios";
 import { redirect } from "../../router";
-import { getCookie, setCookie } from "../DocumnetModules";
+import { getCookie, setCookie } from "../document";
 
 export function doSignout() {
   const token = getCookie("token");
