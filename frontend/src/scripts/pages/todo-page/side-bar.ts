@@ -30,14 +30,13 @@ export async function updateSideBar(props: SideBarProps) {
   const $template = document.getElementById(
     "side-bar-template"
   ) as HTMLTemplateElement;
+  $sidebar.appendChild($template.content.cloneNode(true));
 
-  const $account = $template.content.querySelector(
+  const $account = $sidebar.querySelector(
     ".account-state-container"
   ) as HTMLElement;
 
-  const $menu = $template.content.querySelector(
-    ".menu-container"
-  ) as HTMLDivElement;
+  const $menu = $sidebar.querySelector(".menu-container") as HTMLDivElement;
 
   $account.appendChild($AccountState(user));
 
@@ -52,7 +51,6 @@ export async function updateSideBar(props: SideBarProps) {
     })
   );
 
-  $sidebar.appendChild($template.content.cloneNode(true));
   const $empty = $sidebar.querySelector(".empty-space") as HTMLElement;
 
   $empty.onclick = () => {

@@ -26,6 +26,7 @@
         </div>
       </div>
     </div>
+
     <div id="add-todo-modal" class="modal">
       <div class="container">
         <div class="top-bar">
@@ -35,10 +36,10 @@
         </div>
         <div class="content-container">
           <img class="icon" src="./images/icons/icon_event_gray.png">
-          <input id="input-content" type="text" placeholder="Content">
+          <input id="input-content" type="text" autocomplete="off" placeholder="Content">
 
           <img class="icon" src="./images/icons/icon_calendar_gray.png">
-          <input id="input-date" type="date" placeholder="not selected">
+          <input id="input-date" type="date" placeholder="not selected" autocomplete="off">
         </div>
       </div>
     </div>
@@ -134,6 +135,11 @@
           <div id="nav-account" class="nav-item">
             <img class="icon" src="./images/icons/icon_account_gray.svg">
             <label>Account</label>
+          </div>
+
+          <div id="nav-search" class="nav-item">
+            <img class="icon" src="./images/icons/icon_search_gray.svg">
+            <label>Find</label>
           </div>
 
           <div id="nav-new" class="nav-item">

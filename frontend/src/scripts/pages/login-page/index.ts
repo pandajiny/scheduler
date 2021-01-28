@@ -12,6 +12,12 @@ export function startLoginPage() {
     ".iuput-password"
   ) as HTMLInputElement;
 
+  const clearForm = () => {
+    $title.textContent = `Please login with your email`;
+    $email.value = ``;
+    $password.value = ``;
+  };
+
   const $buttonSubmit = $loginPage.querySelector(
     ".button-submit"
   ) as HTMLButtonElement;
@@ -20,8 +26,7 @@ export function startLoginPage() {
     ".button-signup"
   ) as HTMLButtonElement;
 
-  $email.value = "";
-  $password.value = "";
+  clearForm();
 
   $buttonSubmit.onclick = async () => {
     const email = $email.value;
@@ -31,7 +36,9 @@ export function startLoginPage() {
       await doLoginWithEmailAndPassword({
         email,
         password,
-      }).then(redirect.todos);
+      })
+        .then(redirect.todos)
+        .then(clearForm);
     } catch (err) {
       $title.textContent = err;
     }

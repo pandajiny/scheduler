@@ -11,10 +11,17 @@ export function startSignupPage() {
   const $password = $signupPage.querySelector(
     ".iuput-password"
   ) as HTMLInputElement;
-
   const $confirm = $signupPage.querySelector(
     ".iuput-password-confirm"
   ) as HTMLInputElement;
+
+  const clearForm = () => {
+    $title.textContent = "Please Sign up with email";
+    $name.value = "";
+    $email.value = "";
+    $password.value = "";
+    $confirm.value = "";
+  };
 
   const $buttonSubmit = $signupPage.querySelector(
     ".button-submit"
@@ -24,10 +31,7 @@ export function startSignupPage() {
     ".button-signup"
   ) as HTMLButtonElement;
 
-  $name.value = "";
-  $email.value = "";
-  $password.value = "";
-  $confirm.value = "";
+  clearForm();
 
   $buttonSubmit.onclick = async () => {
     const name = $name.value;
@@ -43,7 +47,9 @@ export function startSignupPage() {
         name,
         email,
         password,
-      }).then(redirect.todos);
+      })
+        .then(redirect.todos)
+        .then(clearForm);
     } catch (err) {
       $title.textContent = err;
     }

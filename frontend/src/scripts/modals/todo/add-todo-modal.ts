@@ -1,5 +1,3 @@
-import { $updateView } from "../../pages/todo-page";
-
 const $modal = document.getElementById("add-todo-modal") as HTMLElement;
 
 export const setAddTodoModal = function (
@@ -23,6 +21,9 @@ async function initModal(props: ActionModalProps<AddTodoRequest>) {
 
   const closeModal = () => {
     $modal.classList.remove("active");
+
+    $inputContent.value = "";
+    $inputDate.value = "";
   };
 
   $btnAdd.onclick = () => {
@@ -42,7 +43,4 @@ async function initModal(props: ActionModalProps<AddTodoRequest>) {
       closeModal();
     });
   };
-
-  $inputContent.value = "";
-  $inputDate.value = "";
 }
