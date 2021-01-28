@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getCookie } from "./modules/DocumnetModules";
-import { updatePage } from "./router";
+import { handleGithubPages, updatePage } from "./router";
 
 type RunningMode = "DEV" | "LOCAL" | "PRODUCTION";
 export let RUNNING_MODE: RunningMode = "PRODUCTION";
@@ -28,11 +28,13 @@ export const serverUrl = SERVER_URLS[RUNNING_MODE];
 initialApp();
 
 function initialApp() {
-  console.log(`init app`);
+  handleGithubPages(window.location);
   const token = getCookie("token");
   axios.defaults.baseURL = serverUrl;
   axios.defaults.headers.common[`Authorization`] = `Bearer ${token}`;
   updatePage();
+
+  window.onpopstate = updatePage;
 }
 
 export function keyInputListener(ev: KeyboardEvent, onSubmit: () => void) {

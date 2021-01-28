@@ -25,6 +25,7 @@ export async function doLoginWithEmailAndPassword(
   request: LoginRequest
 ): Promise<void> {
   validateForm(request);
+  console.log(`login`);
   const token = await axios
     .post<LoginResult>(`${serverUrl}/auth/login`, request)
     .then((res) => res.data)

@@ -3,8 +3,14 @@ import { doSignout } from "../../modules/auth/signout";
 
 const $modal = document.getElementById("account-info-modal") as HTMLElement;
 
-export const setAccountInfoModal = function (user: User | null = null) {
+export const setAccountInfoModal = function (user: User | null) {
   $modal.classList.add("active");
+  $modal.innerHTML = ``;
+  const $template = document.getElementById(
+    "account-info-modal-template"
+  ) as HTMLTemplateElement;
+  $modal.appendChild($template.content.cloneNode(true));
+
   initModal(user);
 };
 

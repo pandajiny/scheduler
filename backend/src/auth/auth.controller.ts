@@ -28,7 +28,7 @@ export class AuthController {
     try {
       const email = req.user.email;
       console.log(`user information requested from ${email}`);
-      const user = await this.usersService.findUser(email);
+      const user = await this.usersService.findUser({ email });
       if (!user) {
         throw `Can't get user from email ${email}`;
       }

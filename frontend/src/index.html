@@ -7,153 +7,153 @@
   <!-- ios pwa -->
   <meta name="apple-mobile-web-app-capable" content="yes">
 
-
   <link rel="stylesheet" href="styles/styles.scss">
   <script defer src="./scripts/app.ts"></script>
 </head>
 
 <body>
+  <!-- MODALS -->
   <div class="modal-container">
-    <div id="account-info-modal" class="modal">
-      <div class="container">
-        <div class="top-bar">
-          <button class="button-cancel">Close</button>
-          <h3 class="title">Account</h3>
-        </div>
-        <div class="content-container">
-          <div class="account-state"></div>
-          <button class="button-signout">Sign Out</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="add-todo-modal" class="modal">
-      <div class="container">
-        <div class="top-bar">
-          <button class="button-cancel">Cancel</button>
-          <h3 class="title">New Event</h3>
-          <button class="button-submit">Add</button>
-        </div>
-        <div class="content-container">
-          <img class="icon" src="./images/icons/icon_event_gray.png">
-          <input id="input-content" type="text" autocomplete="off" placeholder="Content">
-
-          <img class="icon" src="./images/icons/icon_calendar_gray.png">
-          <input id="input-date" type="date" placeholder="not selected" autocomplete="off">
-        </div>
-      </div>
-    </div>
+    <div id="account-info-modal" class="modal"></div>
+    <div id="add-todo-modal" class="modal"></div>
   </div>
 
+  <!-- PAGES -->
   <div class="main">
-    <div id="welcome-page" class="page">
-      <div class="container">
-        <h1 class="title">Welcome</h1>
-        <p>
-          To use scheduler, Please Login first.
-        </p>
-        <button class="button-login text-button">I already have account.</button>
-        <button class="button-signup text-button">or sign-up</button>
-      </div>
-    </div>
-
-    <div id="login-page" class="page">
-      <div class="container">
-        <p class="title">Please login with your email</p>
-
-        <div class="input-form">
-          <img class="icon" src="./images/icons/icon_email_gray.png">
-          <input class="input-email" type="email" placeholder="example@gmail.com" />
-
-          <img class="icon" src="./images/icons/icon_lock_gray.png">
-          <input class="iuput-password" type="password" placeholder="your password" />
-        </div>
-
-        <button class="button-submit text-button">Login</button>
-
-        <div class="signup-container">
-          <label>Don't have account?</label>
-          <button class="button-signup">Sign-up</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="signup-page" class="page">
-      <div class="container">
-        <p class="title">Please Sign up with email</p>
-
-        <div class="input-form">
-          <img class="icon" src="./images/icons/icon_account_gray.svg">
-          <input class="input-name" type="email" placeholder="홍길동" />
-
-          <img class="icon" src="./images/icons/icon_email_gray.png">
-          <input class="input-email" type="email" placeholder="example@gmail.com" />
-
-          <img class="icon" src="./images/icons/icon_lock_gray.png">
-          <input class="iuput-password" type="password" placeholder="your password" />
-
-          <img class="icon" src="./images/icons/icon_again_gray.svg">
-          <input class="iuput-password-confirm" type="password" placeholder="confirm your password" />
-        </div>
-
-        <button class="button-submit text-button">Sign up</button>
-
-        <div class="signup-container">
-          <label>Already have account?</label>
-          <button class="button-signup">Login</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="todo-page" class="page">
-      <div class="container">
-        <!-- mobile elements -->
-        <div class="top mobile" style="display: none;">
-          <div class="container">
-            <img id="todo-menu-button" class="button" src="./images/icons/icon_menu_white.png" />
-            <h3 id="todo-page-title">category</h3>
-            <img class="button account-button" src="./images/icons/icon_account_white.png" />
-          </div>
-        </div>
-
-
-        <div class="side-bar-container"></div>
-
-        <div class="todolist-container"></div>
-
-        <div class="nav-bar">
-          <div id="nav-list" class="nav-item">
-            <img class="icon" src="./images/icons/icon_list_gray.svg">
-            <label>List</label>
-          </div>
-
-          <div id="nav-todos" class="nav-item">
-            <img class="icon" src="./images/icons/icon_todos_gray.svg">
-            <label>Todos</label>
-          </div>
-
-          <div id="nav-account" class="nav-item">
-            <img class="icon" src="./images/icons/icon_account_gray.svg">
-            <label>Account</label>
-          </div>
-
-          <div id="nav-search" class="nav-item">
-            <img class="icon" src="./images/icons/icon_search_gray.svg">
-            <label>Find</label>
-          </div>
-
-          <div id="nav-new" class="nav-item">
-            <img class="icon" src="./images/icons/icon_plus_gray.svg">
-            <label>New</label>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div id="welcome-page" class="page"></div>
+    <div id="login-page" class="page"></div>
+    <div id="signup-page" class="page"></div>
+    <div id="todo-page" class="page"></div>
   </div>
 
-  <!-- templates -->
 
-  <!-- account template -->
+  <!-- PAGE TEMPLATES -->
+  <template id="welcome-page-template">
+    <div class="container">
+      <h1 class="title">Welcome</h1>
+      <p>
+        To use scheduler, Please Login first.
+      </p>
+      <button class="button-login text-button">I already have account.</button>
+      <button class="button-signup text-button">or sign-up</button>
+    </div>
+  </template>
+
+  <template id="login-page-template">
+    <div class="container">
+      <p class="title">Please login with your email</p>
+
+      <div class="input-form">
+        <img class="icon" src="./images/icons/icon_email_gray.png">
+        <input class="input-email" type="email" placeholder="example@gmail.com" />
+
+        <img class="icon" src="./images/icons/icon_lock_gray.png">
+        <input class="iuput-password" type="password" placeholder="your password" />
+      </div>
+
+      <button class="button-submit text-button">Login</button>
+
+      <div class="signup-container">
+        <label>Don't have account?</label>
+        <button class="button-signup">Sign-up</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="signup-page-template">
+    <div class="container">
+      <p class="title">Please Sign up with email</p>
+
+      <div class="input-form">
+        <img class="icon" src="./images/icons/icon_account_gray.svg">
+        <input class="input-name" type="email" placeholder="홍길동" />
+
+        <img class="icon" src="./images/icons/icon_email_gray.png">
+        <input class="input-email" type="email" placeholder="example@gmail.com" />
+
+        <img class="icon" src="./images/icons/icon_lock_gray.png">
+        <input class="iuput-password" type="password" placeholder="your password" />
+
+        <img class="icon" src="./images/icons/icon_again_gray.svg">
+        <input class="iuput-password-confirm" type="password" placeholder="confirm your password" />
+      </div>
+
+      <button class="button-submit text-button">Sign up</button>
+
+      <div class="signup-container">
+        <label>Already have account?</label>
+        <button class="button-signup">Login</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="todo-page-template">
+    <div class="container">
+      <div class="side-bar-container"></div>
+
+      <div class="todolist-container"></div>
+
+      <div class="nav-bar">
+        <div id="nav-list" class="nav-item">
+          <img class="icon" src="./images/icons/icon_list_gray.svg">
+          <label>List</label>
+        </div>
+
+        <div id="nav-todos" class="nav-item">
+          <img class="icon" src="./images/icons/icon_todos_gray.svg">
+          <label>Todos</label>
+        </div>
+
+        <div id="nav-account" class="nav-item">
+          <img class="icon" src="./images/icons/icon_account_gray.svg">
+          <label>Account</label>
+        </div>
+
+        <div id="nav-search" class="nav-item">
+          <img class="icon" src="./images/icons/icon_search_gray.svg">
+          <label>Find</label>
+        </div>
+
+        <div id="nav-new" class="nav-item">
+          <img class="icon" src="./images/icons/icon_plus_gray.svg">
+          <label>New</label>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- MODAL TEMPLATES -->
+  <template id="account-info-modal-template">
+    <div class="container">
+      <div class="top-bar">
+        <button class="button-cancel">Close</button>
+        <h3 class="title">Account</h3>
+      </div>
+      <div class="content-container">
+        <div class="account-state"></div>
+        <button class="button-signout">Sign Out</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="add-todo-modal-template">
+    <div class="container">
+      <div class="top-bar">
+        <button class="button-cancel">Cancel</button>
+        <h3 class="title">New Event</h3>
+        <button class="button-submit">Add</button>
+      </div>
+      <div class="content-container">
+        <img class="icon" src="./images/icons/icon_event_gray.png">
+        <input id="input-content" type="text" autocomplete="off" placeholder="Content">
+
+        <img class="icon" src="./images/icons/icon_calendar_gray.png">
+        <input id="input-date" type="date" placeholder="not selected" autocomplete="off">
+      </div>
+    </div>
+  </template>
+
+  <!-- COMPONENT TEMPLATES -->
   <template id="account-state-template">
     <img class="icon" src="./images/icons/icon_account_gray.svg">
 
@@ -168,10 +168,6 @@
     </div>
   </template>
 
-  <!-- todo template -->
-  <template id="todo-list-tenplate">
-
-  </template>
   <template id="todo-item-template">
     <div class="content-container">
       <p class="content"></p>
@@ -190,7 +186,6 @@
     </div>
   </template>
 
-  <!--  -->
   <template id="side-bar-template">
     <div class="container">
       <div class="account-state-container"></div>
@@ -198,20 +193,6 @@
     </div>
     <div class="empty-space"></div>
   </template>
-
-  <!-- router config for gh-pages -->
-  <script>
-    (function (l) {
-      if (l.search[1] === '/') {
-        var decoded = l.search.slice(1).split('&').map(function (s) {
-          return s.replace(/~and~/g, '&')
-        }).join('?');
-        window.history.replaceState(null, null,
-          l.pathname.slice(0, -1) + decoded + l.hash
-        );
-      }
-    }(window.location))
-  </script>
 </body>
 
 </html>

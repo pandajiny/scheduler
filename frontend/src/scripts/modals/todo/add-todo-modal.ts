@@ -4,6 +4,11 @@ export const setAddTodoModal = function (
   props: ActionModalProps<AddTodoRequest>
 ) {
   $modal.classList.add("active");
+  $modal.innerHTML = ``;
+  const $template = document.getElementById(
+    "add-todo-modal-template"
+  ) as HTMLTemplateElement;
+  $modal.appendChild($template.content.cloneNode(true));
   initModal(props);
 };
 
@@ -34,7 +39,6 @@ async function initModal(props: ActionModalProps<AddTodoRequest>) {
       ownerId: user.uid,
       parentTodoId: null,
     };
-
     props.handleSubmit(request).then(closeModal);
   };
 

@@ -1,17 +1,22 @@
 import { doSignUp } from "../../modules/auth";
 import { $pages, redirect } from "../../router";
 
-const $signupPage = $pages.signup;
+const $page = $pages.signup;
 export function startSignupPage() {
-  $signupPage.classList.add("active");
-  const $title = $signupPage.querySelector(".title") as HTMLParagraphElement;
+  $page.classList.add("active");
+  $page.innerHTML = ``;
+  const $template = document.getElementById(
+    "signup-page-template"
+  ) as HTMLTemplateElement;
 
-  const $name = $signupPage.querySelector(".input-name") as HTMLInputElement;
-  const $email = $signupPage.querySelector(".input-email") as HTMLInputElement;
-  const $password = $signupPage.querySelector(
-    ".iuput-password"
-  ) as HTMLInputElement;
-  const $confirm = $signupPage.querySelector(
+  $page.appendChild($template.content.cloneNode(true));
+
+  const $title = $page.querySelector(".title") as HTMLParagraphElement;
+
+  const $name = $page.querySelector(".input-name") as HTMLInputElement;
+  const $email = $page.querySelector(".input-email") as HTMLInputElement;
+  const $password = $page.querySelector(".iuput-password") as HTMLInputElement;
+  const $confirm = $page.querySelector(
     ".iuput-password-confirm"
   ) as HTMLInputElement;
 
@@ -23,11 +28,11 @@ export function startSignupPage() {
     $confirm.value = "";
   };
 
-  const $buttonSubmit = $signupPage.querySelector(
+  const $buttonSubmit = $page.querySelector(
     ".button-submit"
   ) as HTMLButtonElement;
 
-  const $buttonLogin = $signupPage.querySelector(
+  const $buttonLogin = $page.querySelector(
     ".button-signup"
   ) as HTMLButtonElement;
 

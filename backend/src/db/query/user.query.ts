@@ -17,15 +17,15 @@ export const selectUserQuery = (condition: {
   const { email, uid } = condition;
 
   if (email && uid) {
-    return `SELECT * FROM ${DB_TABLES} WHERE uid="${uid} AND email=${email}"`;
+    return `SELECT * FROM ${DB_TABLES.USER_TABLE} WHERE uid="${uid} AND email=${email}"`;
   }
 
   if (email) {
-    return `SELECT * FROM ${DB_TABLES} WHERE email="${email}"`;
+    return `SELECT * FROM ${DB_TABLES.USER_TABLE} WHERE email="${email}"`;
   }
 
   if (uid) {
-    return `SELECT * FROM ${DB_TABLES} WHERE uid="${uid}"`;
+    return `SELECT * FROM ${DB_TABLES.USER_TABLE} WHERE uid="${uid}"`;
   }
 
   return `SELECT * FROM ${DB_TABLES.USER_TABLE} WHERE FALSE`;

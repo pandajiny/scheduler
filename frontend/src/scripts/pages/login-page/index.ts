@@ -1,16 +1,19 @@
 import { doLoginWithEmailAndPassword } from "../../modules/auth/login";
 import { $pages, redirect } from "../../router";
 
-const $loginPage = $pages.login;
+const $page = $pages.login;
 
 export function startLoginPage() {
-  $loginPage.classList.add("active");
-  const $title = $loginPage.querySelector(".title") as HTMLParagraphElement;
+  $page.classList.add("active");
+  $page.innerHTML = ``;
+  const $template = document.getElementById(
+    "login-page-template"
+  ) as HTMLTemplateElement;
+  $page.appendChild($template.content.cloneNode(true));
 
-  const $email = $loginPage.querySelector(".input-email") as HTMLInputElement;
-  const $password = $loginPage.querySelector(
-    ".iuput-password"
-  ) as HTMLInputElement;
+  const $title = $page.querySelector(".title") as HTMLParagraphElement;
+  const $email = $page.querySelector(".input-email") as HTMLInputElement;
+  const $password = $page.querySelector(".iuput-password") as HTMLInputElement;
 
   const clearForm = () => {
     $title.textContent = `Please login with your email`;
@@ -18,11 +21,11 @@ export function startLoginPage() {
     $password.value = ``;
   };
 
-  const $buttonSubmit = $loginPage.querySelector(
+  const $buttonSubmit = $page.querySelector(
     ".button-submit"
   ) as HTMLButtonElement;
 
-  const $buttonsignup = $loginPage.querySelector(
+  const $buttonsignup = $page.querySelector(
     ".button-signup"
   ) as HTMLButtonElement;
 

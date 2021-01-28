@@ -1,3 +1,4 @@
+import { $TodoItem } from "../../components/todo/todo-item";
 import { getGroupsFromUser } from "../../modules/groups";
 import { getTodos } from "../../modules/todo";
 import { $pages, redirect } from "../../router";
@@ -6,10 +7,16 @@ import { updateSideBar } from "./side-bar";
 import { updateTodolist } from "./todolist";
 
 let currentUser: User | null;
-const $todosPage = $pages.todos;
+const $page = $pages.todos;
 export async function startTodoPage(user: User) {
-  $todosPage.classList.add("active");
   currentUser = user;
+  $page.classList.add("active");
+  $page.innerHTML = ``;
+  const $template = document.getElementById(
+    "todo-page-template"
+  ) as HTMLTemplateElement;
+  $page.appendChild($template.content.cloneNode(true));
+
   $updateView();
 }
 
@@ -18,8 +25,6 @@ export async function $updateView() {
     redirect.todos();
     return;
   }
-
-  console.log(currentUser);
   const groups = await getGroupsFromUser(currentUser.uid);
   const filter: TodosFilter = {
     userId: currentUser.uid,

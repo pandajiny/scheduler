@@ -15,10 +15,10 @@ interface SideBarProps {
   groups: Group[];
 }
 
-const $todosPage = $pages.todos;
+const $page = $pages.todos;
 export async function updateSideBar(props: SideBarProps) {
   const { user, groups } = props;
-  const $container = $todosPage.querySelector(
+  const $container = $page.querySelector(
     ".side-bar-container"
   ) as HTMLDivElement;
 
