@@ -1,19 +1,33 @@
-export * from "./get-todo";
-export * from "./add-todo";
-export * from "./delete-todo";
-export * from "./update-todo";
+import axios from "axios";
+import { parseErrorResponse } from "../http";
+export async function getTodos(filter: TodosFilter): Promise<Todo[]> {
+  return await axios
+    .get<Todo[]>(`/scheduler/todos`, { params: filter })
+    .then((resp) => resp.data)
+    .catch((err) => {
+      throw parseErrorResponse(err).message;
+    });
+}
 
-// export function getFilter(userId: string): TodosFilter {
-//   if (!userId) {
-//     throw new Error("Cannot parse user id");
-//   }
-//   const filter: TodosFilter = {
-//     userId,
-//   };
+export async function getTodo(todoId: string): Promise<Todo> {
+  return await axios
+    .get<Todo>(`/scheduler/todos/${todoId}`)
+    .then((resp) => resp.data)
+    .catch((err) => {
+      throw parseErrorResponse(err).message;
+    });
+}
 
-//   const groupId = urlParams.get("group_id");
-//   if (groupId) {
-//     filter.groupId = groupId;
-//   }
-//   return filter;
-// }
+export const addTodo = async (request: AddTodoRequest) => {
+  await axios.post("/scheduler/todos", request).catch((err) => {
+    throw parseErrorResponse(err).message;
+  });
+};
+
+export async function deleteTodo(todoId: string) {
+  await axios.delete(`/scheduler/todos/${todoId}`).catch((err) => {
+    throw parseErrorResponse(err).message;
+  });
+}
+
+export async function updateTodo() {}

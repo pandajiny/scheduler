@@ -10,3 +10,5 @@ server
 
 frontend/.cache
 frontend/dist
+.cache
+dist

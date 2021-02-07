@@ -1,8 +1,11 @@
-import { serverUrl } from "../../app";
-import { doGetRequest } from "..//http";
+import axios from "axios";
+import { parseErrorResponse } from "../http";
 
-export async function getGroupsFromUser(userId: string): Promise<Group[]> {
-  const url = `${serverUrl}/users/${userId}/groups`;
-  const groups = await doGetRequest<Group[]>(url);
-  return groups;
+export async function getGroupsFromUid(uid: string): Promise<Group[]> {
+  return await await axios
+    .get<Group[]>(`/scheduler/groups`, { params: { uid } })
+    .then((resp) => resp.data)
+    .catch((err) => {
+      throw parseErrorResponse(err).message;
+    });
 }

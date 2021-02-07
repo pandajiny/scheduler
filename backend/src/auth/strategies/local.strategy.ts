@@ -10,14 +10,14 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super({ usernameField: 'email', passwordField: 'password' });
   }
 
-  async validate(email: string, _password: string): Promise<User> {
-    return await this.authService
-      .validateUser({
-        email,
-        _password,
-      })
-      .catch(err => {
-        throw new UnauthorizedException(err);
-      });
-  }
+  // async validate(email: string, _password: string): Promise<User> {
+  //   return await this.authService
+  //     .validateUser({
+  //       email,
+  //       _password,
+  //     })
+  //     .catch(err => {
+  //       throw new UnauthorizedException(err);
+  //     });
+  // }
 }

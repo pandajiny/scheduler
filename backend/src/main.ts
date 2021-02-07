@@ -1,47 +1,45 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as fs from 'fs';
-import { CERT_PATH, KEY_PATH } from './secret/secrets';
+import * as session from 'express-session';
+import * as redisConnect from 'connect-redis';
+import * as redis from 'redis';
+import * as cors from 'cors';
+import { FRONTEND_URL } from './constants';
 
-const HTTP_PORT = 80;
-const HTTPS_PORT = 443;
+const RedisStore = redisConnect(session);
+const redisClient = redis.createClient({
+  host: 'localhost',
+  port: 6379,
+});
 
-async function startWithHttp() {
+async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
-  console.log(`cors enabled`);
-  await app.listen(HTTP_PORT);
-  const serverUrl = await app.getUrl();
-  console.log(`server is listening on ${serverUrl}`);
-}
-
-async function startWithHttps() {
-  const httpsOptions = {
-    key: fs.readFileSync(KEY_PATH),
-    cert: fs.readFileSync(CERT_PATH),
-  };
-  const app = await NestFactory.create(AppModule, { httpsOptions });
-
-  app.enableCors();
-  console.log(`cors enabled`);
-
-  await app.listen(HTTPS_PORT).catch(err => {
-    throw err;
+  app.enableCors({
+    credentials: true,
+    origin: FRONTEND_URL,
   });
-
+  app.use(
+    session({
+      secret: `secret`,
+      saveUninitialized: true,
+      resave: false,
+      cookie: {
+        maxAge: 24 * 60 * 60 * 1000,
+      },
+      store: new RedisStore({
+        port: 4379,
+        client: redisClient,
+        ttl: 86400,
+      }),
+    }),
+  );
+  const port = process.env.API_PORT;
+  if (!port) {
+    throw `Cannot parse PORT env`;
+  }
+  await app.listen(port);
   const serverUrl = await app.getUrl();
-  console.log(`server is listening on  ${serverUrl}`);
+  console.log(`scheduler api is running on ${serverUrl}`);
 }
 
-if (isFileExists([KEY_PATH, CERT_PATH])) {
-  console.log(`server updated`);
-  console.log(`cert exist, start https server`);
-  startWithHttps();
-} else {
-  console.log(`cert not exist, start http server`);
-  startWithHttp();
-}
-
-function isFileExists(paths: string[]): boolean {
-  return paths.every(path => fs.existsSync(path));
-}
+bootstrap();

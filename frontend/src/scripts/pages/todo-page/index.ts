@@ -1,4 +1,4 @@
-import { getGroupsFromUser } from "../../modules/groups";
+import { getGroupsFromUid } from "../../modules/groups";
 import { getTodo, getTodos } from "../../modules/todo";
 import { $pages, redirect } from "../../router";
 import { initNavBar as updateNavBar } from "./nav-bar";
@@ -29,7 +29,7 @@ export async function $updateView() {
   };
 
   const [groups, todos] = await Promise.all([
-    getGroupsFromUser(currentUser.uid),
+    getGroupsFromUid(currentUser.uid),
     getTodos(filter),
   ]);
 

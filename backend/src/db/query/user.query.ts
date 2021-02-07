@@ -1,12 +1,12 @@
 import { DB_TABLES } from '.';
 
 export const createUserQuery = (user: User): string => {
-  const { _password, email, name, uid } = user;
+  const { email, name, uid } = user;
   return `
     INSERT INTO ${DB_TABLES.USER_TABLE}
     (uid, name, email, _password)
     VALUES
-    ("${uid}","${name}","${email}","${_password}");
+    ("${uid}","${name}","${email}","$");
     `;
 };
 
@@ -32,11 +32,10 @@ export const selectUserQuery = (condition: {
 };
 
 export const updateUserQuery = (user: User) => {
-  const { _password, email, name, uid } = user;
+  const { email, name, uid } = user;
   const query = `
     UPDATE ${DB_TABLES.USER_TABLE} SET
 
-    _password="${_password}",
     email="${email}",
     name="${name}"
 

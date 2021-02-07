@@ -1,4 +1,4 @@
-import { doLoginWithEmailAndPassword } from "../../modules/auth/login";
+import { doLoginWithEmailAndPassword } from "../../modules/auth";
 import { $pages, redirect } from "../../router";
 
 const $page = $pages.login;
@@ -35,16 +35,15 @@ export function startLoginPage() {
     const email = $email.value;
     const password = $password.value;
 
-    try {
-      await doLoginWithEmailAndPassword({
-        email,
-        password,
-      })
-        .then(redirect.todos)
-        .then(clearForm);
-    } catch (err) {
-      $title.textContent = err;
-    }
+    await doLoginWithEmailAndPassword({
+      email,
+      password,
+    })
+      .then(redirect.todos)
+      .then(clearForm)
+      .catch((err) => {
+        $title.textContent = err;
+      });
   };
 
   $buttonsignup.onclick = redirect.signup;

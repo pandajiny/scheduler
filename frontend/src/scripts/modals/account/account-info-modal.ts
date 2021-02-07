@@ -1,5 +1,5 @@
 import { $AccountState } from "../../components/account/account-state";
-import { doSignout } from "../../modules/auth/signout";
+import { doSignout } from "../../modules/auth";
 
 const $modal = document.getElementById("account-info-modal") as HTMLElement;
 

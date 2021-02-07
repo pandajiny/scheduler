@@ -1,10 +1,9 @@
-import { serverUrl } from "../../app";
 import { doDeleteRequest } from "..//http";
 
 export async function deleteGroup(userId: string, groupId: string) {
-  const url = `${serverUrl}/users/${userId}/groups/${groupId}`;
-  const result = await doDeleteRequest<ActionResult>({
-    url,
-  });
-  return result;
+  // const url = `${serverUrl}/users/${userId}/groups/${groupId}`;
+  // const result = await doDeleteRequest<ActionResult>({
+  //   url,
+  // });
+  // return result;
 }

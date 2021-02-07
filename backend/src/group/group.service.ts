@@ -1,58 +1,45 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { Action } from 'rxjs/internal/scheduler/Action';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { DbService } from 'src/db/db.service';
-import { DB_TABLES, getCurrentTime, getUniqueString } from 'src/db/query';
-import { getDeleteGroupQuery } from 'src/db/query/group.query';
-import { UsersService } from 'src/users/users.service';
+import { DB_TABLES } from 'src/db/query';
+import {
+  insertGroupQuery,
+  selectGroupQuery,
+  selectGroupsQuery,
+} from 'src/db/query/group.query';
 
 @Injectable()
 export class GroupService {
   constructor(
-    private dbService: DbService,
-    @Inject(forwardRef(() => UsersService))
-    private userService: UsersService,
+    private dbService: DbService, // private userService: UsersService,
   ) {}
+
   async getGroupsFromUid(uid: string): Promise<Group[]> {
-    const isUserExist = await this.userService.isUserExist(uid);
-    if (!isUserExist) {
-      throw `User Not Exist`;
+    return await this.dbService.get<Group>(selectGroupsQuery({ uid }));
+  }
+
+  async getGroupInformation(groupId: string, uid: string): Promise<Group> {
+    const group = await this.dbService.get<Group>(selectGroupQuery(groupId));
+    if (group[0]) {
+      return group[0];
+    } else {
+      throw new BadRequestException('Cannot get group');
     }
-
-    if (!(await this.userService.findUser({ uid }))) {
-      throw `User not exist`;
-    }
-
-    const query = `SELECT * FROM todo_groups WHERE owner_id="${uid}"`;
-    const groups = await this.dbService.get<Group>(query, 'scheduler_db');
-    return groups;
   }
 
-  async addGroup(request: AddGroupRequest): Promise<ActionResult> {
-    const groupId = getUniqueString();
-    const createTime = getCurrentTime();
-    const { groupName, userId } = request;
-
-    const query = `
-        INSERT INTO todo_groups
-        (group_id, group_name, owner_id, create_time)
-        VALUES ("${groupId}", "${groupName}", "${userId}", ${createTime});
-      `;
-
-    const dbResult = await this.dbService.write(query, 'scheduler_db');
-
-    return {
-      ok: true,
-      message: dbResult.message,
-    };
+  async addGroup(request: AddGroupRequest) {
+    const query = insertGroupQuery(request);
+    await this.dbService.write(query).catch(err => {
+      console.error(err);
+      throw new Error(`Cannot create group.`);
+    });
   }
 
-  async deleteGroup(groupId: string): Promise<ActionResult> {
-    const query = getDeleteGroupQuery({ groupId });
-    const result = await this.dbService.write(query, 'scheduler_db');
-    return result;
+  async deleteGroup(groupId: string) {
+    // const query = getDeleteGroupQuery({ groupId });
+    // await this.dbService.write(query);
   }
 
-  async updateGroup(group: Group): Promise<ActionResult> {
+  async updateGroup(group: Group) {
     const { group_id, create_time, group_name, owner_id } = group;
     const query = `
       UPDATE ${DB_TABLES.TODO_GROUP_TABLE} SET
@@ -64,7 +51,6 @@ export class GroupService {
       WHERE group_id = "${group_id}";
     `;
 
-    const result = await this.dbService.write(query, 'scheduler_db');
-    return result;
+    await this.dbService.write(query);
   }
 }

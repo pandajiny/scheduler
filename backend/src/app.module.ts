@@ -6,10 +6,11 @@ import { DbModule } from './db/db.module';
 import { DbService } from './db/db.service';
 import { ApiModule } from './api/api.module';
 import { UsersModule } from './users/users.module';
+import { TodoModule } from './todo/todo.module';
 
 @Module({
   providers: [AppService],
   controllers: [AppController],
-  imports: [UsersModule, DbModule, AuthModule, ApiModule],
+  imports: [TodoModule, DbModule, AuthModule, ApiModule],
 })
 export class AppModule {}

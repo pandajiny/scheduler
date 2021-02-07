@@ -154,9 +154,8 @@
 
   <!-- COMPONENT TEMPLATES -->
   <template id="account-state-template">
-    <img class="icon" src="./images/icons/icon_account_gray.svg">
-
     <div class="account-container">
+      <img class="icon" src="./images/icons/icon_account_white.svg">
       <p class="name"></p>
       <p class="email"></p>
     </div>
@@ -187,10 +186,21 @@
 
   <template id="side-bar-template">
     <div class="container">
+      <div class="cancel-button-container">
+        <img class="cancel-button" src="./images/icons/icon_back_white.svg">
+        <p>Back</p>
+      </div>
       <div class="account-state-container"></div>
-      <div class="menu-container"></div>
+      <ul class="nav-list"></ul>
     </div>
     <div class="empty-space"></div>
+  </template>
+
+  <template id="nav-item-template">
+    <div class="container">
+      <img class="icon" src="./images/icons/icon_list_item_white.svg">
+      <p class="title"></p>
+    </div>
   </template>
 </body>
 

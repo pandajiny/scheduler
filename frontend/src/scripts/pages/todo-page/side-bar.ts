@@ -1,10 +1,10 @@
 import { $AccountState } from "../../components/account/account-state";
 import { $pages } from "../../router";
 
-interface ListProps {
-  title?: string;
-  items: NavItem[];
-}
+// interface ListProps {
+//   title?: string;
+//   items: NavItem[];
+// }
 
 interface NavItem {
   title: string;
@@ -21,6 +21,9 @@ export async function updateSideBar(props: SideBarProps) {
   const $container = $page.querySelector(
     ".side-bar-container"
   ) as HTMLDivElement;
+  function closeSidebar() {
+    $container.classList.remove("active");
+  }
 
   $container.innerHTML = ``;
 
@@ -32,54 +35,60 @@ export async function updateSideBar(props: SideBarProps) {
   ) as HTMLTemplateElement;
   $sidebar.appendChild($template.content.cloneNode(true));
 
+  const $buttonCancel = $sidebar.querySelector(
+    ".cancel-button-container"
+  ) as HTMLElement;
+  $buttonCancel.onclick = closeSidebar;
+
   const $account = $sidebar.querySelector(
     ".account-state-container"
   ) as HTMLElement;
 
-  const $menu = $sidebar.querySelector(".menu-container") as HTMLDivElement;
+  const $navs = $sidebar.querySelector(".nav-list") as HTMLDivElement;
 
   $account.appendChild($AccountState(user));
 
-  $menu.appendChild(
-    $List({
-      title: "Todos",
-      items: groups.map((group) => {
-        return {
-          title: group.group_name,
-        };
-      }),
-    })
-  );
+  $navs.append(...groups.map((group) => $NavItem({ title: group.group_name })));
 
   const $empty = $sidebar.querySelector(".empty-space") as HTMLElement;
 
-  $empty.onclick = () => {
-    $container.classList.remove("active");
-  };
+  $empty.onclick = closeSidebar;
 
   $container.appendChild($sidebar);
 }
 
-function $List(props: ListProps): HTMLUListElement {
-  const { items, title } = props;
-  const $list = document.createElement("ul");
+const $NavItem = (item: NavItem): HTMLLIElement => {
+  const $item = document.createElement("li");
+  $item.className = "nav-item";
+  const $template = document.getElementById(
+    "nav-item-template"
+  ) as HTMLTemplateElement;
+  $item.appendChild($template.content.cloneNode(true));
+  const $title = $item.querySelector(".title") as HTMLParagraphElement;
+  $title.textContent = item.title;
+  return $item;
+};
 
-  if (title) {
-    const $title = document.createElement("h3");
-    $title.textContent = title;
-    $list.appendChild($title);
-  }
+// function $List(props: ListProps): HTMLUListElement {
+//   const { items, title } = props;
+//   const $list = document.createElement("ul");
 
-  $list.append(
-    ...items.map((item) => {
-      const $item = document.createElement("li");
+//   if (title) {
+//     const $title = document.createElement("h3");
+//     $title.textContent = title;
+//     $list.appendChild($title);
+//   }
 
-      $item.textContent = item.title;
-      $item.onclick = () => {};
+//   $list.append(
+//     ...items.map((item) => {
+//       const $item = document.createElement("li");
 
-      return $item;
-    })
-  );
+//       $item.textContent = item.title;
+//       $item.onclick = () => {};
 
-  return $list;
-}
+//       return $item;
+//     })
+//   );
+
+//   return $list;
+// }

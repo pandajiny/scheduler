@@ -1,5 +1,4 @@
-import { keyInputListener } from "../../App";
-import { updateTodo, deleteTodo } from "../../modules/todo";
+import { deleteTodo } from "../../modules/todo";
 
 export function $TodoItem(todo: Todo, handleUpdate: () => void): HTMLElement {
   const $todo = document.createElement("div");
@@ -29,16 +28,16 @@ export function $TodoItem(todo: Todo, handleUpdate: () => void): HTMLElement {
   // content
   $content.textContent = todo.content;
   $contentEdit.onblur = unsetContentEditMode;
-  $contentEdit.onkeypress = (ev) => {
-    keyInputListener(ev, () => {
-      if (todo.content != $contentEdit.value) {
-        todo.content = $contentEdit.value;
-        updateTodo(todo).then(handleUpdate);
-      } else {
-        unsetContentEditMode();
-      }
-    });
-  };
+  // $contentEdit.onkeypress = (ev) => {
+  //   keyInputListener(ev, () => {
+  //     if (todo.content != $contentEdit.value) {
+  //       todo.content = $contentEdit.value;
+  //       // updateTodo(todo).then(handleUpdate);
+  //     } else {
+  //       unsetContentEditMode();
+  //     }
+  //   });
+  // };
 
   // actions
   $todo.onclick = () => {
@@ -76,7 +75,7 @@ export function $TodoItem(todo: Todo, handleUpdate: () => void): HTMLElement {
 
   $doneButton.addEventListener("click", () => {
     todo.complete_datetime = new Date().getTime();
-    updateTodo(todo).then(handleUpdate);
+    // updateTodo(todo).then(handleUpdate);
   });
 
   return $todo;

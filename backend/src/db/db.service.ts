@@ -1,73 +1,37 @@
-import { Injectable } from '@nestjs/common';
-import * as mysql from 'mysql';
-import { dbHost, dbPassword } from 'src/secret/secrets';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import * as mysql from 'mysql2/promise';
+import { DB_HOST, DB_PASSWORD, DB_PORT } from 'src/constants';
 
 @Injectable()
 export class DbService {
   dbInstance = mysql;
 
-  getConnectOptions(dbName: string): mysql.ConnectionConfig {
-    return {
-      host: dbHost,
-      port: 3306,
-      user: 'root',
-      password: dbPassword,
-      database: dbName,
-    };
+  private readonly connectionOptions: mysql.ConnectionOptions = {
+    host: DB_HOST,
+    port: parseInt(DB_PORT),
+    user: 'root',
+    password: DB_PASSWORD,
+    database: 'scheduler_db',
+  };
+
+  async checkConnection() {
+    const conn = await mysql.createConnection(this.connectionOptions);
+    await conn.connect();
+  }
+  async get<T>(query: string): Promise<T[]> {
+    const connection = await mysql.createConnection(this.connectionOptions);
+    const [rows] = await connection.execute(query).catch(err => {
+      console.error(err);
+      throw new InternalServerErrorException(err);
+    });
+    return (rows as any[]).map<T>(row => ({ ...row }));
   }
 
-  async get<T>(query: string, dbName: string): Promise<T[]> {
-    console.log(`get query with ${query}`);
-
-    const queryResult = await new Promise<T[]>((res, reject) => {
-      const options = this.getConnectOptions(dbName);
-      const connection = mysql.createConnection(options);
-      connection.connect(err => {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        connection.query(query, (err, results) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-
-          connection.end();
-
-          if (results) {
-            res(results);
-          } else {
-            res([]);
-          }
-          return;
-        });
-      });
+  async write(query: string): Promise<void> {
+    const connection = await mysql.createConnection(this.connectionOptions);
+    await connection.execute(query).catch(err => {
+      console.error(err);
+      throw new InternalServerErrorException(err);
     });
-
-    console.log(`get query done`);
-    return queryResult;
-  }
-
-  async write(query: string, dbName: string): Promise<ActionResult> {
-    console.log(`write query with ${query}`);
-    const queryResult = await new Promise<ActionResult>((res, rej) => {
-      const options = this.getConnectOptions(dbName);
-      const connection = mysql.createConnection(options);
-      connection.query(query, (err, results) => {
-        if (err) {
-          rej(err);
-          return;
-        }
-
-        res({
-          ok: true,
-          message: `successfully done query ${query}`,
-        });
-      });
-    });
-    console.log(`write query done`);
-    return queryResult;
   }
 }

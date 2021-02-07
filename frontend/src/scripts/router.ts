@@ -16,33 +16,33 @@ export const $pages: Record<PageNames, HTMLElement> = {
   signup: $signupPage,
 };
 
-import { getUser } from "./modules/auth";
+import { getAuth } from "./modules/auth";
 import { startLoginPage } from "./pages/login-page";
 import { startWelcomePage } from "./pages/welcome-page";
 import { startTodoPage } from "./pages/todo-page";
 import { startSignupPage } from "./pages/signup-page";
 
-const startPages: Record<PagePaths, (user: User | null) => void> = {
+const startPage: Record<PagePaths, (user: User | null) => void> = {
   "/": (user) => (user ? startTodoPage(user) : redirect.welcome()),
   "/welcome": (user) => (user ? redirect.todos() : startWelcomePage()),
   "/login": (user) => (user ? redirect.todos() : startLoginPage()),
   "/signup": (user) => (user ? redirect.todos() : startSignupPage()),
 };
 
-export async function updatePage() {
-  try {
-    clearPages();
-    const path = location.pathname as PagePaths;
-    const user = await getUser();
-    startPages[path](user);
-  } catch (err) {
-    console.error(err);
+export async function updatePage(newPath?: PagePaths) {
+  if (newPath) {
+    history.pushState({}, "", newPath);
   }
-}
+  clearPages();
+  const path = location.pathname as PagePaths;
 
-function updatePath(path: PagePaths) {
-  history.pushState({}, "", path);
-  updatePage();
+  getAuth()
+    .then((user) => {
+      startPage[path](user);
+    })
+    .catch(() => {
+      startPage[path](null);
+    });
 }
 
 function clearPages() {
@@ -53,10 +53,10 @@ function clearPages() {
 }
 
 export const redirect: Record<PageNames, () => void> = {
-  todos: () => updatePath("/"),
-  welcome: () => updatePath("/welcome"),
-  login: () => updatePath("/login"),
-  signup: () => updatePath("/signup"),
+  todos: () => updatePage("/"),
+  welcome: () => updatePage("/welcome"),
+  login: () => updatePage("/login"),
+  signup: () => updatePage("/signup"),
 };
 
 export function handleGithubPages(location: Location) {
