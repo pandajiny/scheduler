@@ -1,13 +1,9 @@
 import { $AccountState } from "../../components/account/account-state";
 import { $pages } from "../../router";
 
-// interface ListProps {
-//   title?: string;
-//   items: NavItem[];
-// }
-
 interface NavItem {
   title: string;
+  onclick: () => void;
 }
 
 interface SideBarProps {
@@ -48,7 +44,14 @@ export async function updateSideBar(props: SideBarProps) {
 
   $account.appendChild($AccountState(user));
 
-  $navs.append(...groups.map((group) => $NavItem({ title: group.group_name })));
+  $navs.append(
+    ...groups.map((group) =>
+      $NavItem({
+        title: group.group_name,
+        onclick: () => {},
+      })
+    )
+  );
 
   const $empty = $sidebar.querySelector(".empty-space") as HTMLElement;
 
@@ -60,6 +63,7 @@ export async function updateSideBar(props: SideBarProps) {
 const $NavItem = (item: NavItem): HTMLLIElement => {
   const $item = document.createElement("li");
   $item.className = "nav-item";
+  $item.onclick = item.onclick;
   const $template = document.getElementById(
     "nav-item-template"
   ) as HTMLTemplateElement;

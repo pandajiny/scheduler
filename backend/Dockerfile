@@ -4,8 +4,11 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install --only=prod
 
-COPY . .
+COPY ./dist .
+COPY .env .
 
-CMD ["node","dist/main.js"]
+EXPOSE 5000
+
+CMD ["node","main.js"]

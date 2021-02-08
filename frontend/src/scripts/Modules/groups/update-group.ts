@@ -1,5 +1,3 @@
-import { doPutRequest } from "..//http";
-
 export async function updateGroup(group: Group) {
   // const url = `${serverUrl}/users/${group.owner_id}/groups/${group.group_id}`;
   //   (await doPutRequest()

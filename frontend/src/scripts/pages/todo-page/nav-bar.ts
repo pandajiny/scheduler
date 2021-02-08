@@ -34,4 +34,12 @@ export function initNavBar(user: User) {
       },
     });
   };
+  // temp
+  setAddTodoModal({
+    user,
+    handleCancel: async () => {},
+    handleSubmit: async (request: AddTodoRequest) => {
+      await addTodo(request).then($updateView);
+    },
+  });
 }

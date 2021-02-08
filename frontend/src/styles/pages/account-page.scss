@@ -1,0 +1,63 @@
+@use '../colors.scss';
+
+#account-page {
+  > .container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 30%;
+    color: colors.$color-text-secondary;
+
+    > .profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+
+      > .profile-photo {
+        @extend .gray;
+        $size: 64px;
+        width: $size;
+        height: $size;
+
+        margin: 16px;
+      }
+
+      > p {
+        font-size: 24px;
+      }
+    }
+
+    > .account-information {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+
+      > .item {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        column-gap: 12px;
+
+        > .icon {
+          @extend .gray;
+        }
+
+        > p {
+          color: colors.$color-text-disabled;
+          font-size: 18px;
+          height: fit-content;
+        }
+      }
+    }
+
+    > .actions {
+      margin-top: 32px;
+    }
+  }
+}

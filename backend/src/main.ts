@@ -4,12 +4,12 @@ import * as session from 'express-session';
 import * as redisConnect from 'connect-redis';
 import * as redis from 'redis';
 import * as cors from 'cors';
-import { FRONTEND_URL } from './constants';
+import { FRONTEND_URL, REDIS_HOST, REDIS_PORT } from './constants';
 
 const RedisStore = redisConnect(session);
 const redisClient = redis.createClient({
-  host: 'localhost',
-  port: 6379,
+  host: REDIS_HOST,
+  port: parseInt(REDIS_PORT),
 });
 
 async function bootstrap() {

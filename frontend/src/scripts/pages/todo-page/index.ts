@@ -1,5 +1,6 @@
+import { $renderTemplate } from "../../modules/document";
 import { getGroupsFromUid } from "../../modules/groups";
-import { getTodo, getTodos } from "../../modules/todo";
+import { getTodos } from "../../modules/todo";
 import { $pages, redirect } from "../../router";
 import { initNavBar as updateNavBar } from "./nav-bar";
 import { updateSideBar } from "./side-bar";
@@ -10,12 +11,7 @@ const $page = $pages.todos;
 export async function startTodoPage(user: User) {
   currentUser = user;
   $page.classList.add("active");
-  $page.innerHTML = ``;
-  const $template = document.getElementById(
-    "todo-page-template"
-  ) as HTMLTemplateElement;
-  $page.appendChild($template.content.cloneNode(true));
-
+  $renderTemplate($page, `todo-page-template`);
   $updateView();
 }
 

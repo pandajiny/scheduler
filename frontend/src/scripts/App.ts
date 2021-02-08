@@ -6,6 +6,7 @@ function bootstrap() {
   handleGithubPages(window.location);
   axios.defaults.baseURL = SERVER_URL;
   axios.defaults.withCredentials = true;
+  console.log(SERVER_URL);
   updatePage();
   window.onpopstate = () => {
     updatePage();

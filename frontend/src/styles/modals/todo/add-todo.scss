@@ -21,6 +21,10 @@
       display: grid;
       grid-template-columns: min-content auto;
       gap: 8px 4px;
+
+      > img {
+        @extend .gray;
+      }
     }
   }
 }

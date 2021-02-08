@@ -13,9 +13,10 @@
   },
   "scripts": {
     "dev": "set NODE_ENV=dev && parcel src/index.html",
+    "prebuild": "rimraf ../docs",
+    "build": "parcel build src/*.html -d ../docs --public-url ./ && copyfiles ../CNAME ../docs/CNAME",
     "predeploy": "npm run build",
     "deploy": "git add ../docs && git commit -m \"update hosting\" && git push origin main",
-    "build": "rimraf ../docs && parcel build src/*.html -d ../docs --public-url ./ && copyfiles ../CNAME ../docs/CNAME",
     "compile": "tsc --noEmit -w",
     "update-types": "cd src/types && (git add . && git commit -m '' && git push) & git pull"
   }

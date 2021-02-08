@@ -1,14 +1,14 @@
+import { group } from "console";
+import { $renderTemplate } from "../../modules/document";
+import { getGroupsFromUid } from "../../modules/groups";
+
 const $modal = document.getElementById("add-todo-modal") as HTMLElement;
 
 export const setAddTodoModal = function (
   props: ActionModalProps<AddTodoRequest>
 ) {
   $modal.classList.add("active");
-  $modal.innerHTML = ``;
-  const $template = document.getElementById(
-    "add-todo-modal-template"
-  ) as HTMLTemplateElement;
-  $modal.appendChild($template.content.cloneNode(true));
+  $renderTemplate($modal, `add-todo-modal-template`);
   initModal(props);
 };
 
@@ -20,9 +20,15 @@ async function initModal(props: ActionModalProps<AddTodoRequest>) {
   ) as HTMLButtonElement;
   const $btnAdd = $modal.querySelector(".button-submit") as HTMLButtonElement;
   const $inputContent = $modal.querySelector(
-    "#input-content"
+    ".input-content"
   ) as HTMLInputElement;
-  const $inputDate = $modal.querySelector("#input-date") as HTMLInputElement;
+  const $inputDate = $modal.querySelector(".input-date") as HTMLInputElement;
+  const $selectGroup = $modal.querySelector(
+    ".select-group"
+  ) as HTMLSelectElement;
+
+  const groups = await getGroupsFromUid().catch(() => []);
+  $selectGroup.append(...$groupOptions(groups));
 
   const closeModal = () => {
     $modal.classList.remove("active");
@@ -34,7 +40,10 @@ async function initModal(props: ActionModalProps<AddTodoRequest>) {
   $btnAdd.onclick = () => {
     const request: AddTodoRequest = {
       content: $inputContent.value,
-      groupId: null,
+      groupId:
+        $selectGroup.selectedIndex != 0
+          ? groups[$selectGroup.selectedIndex].group_id
+          : null,
       limitDatetime: new Date($inputDate.value).getTime(),
       ownerId: user.uid,
       parentTodoId: null,
@@ -48,3 +57,16 @@ async function initModal(props: ActionModalProps<AddTodoRequest>) {
     });
   };
 }
+
+const $groupOptions = (groups: Group[]): HTMLOptionElement[] => {
+  const $notselect = document.createElement("option");
+  $notselect.textContent = `Not select`;
+  return [
+    $notselect,
+    ...groups.map((group) => {
+      const $option = document.createElement("option");
+      $option.textContent = group.group_name;
+      return $option;
+    }),
+  ];
+};

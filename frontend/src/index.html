@@ -21,6 +21,7 @@
   <!-- PAGES -->
   <div class="main">
     <div id="welcome-page" class="page"></div>
+    <div id="account-page" class="page"></div>
     <div id="login-page" class="page"></div>
     <div id="signup-page" class="page"></div>
     <div id="todo-page" class="page"></div>
@@ -108,15 +109,37 @@
           <label>Account</label>
         </div>
 
-        <div id="nav-search" class="nav-item">
+        <!-- <div id="nav-search" class="nav-item">
           <img class="icon" src="./images/icons/icon_search_gray.svg">
           <label>Find</label>
-        </div>
+        </div> -->
 
         <div id="nav-new" class="nav-item">
           <img class="icon" src="./images/icons/icon_plus_gray.svg">
           <label>New</label>
         </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="account-page-template">
+    <div class="container">
+      <div class="profile">
+        <img class="profile-photo" src="./images/icons/icon_account_white.svg">
+        <p class="name">pandajiny</p>
+      </div>
+      <div class="account-information">
+        <div class="item">
+          <img class="icon" src="images/icons/icon_email.svg">
+          <p class="email">astic1764@gmail.com</p>
+        </div>
+        <div class="item">
+          <img class="icon" src="images/icons/icon_lock_gray.png">
+          <p class="email">Change password</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button>Sign out</button>
       </div>
     </div>
   </template>
@@ -142,12 +165,16 @@
         <h3 class="title">New Event</h3>
         <button class="button-submit">Add</button>
       </div>
-      <div class="content-container">
-        <img class="icon" src="./images/icons/icon_event_gray.png">
-        <input id="input-content" type="text" autocomplete="off" placeholder="Content">
 
-        <img class="icon" src="./images/icons/icon_calendar_gray.png">
-        <input id="input-date" type="date" placeholder="not selected" autocomplete="off">
+      <div class="content-container">
+        <img class="icon" src="./images/icons/icon_todos.svg">
+        <input class="input-content" type="text" autocomplete="off" placeholder="Content">
+
+        <img class="icon" src="./images/icons/icon_calendar.svg">
+        <input class="input-date" type="date" placeholder="not selected" autocomplete="off">
+
+        <img class="icon" src="./images/icons/icon_group.svg">
+        <select class="select-group"></select>
       </div>
     </div>
   </template>
