@@ -4,8 +4,6 @@ import { DB_HOST, DB_PASSWORD, DB_PORT } from 'src/constants';
 
 @Injectable()
 export class DbService {
-  dbInstance = mysql;
-
   private readonly connectionOptions: mysql.ConnectionOptions = {
     host: DB_HOST,
     port: parseInt(DB_PORT),
@@ -13,7 +11,6 @@ export class DbService {
     password: DB_PASSWORD,
     database: 'scheduler_db',
   };
-
   async checkConnection() {
     const conn = await mysql.createConnection(this.connectionOptions);
     await conn.connect();

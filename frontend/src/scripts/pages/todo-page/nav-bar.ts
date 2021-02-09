@@ -1,4 +1,3 @@
-import axios from "axios";
 import { $updateView } from ".";
 import { setAccountInfoModal } from "../../modals/account/account-info-modal";
 import { setAddTodoModal } from "../../modals/todo/add-todo-modal";
@@ -34,12 +33,4 @@ export function initNavBar(user: User) {
       },
     });
   };
-  // temp
-  setAddTodoModal({
-    user,
-    handleCancel: async () => {},
-    handleSubmit: async (request: AddTodoRequest) => {
-      await addTodo(request).then($updateView);
-    },
-  });
 }

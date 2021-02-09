@@ -1,9 +1,10 @@
-import axios from "axios";
+import { SchedulerService } from "../../script";
 import { parseErrorResponse } from "../http";
 
 export async function getGroupsFromUid(uid?: string): Promise<Group[]> {
-  return await await axios
-    .get<Group[]>(`/scheduler/groups`, { params: { uid } })
+  return await SchedulerService.get<Group[]>(`/groups`, {
+    params: { uid },
+  })
     .then((resp) => resp.data)
     .catch((err) => {
       throw parseErrorResponse(err).message;

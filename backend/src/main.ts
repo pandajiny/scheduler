@@ -1,45 +1,45 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as session from 'express-session';
-import * as redisConnect from 'connect-redis';
-import * as redis from 'redis';
-import * as cors from 'cors';
-import { FRONTEND_URL, REDIS_HOST, REDIS_PORT } from './constants';
-
-const RedisStore = redisConnect(session);
-const redisClient = redis.createClient({
-  host: REDIS_HOST,
-  port: parseInt(REDIS_PORT),
-});
+import * as fs from 'fs';
+import {
+  API_PORT,
+  CERT_PATH,
+  corsOptions,
+  KEY_PATH,
+  sessionOptions,
+} from './constants';
+import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.enableCors({
-    credentials: true,
-    origin: FRONTEND_URL,
-  });
-  app.use(
-    session({
-      secret: `secret`,
-      saveUninitialized: true,
-      resave: false,
-      cookie: {
-        maxAge: 24 * 60 * 60 * 1000,
-      },
-      store: new RedisStore({
-        port: 4379,
-        client: redisClient,
-        ttl: 86400,
-      }),
-    }),
-  );
-  const port = process.env.API_PORT;
-  if (!port) {
-    throw `Cannot parse PORT env`;
+  const httpsOptions: HttpsOptions | undefined = isCertExist({
+    keyPath: KEY_PATH,
+    certPath: CERT_PATH,
+  })
+    ? {
+        key: fs.readFileSync(KEY_PATH),
+        cert: fs.readFileSync(CERT_PATH),
+      }
+    : undefined;
+
+  if (httpsOptions) {
+    console.log(`run as https`);
+  } else {
+    console.log(`run as http`);
   }
-  await app.listen(port);
+  const app = await NestFactory.create(AppModule, {
+    httpsOptions,
+  });
+  app.enableCors(corsOptions);
+  app.use(session(sessionOptions));
+
+  await app.listen(API_PORT);
   const serverUrl = await app.getUrl();
   console.log(`scheduler api is running on ${serverUrl}`);
 }
+
+const isCertExist = (paths: { keyPath: string; certPath: string }): boolean => {
+  return fs.existsSync(paths.keyPath) && fs.existsSync(paths.certPath);
+};
 
 bootstrap();

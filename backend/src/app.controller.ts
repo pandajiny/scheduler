@@ -1,4 +1,3 @@
-import { AppService } from './app.service';
 import { Controller, Get, InternalServerErrorException } from '@nestjs/common';
 import { DbService } from './db/db.service';
 

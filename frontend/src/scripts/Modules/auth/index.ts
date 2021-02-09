@@ -1,9 +1,9 @@
-import axios from "axios";
+import { AuthService } from "../../script";
 import { redirect } from "../../router";
 import { parseErrorResponse } from "../http";
 
 export const getAuth = async (): Promise<User> => {
-  return await axios.get<User>(`/auth`).then((resp) => resp.data);
+  return await AuthService.get<User>(`/auth`).then((resp) => resp.data);
 };
 
 const validateLoginForm = (request: LoginRequest) => {
@@ -23,14 +23,13 @@ const validateLoginForm = (request: LoginRequest) => {
 
 export async function doLoginWithEmailAndPassword(request: LoginRequest) {
   validateLoginForm(request);
-  await axios.post(`/auth`, request).catch((err: HttpError) => {
+  await AuthService.post(`/auth`, request).catch((err: HttpError) => {
     throw parseErrorResponse(err).message;
   });
 }
 
 export async function doSignout() {
-  await axios
-    .delete("/auth")
+  await AuthService.delete("/auth")
     .then(redirect.welcome)
     .catch((err) => {
       throw parseErrorResponse(err).message;
@@ -57,7 +56,7 @@ const validateSignUpForm = (request: SignUpRequest) => {
 export const doSignUp = async (request: SignUpRequest): Promise<void> => {
   validateSignUpForm(request);
 
-  await axios.post<LoginResult>(`/auth/signup`, request).catch((err) => {
+  await AuthService.post<LoginResult>(`/auth/signup`, request).catch((err) => {
     throw parseErrorResponse(err).message;
   });
 };

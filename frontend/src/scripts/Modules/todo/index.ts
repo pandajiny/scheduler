@@ -1,8 +1,9 @@
-import axios from "axios";
+import { SchedulerService } from "../../script";
 import { parseErrorResponse } from "../http";
 export async function getTodos(filter: TodosFilter): Promise<Todo[]> {
-  return await axios
-    .get<Todo[]>(`/scheduler/todos`, { params: filter })
+  return await SchedulerService.get<Todo[]>(`/todos`, {
+    params: filter,
+  })
     .then((resp) => resp.data)
     .catch((err) => {
       throw parseErrorResponse(err).message;
@@ -10,8 +11,7 @@ export async function getTodos(filter: TodosFilter): Promise<Todo[]> {
 }
 
 export async function getTodo(todoId: string): Promise<Todo> {
-  return await axios
-    .get<Todo>(`/scheduler/todos/${todoId}`)
+  return await SchedulerService.get<Todo>(`/todos/${todoId}`)
     .then((resp) => resp.data)
     .catch((err) => {
       throw parseErrorResponse(err).message;
@@ -19,13 +19,13 @@ export async function getTodo(todoId: string): Promise<Todo> {
 }
 
 export const addTodo = async (request: AddTodoRequest) => {
-  await axios.post("/scheduler/todos", request).catch((err) => {
+  await SchedulerService.post("/todos", request).catch((err) => {
     throw parseErrorResponse(err).message;
   });
 };
 
 export async function deleteTodo(todoId: string) {
-  await axios.delete(`/scheduler/todos/${todoId}`).catch((err) => {
+  await SchedulerService.delete(`/todos/${todoId}`).catch((err) => {
     throw parseErrorResponse(err).message;
   });
 }
