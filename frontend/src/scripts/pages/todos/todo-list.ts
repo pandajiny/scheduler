@@ -1,5 +1,5 @@
 import { $updateView } from ".";
-import { $Todolist } from "../../components/todo/todo-list";
+import { TodoList } from "../../components/todo/todo-list";
 import { $pages } from "../../router";
 
 const $todosPage = $pages.todos;
@@ -11,8 +11,7 @@ export function updateTodolist(todos: Todo[]) {
   ) as HTMLElement;
   $container.innerHTML = ``;
 
-  const $todolist = $Todolist(todos, $updateView);
-
+  const $todolist = new TodoList(todos, $updateView);
   $todolist.onscroll = () => {
     scrollTop = $todolist.scrollTop;
   };

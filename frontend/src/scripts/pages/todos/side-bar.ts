@@ -1,5 +1,5 @@
 import { $AccountState } from "../../components/account/account-state";
-import { $pages } from "../../router";
+import { $pages, updatePage } from "../../router";
 
 interface NavItem {
   title: string;
@@ -43,10 +43,20 @@ export async function updateSideBar(props: SideBarProps) {
   $account.appendChild($AccountState(user));
 
   $navs.append(
+    $NavItem({
+      title: "All todos",
+      onclick: () => {
+        updatePage("/todos");
+        closeSidebar();
+      },
+    }),
     ...groups.map((group) =>
       $NavItem({
         title: group.group_name,
-        onclick: () => {},
+        onclick: () => {
+          updatePage("/todos", { groupId: group.group_id });
+          closeSidebar();
+        },
       })
     )
   );

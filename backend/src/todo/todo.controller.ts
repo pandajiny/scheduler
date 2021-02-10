@@ -22,16 +22,16 @@ export class TodoController {
   @Get()
   async getTodos(@Query() query, @Session() session): Promise<Todo[]> {
     const uid = session.uid as string;
-    const { user_id, group_id } = query;
+    const { userId, groupId } = query;
 
     console.log(
-      `get todos request / user : ${user_id || uid}, group : ${group_id ||
+      `get todos request / user : ${userId || uid}, group : ${groupId ||
         'not selected'}`,
     );
 
     const filter: TodosFilter = {
-      userId: user_id || uid,
-      groupId: group_id,
+      userId: userId || uid,
+      groupId: groupId,
     };
 
     return await this.todoService.getTodos(filter);

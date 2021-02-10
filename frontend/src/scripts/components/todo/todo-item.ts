@@ -1,13 +1,13 @@
-import { $renderTemplate, $template } from "../../modules/document";
+import { $template } from "../../modules/document";
 import { deleteTodo } from "../../modules/todo";
 
-document.querySelector("div")?.replaceWith;
 export class TodoItem extends HTMLElement {
   onUpdate = () => {
     console.log(`need to update`);
   };
   constructor(todo: Todo) {
     super();
+    this.style.display = "block";
     this.id = `todo-${todo.todo_id}`;
     this.className = `${todo.complete_datetime ? "done" : ""}`;
     this.append($template("todo-item-template"));

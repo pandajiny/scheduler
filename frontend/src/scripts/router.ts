@@ -12,7 +12,7 @@ export const $pages = {
 };
 
 import { startLoginPage } from "./pages/login-page";
-import { startTodoPage } from "./pages/todo-page";
+import { startTodoPage } from "./pages/todos";
 import { startSignupPage } from "./pages/signup-page";
 import { startAccountPage } from "./pages/account";
 import { getAuth } from "./modules/auth";
