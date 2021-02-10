@@ -51,7 +51,8 @@ function getEnv(key: string) {
 
   const value = process.env[key];
   if (!value) {
-    throw `Cannot parse env ${key}`;
+    console.error(`Cannot parse env ${key}`);
+    throw new Error(`Cannot parse env value`);
   }
   return value;
 }
