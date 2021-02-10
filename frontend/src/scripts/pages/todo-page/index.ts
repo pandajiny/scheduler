@@ -1,7 +1,8 @@
-import { $renderTemplate } from "../../modules/document";
+import { TestElement } from "../../custom-elements";
+import { $renderTemplate, $template } from "../../modules/document";
 import { getGroupsFromUid } from "../../modules/groups";
 import { getTodos } from "../../modules/todo";
-import { $pages, redirect } from "../../router";
+import { $pages, updatePage } from "../../router";
 import { initNavBar as updateNavBar } from "./nav-bar";
 import { updateSideBar } from "./side-bar";
 import { updateTodolist } from "./todolist";
@@ -11,13 +12,14 @@ const $page = $pages.todos;
 export async function startTodoPage(user: User) {
   currentUser = user;
   $page.classList.add("active");
-  $renderTemplate($page, `todo-page-template`);
+  $page.innerHTML = "";
+  $page.append($template("todo-page-template"));
   $updateView();
 }
 
 export async function $updateView() {
   if (!currentUser) {
-    redirect.todos();
+    updatePage("/welcome");
     return;
   }
   const filter: TodosFilter = {

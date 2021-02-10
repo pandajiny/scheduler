@@ -1,5 +1,4 @@
 import { AuthService } from "../../script";
-import { redirect } from "../../router";
 import { parseErrorResponse } from "../http";
 
 export const getAuth = async (): Promise<User> => {

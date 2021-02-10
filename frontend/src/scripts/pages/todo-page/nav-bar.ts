@@ -2,7 +2,7 @@ import { $updateView } from ".";
 import { setAccountInfoModal } from "../../modals/account/account-info-modal";
 import { setAddTodoModal } from "../../modals/todo/add-todo-modal";
 import { addTodo } from "../../modules/todo";
-import { $pages } from "../../router";
+import { $pages, updatePage } from "../../router";
 
 const $todosPage = $pages.todos;
 export function initNavBar(user: User) {
@@ -21,7 +21,7 @@ export function initNavBar(user: User) {
   };
 
   $navAccount.onclick = () => {
-    setAccountInfoModal(user);
+    updatePage("/account");
   };
 
   $navNew.onclick = () => {

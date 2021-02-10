@@ -1,82 +1,87 @@
+import { $renderTemplate, $template } from "../../modules/document";
 import { deleteTodo } from "../../modules/todo";
 
-export function $TodoItem(todo: Todo, handleUpdate: () => void): HTMLElement {
-  const $todo = document.createElement("div");
-  $todo.id = `todo-${todo.todo_id}`;
-  $todo.className = `todo-item ${todo.complete_datetime ? "done" : ""}`;
+document.querySelector("div")?.replaceWith;
+export class TodoItem extends HTMLElement {
+  onUpdate = () => {
+    console.log(`need to update`);
+  };
+  constructor(todo: Todo) {
+    super();
+    this.id = `todo-${todo.todo_id}`;
+    this.className = `${todo.complete_datetime ? "done" : ""}`;
+    this.append($template("todo-item-template"));
 
-  const $todoTemplate = document.getElementById(
-    "todo-item-template"
-  ) as HTMLTemplateElement;
-  $todo.appendChild($todoTemplate.content.cloneNode(true));
+    // content
+    const $content = this.querySelector(".content") as HTMLElement;
+    const $contentEditContainer = this.querySelector(
+      ".content-edit-container"
+    ) as HTMLElement;
+    const $contentEdit = this.querySelector(
+      ".content-edit"
+    ) as HTMLInputElement;
 
-  // content
-  const $content = $todo.querySelector(".content") as HTMLElement;
-  const $contentEditContainer = $todo.querySelector(
-    ".content-edit-container"
-  ) as HTMLElement;
-  const $contentEdit = $todo.querySelector(".content-edit") as HTMLInputElement;
+    // actions
+    const $actions = this.querySelector(".actions") as HTMLDivElement;
+    const $deleteButton = this.querySelector(
+      ".delete-button"
+    ) as HTMLButtonElement;
+    const $editButton = this.querySelector(".edit-button") as HTMLButtonElement;
+    const $doneButton = this.querySelector(`.done-button`) as HTMLButtonElement;
 
-  // actions
-  const $actions = $todo.querySelector(".actions") as HTMLDivElement;
-  const $deleteButton = $todo.querySelector(
-    ".delete-button"
-  ) as HTMLButtonElement;
-  const $editButton = $todo.querySelector(".edit-button") as HTMLButtonElement;
-  const $doneButton = $todo.querySelector(`.done-button`) as HTMLButtonElement;
+    // content
+    $content.textContent = todo.content;
+    $contentEdit.onblur = unsetContentEditMode;
+    // $contentEdit.onkeypress = (ev) => {
+    //   keyInputListener(ev, () => {
+    //     if (todo.content != $contentEdit.value) {
+    //       todo.content = $contentEdit.value;
+    //       // updateTodo(todo).then(handleUpdate);
+    //     } else {
+    //       unsetContentEditMode();
+    //     }
+    //   });
+    // };
 
-  // content
-  $content.textContent = todo.content;
-  $contentEdit.onblur = unsetContentEditMode;
-  // $contentEdit.onkeypress = (ev) => {
-  //   keyInputListener(ev, () => {
-  //     if (todo.content != $contentEdit.value) {
-  //       todo.content = $contentEdit.value;
-  //       // updateTodo(todo).then(handleUpdate);
-  //     } else {
-  //       unsetContentEditMode();
-  //     }
-  //   });
-  // };
+    // actions
+    this.onclick = () => {
+      const isActivated = () => {
+        return $actions.classList.contains("active");
+      };
 
-  // actions
-  $todo.onclick = () => {
-    const isActivated = () => {
-      return $actions.classList.contains("active");
+      if (isActivated()) {
+        $actions.classList.remove("active");
+      } else {
+        $actions.classList.add("active");
+      }
     };
 
-    if (isActivated()) {
-      $actions.classList.remove("active");
-    } else {
-      $actions.classList.add("active");
+    $deleteButton.onclick = () => {
+      deleteTodo(todo.todo_id).then(this.onUpdate);
+    };
+    $editButton.onclick = () => {
+      setContentEditMode();
+    };
+
+    function setContentEditMode() {
+      $contentEditContainer.className = "active";
+      $contentEditContainer.style.display = "flex";
+      $content.className = "unactive";
+      $contentEdit.value = todo.content;
+      $contentEdit.focus();
     }
-  };
 
-  $deleteButton.onclick = () => {
-    deleteTodo(todo.todo_id).then(handleUpdate);
-  };
-  $editButton.onclick = () => {
-    setContentEditMode();
-  };
+    function unsetContentEditMode() {
+      $contentEditContainer.className = "unactive";
+      $contentEditContainer.style.display = "none";
+      $content.className = "active";
+    }
 
-  function setContentEditMode() {
-    $contentEditContainer.className = "active";
-    $contentEditContainer.style.display = "flex";
-    $content.className = "unactive";
-    $contentEdit.value = todo.content;
-    $contentEdit.focus();
+    $doneButton.addEventListener("click", () => {
+      todo.complete_datetime = new Date().getTime();
+      // updateTodo(todo).then(handleUpdate);
+    });
   }
-
-  function unsetContentEditMode() {
-    $contentEditContainer.className = "unactive";
-    $contentEditContainer.style.display = "none";
-    $content.className = "active";
-  }
-
-  $doneButton.addEventListener("click", () => {
-    todo.complete_datetime = new Date().getTime();
-    // updateTodo(todo).then(handleUpdate);
-  });
-
-  return $todo;
 }
+
+customElements.define("todo-item", TodoItem);

@@ -1,4 +1,4 @@
-import { $pages, redirect } from "../../router";
+import { $pages, updatePage } from "../../router";
 
 const $page = $pages.welcome;
 
@@ -19,6 +19,10 @@ export function startWelcomePage() {
     ".button-signup"
   ) as HTMLButtonElement;
 
-  $buttonLogin.onclick = redirect.login;
-  $buttonSignup.onclick = redirect.signup;
+  $buttonLogin.onclick = () => {
+    updatePage("/login");
+  };
+  $buttonSignup.onclick = () => {
+    updatePage("/signup");
+  };
 }

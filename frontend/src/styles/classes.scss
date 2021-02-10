@@ -142,3 +142,8 @@ select {
   filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(168deg)
     brightness(100%) contrast(103%);
 }
+
+.primary {
+  filter: invert(49%) sepia(54%) saturate(483%) hue-rotate(207deg)
+    brightness(84%) contrast(91%);
+}

@@ -1,5 +1,5 @@
 import { $DateDivider } from "./date-divider";
-import { $TodoItem } from "./todo-item";
+import { TodoItem } from "./todo-item";
 
 export function $Todolist(
   todos: Todo[],
@@ -17,7 +17,9 @@ export function $Todolist(
       $todolist.appendChild($DateDivider(todo.limit_datetime));
     }
 
-    $todolist.appendChild($TodoItem(todo, handleUpdate));
+    const $todo = new TodoItem(todo);
+    $todo.onUpdate = handleUpdate;
+    $todolist.appendChild($todo);
   });
 
   return $todolist;

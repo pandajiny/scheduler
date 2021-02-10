@@ -1,7 +1,8 @@
 @use '../../colors.scss';
 @use '../../sizes.scss';
 
-.todo-item {
+todo-item {
+  display: block;
   margin: 8px;
 
   > .content-container {

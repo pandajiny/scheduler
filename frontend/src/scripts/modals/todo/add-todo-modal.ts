@@ -1,5 +1,5 @@
 import { group } from "console";
-import { $renderTemplate } from "../../modules/document";
+import { $renderTemplate, $template } from "../../modules/document";
 import { getGroupsFromUid } from "../../modules/groups";
 
 const $modal = document.getElementById("add-todo-modal") as HTMLElement;
@@ -8,7 +8,8 @@ export const setAddTodoModal = function (
   props: ActionModalProps<AddTodoRequest>
 ) {
   $modal.classList.add("active");
-  $renderTemplate($modal, `add-todo-modal-template`);
+  $modal.innerHTML = ``;
+  $modal.append($template("add-todo-modal-template"));
   initModal(props);
 };
 

@@ -124,6 +124,7 @@
 
   <template id="account-page-template">
     <div class="container">
+      <back-button></back-button>
       <div class="profile">
         <img class="profile-photo" src="./images/icons/icon_account_white.svg">
         <p class="name">pandajiny</p>
@@ -139,7 +140,7 @@
         </div>
       </div>
       <div class="actions">
-        <button>Sign out</button>
+        <button class="button-signout">Sign out</button>
       </div>
     </div>
   </template>
@@ -213,10 +214,7 @@
 
   <template id="side-bar-template">
     <div class="container">
-      <div class="cancel-button-container">
-        <img class="cancel-button" src="./images/icons/icon_back_white.svg">
-        <p>Back</p>
-      </div>
+      <back-button class="sm"></back-button>
       <div class="account-state-container"></div>
       <ul class="nav-list"></ul>
     </div>
@@ -228,6 +226,12 @@
       <img class="icon" src="./images/icons/icon_list_item_white.svg">
       <p class="title"></p>
     </div>
+  </template>
+
+  <!-- custom element templates -->
+  <template id="back-button-template">
+    <img class="icon" src="./images/icons/icon_back.svg">
+    <p>Back</p>
   </template>
 </body>
 

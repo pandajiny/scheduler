@@ -1,8 +1,10 @@
 import { doLoginWithEmailAndPassword } from "../../modules/auth";
-import { $pages, redirect } from "../../router";
-
+import { $pages, updatePage } from "../../router";
 const $page = $pages.login;
 
+export function redirectLogin() {
+  updatePage(`/login`);
+}
 export function startLoginPage() {
   $page.classList.add("active");
   $page.innerHTML = ``;

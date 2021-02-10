@@ -1,5 +1,5 @@
 import { doSignUp } from "../../modules/auth";
-import { $pages, redirect } from "../../router";
+import { $pages } from "../../router";
 
 const $page = $pages.signup;
 export function startSignupPage() {

@@ -21,6 +21,7 @@ export class DbService {
       console.error(err);
       throw new InternalServerErrorException(err);
     });
+    await connection.end();
     return (rows as any[]).map<T>(row => ({ ...row }));
   }
 
@@ -30,5 +31,6 @@ export class DbService {
       console.error(err);
       throw new InternalServerErrorException(err);
     });
+    await connection.end();
   }
 }

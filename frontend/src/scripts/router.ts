@@ -3,11 +3,7 @@ const $todosPage = document.getElementById("todo-page") as HTMLDivElement;
 const $loginPage = document.getElementById("login-page") as HTMLDivElement;
 const $signupPage = document.getElementById("signup-page") as HTMLDivElement;
 const $accountPage = document.getElementById("account-page") as HTMLDivElement;
-export type PageNames = "todos" | "welcome" | "login" | "signup" | "account";
-
-type PagePaths = "/" | "/welcome" | "/login" | "/signup" | "/account";
-
-export const $pages: Record<PageNames, HTMLElement> = {
+export const $pages = {
   todos: $todosPage,
   login: $loginPage,
   welcome: $welcomePage,
@@ -15,28 +11,40 @@ export const $pages: Record<PageNames, HTMLElement> = {
   account: $accountPage,
 };
 
-import { getAuth } from "./modules/auth";
 import { startLoginPage } from "./pages/login-page";
-import { startWelcomePage } from "./pages/welcome-page";
 import { startTodoPage } from "./pages/todo-page";
 import { startSignupPage } from "./pages/signup-page";
-import { startAccountPage } from "./pages/account-page";
+import { startAccountPage } from "./pages/account";
+import { getAuth } from "./modules/auth";
 
-const startPage: Record<PagePaths, (user: User | null) => void> = {
-  "/": (user) => (user ? startTodoPage(user) : redirect.welcome()),
-  "/welcome": (user) => (user ? redirect.todos() : startWelcomePage()),
-  "/login": (user) => (user ? redirect.todos() : startLoginPage()),
-  "/signup": (user) => (user ? redirect.todos() : startSignupPage()),
-  // implement
-  "/account": (user) => (user ? startAccountPage(user) : redirect.login()),
+function clearPages() {
+  Object.values($pages).forEach(($page) => {
+    $page.className = "page";
+    $page.innerHTML = ``;
+  });
+}
+type AuthRoute = "/todos" | "/account";
+type PublicRoute = "/welcome" | "/login" | "/signup";
+type Route = AuthRoute | PublicRoute;
+
+const startAuthPage: Record<AuthRoute, (user: User) => void> = {
+  "/todos": (user: User) => startTodoPage(user),
+  "/account": (user: User) => startAccountPage(user),
 };
 
-export async function updatePage(
-  newPath?: PagePaths,
-  query?: Record<string, string>
-) {
-  if (newPath) {
-    history.pushState({}, "", newPath);
+const startPublicPage: Record<PublicRoute, () => void> = {
+  "/login": startLoginPage,
+  "/signup": startSignupPage,
+  "/welcome": startSignupPage,
+};
+
+function updateRoute(props: {
+  route?: AuthRoute | PublicRoute;
+  query?: Record<string, string>;
+}) {
+  const { query, route } = props;
+  if (route) {
+    history.pushState({}, "", route);
     if (query) {
       const url = new URL(window.location.href);
       Object.entries(query).forEach(([key, value]) => {
@@ -45,33 +53,50 @@ export async function updatePage(
       history.pushState({}, "", url.toString());
     }
   }
-  clearPages();
-  const path = location.pathname as PagePaths;
+}
 
+export async function updatePage(
+  route?: AuthRoute | PublicRoute,
+  query?: Record<string, string>
+) {
+  clearPages();
+  updateRoute({
+    query,
+    route,
+  });
+
+  const path = location.pathname as Route;
   getAuth()
     .then((user) => {
-      startPage[path](user);
+      if (startAuthPage[path as AuthRoute] != undefined) {
+        startAuthPage[path as AuthRoute](user);
+      } else {
+        updatePage("/todos");
+      }
     })
     .catch(() => {
-      console.log(`cannot`);
-      startPage[path](null);
+      if (startPublicPage[path as PublicRoute] != undefined) {
+        startPublicPage[path as PublicRoute]();
+      } else {
+        updatePage("/welcome");
+      }
     });
 }
+// const startPage: Record<PagePaths, (user: User | null) => void> = {
+//   "/": (user) => startAuthPage(user, startTodoPage),
+//   "/account": (user) => startAuthPage(user, startAccountPage),
+//   "/welcome": (user) => startPublicPage(user, startWelcomePage),
+//   "/login": (user) => startPublicPage(user, startLoginPage),
+//   "/signup": (user) => startPublicPage(user, startSignupPage),
+// };
 
-function clearPages() {
-  Object.values($pages).forEach(($page) => {
-    $page.className = "page";
-    $page.innerHTML = ``;
-  });
-}
-
-export const redirect: Record<PageNames, (props?: any) => void> = {
-  todos: () => updatePage("/"),
-  welcome: () => updatePage("/welcome"),
-  login: () => updatePage("/login"),
-  signup: () => updatePage("/signup"),
-  account: () => updatePage("/account"),
-};
+// export const redirect: Record<PageNames, () => void> = {
+//   todos: () => updatePage("/"),
+//   welcome: () => updatePage("/welcome"),
+//   login: () => updatePage("/login"),
+//   signup: () => updatePage("/signup"),
+//   account: () => updatePage("/account"),
+// };
 
 export function handleGithubPages(location: Location) {
   // function for github pages

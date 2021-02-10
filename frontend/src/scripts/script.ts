@@ -1,3 +1,6 @@
+import "regenerator-runtime/runtime";
+import "./custom-elements";
+
 import axios from "axios";
 import { AUTH_SERVICE_URL, SCHEDULER_SERVICE_URL } from "./constants";
 import { handleGithubPages, updatePage } from "./router";

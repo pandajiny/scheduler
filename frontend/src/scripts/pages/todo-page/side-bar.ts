@@ -31,10 +31,8 @@ export async function updateSideBar(props: SideBarProps) {
   ) as HTMLTemplateElement;
   $sidebar.appendChild($template.content.cloneNode(true));
 
-  const $buttonCancel = $sidebar.querySelector(
-    ".cancel-button-container"
-  ) as HTMLElement;
-  $buttonCancel.onclick = closeSidebar;
+  const buttonBack = $sidebar.querySelector("back-button") as HTMLElement;
+  buttonBack.onclick = closeSidebar;
 
   const $account = $sidebar.querySelector(
     ".account-state-container"
