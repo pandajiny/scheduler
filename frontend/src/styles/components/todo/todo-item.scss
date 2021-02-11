@@ -2,8 +2,6 @@
 @use '../../sizes.scss';
 
 todo-item {
-  margin: 8px;
-
   > .content-container {
     padding: 14px 12px;
 
@@ -34,8 +32,6 @@ todo-item {
     flex-direction: row;
     justify-content: flex-end;
 
-    padding: 4px;
-
     img {
       padding: 8px;
       width: 16px;
@@ -46,5 +42,7 @@ todo-item {
   > .actions.active {
     max-height: 100px;
     transition: max-height 0.3s ease-in;
+
+    padding: 4px;
   }
 }
