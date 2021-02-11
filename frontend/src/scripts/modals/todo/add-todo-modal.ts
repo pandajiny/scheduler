@@ -1,5 +1,4 @@
-import { group } from "console";
-import { $renderTemplate, $template } from "../../modules/document";
+import { $template } from "../../modules/document";
 import { getGroupsFromUid } from "../../modules/groups";
 
 const $modal = document.getElementById("add-todo-modal") as HTMLElement;

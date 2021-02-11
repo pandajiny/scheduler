@@ -1,4 +1,4 @@
-import { $renderTemplate, $template } from "./modules/document";
+import { $template } from "./modules/document";
 
 export class BackButtonElement extends HTMLElement {
   constructor() {

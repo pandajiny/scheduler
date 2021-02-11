@@ -2,9 +2,6 @@ import { doLoginWithEmailAndPassword } from "../../modules/auth";
 import { $pages, updatePage } from "../../router";
 const $page = $pages.login;
 
-export function redirectLogin() {
-  updatePage(`/login`);
-}
 export function startLoginPage() {
   $page.classList.add("active");
   $page.innerHTML = ``;
@@ -41,12 +38,16 @@ export function startLoginPage() {
       email,
       password,
     })
-      .then(redirect.todos)
+      .then(() => {
+        updatePage("/todos");
+      })
       .then(clearForm)
       .catch((err) => {
         $title.textContent = err;
       });
   };
 
-  $buttonsignup.onclick = redirect.signup;
+  $buttonsignup.onclick = () => {
+    updatePage("/todos");
+  };
 }

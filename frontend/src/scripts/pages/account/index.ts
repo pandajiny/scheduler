@@ -1,6 +1,6 @@
 import { BackButtonElement } from "../../custom-elements";
 import { doSignout } from "../../modules/auth";
-import { $renderTemplate, $template } from "../../modules/document";
+import { $template } from "../../modules/document";
 import { $pages, updatePage } from "../../router";
 
 const $page = $pages.account;

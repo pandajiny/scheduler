@@ -1,3 +1,4 @@
+import { updatePage } from "../../router";
 import { AuthService } from "../../script";
 import { parseErrorResponse } from "../http";
 
@@ -28,11 +29,9 @@ export async function doLoginWithEmailAndPassword(request: LoginRequest) {
 }
 
 export async function doSignout() {
-  await AuthService.delete("/auth")
-    .then(redirect.welcome)
-    .catch((err) => {
-      throw parseErrorResponse(err).message;
-    });
+  await AuthService.delete("/auth").catch((err) => {
+    throw parseErrorResponse(err).message;
+  });
 }
 
 const validateSignUpForm = (request: SignUpRequest) => {

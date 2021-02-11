@@ -1,5 +1,5 @@
 import { doSignUp } from "../../modules/auth";
-import { $pages } from "../../router";
+import { $pages, updatePage } from "../../router";
 
 const $page = $pages.signup;
 export function startSignupPage() {
@@ -53,12 +53,14 @@ export function startSignupPage() {
         email,
         password,
       })
-        .then(redirect.todos)
+        .then(() => {
+          updatePage("/todos");
+        })
         .then(clearForm);
     } catch (err) {
       $title.textContent = err;
     }
   };
 
-  $buttonLogin.onclick = redirect.login;
+  $buttonLogin.onclick = () => updatePage("/login");
 }

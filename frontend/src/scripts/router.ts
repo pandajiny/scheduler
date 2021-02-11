@@ -16,6 +16,7 @@ import { startTodoPage } from "./pages/todos";
 import { startSignupPage } from "./pages/signup-page";
 import { startAccountPage } from "./pages/account";
 import { getAuth } from "./modules/auth";
+import { startWelcomePage } from "./pages/welcome-page";
 
 function clearPages() {
   Object.values($pages).forEach(($page) => {
@@ -35,7 +36,7 @@ const startAuthPage: Record<AuthRoute, (user: User) => void> = {
 const startPublicPage: Record<PublicRoute, () => void> = {
   "/login": startLoginPage,
   "/signup": startSignupPage,
-  "/welcome": startSignupPage,
+  "/welcome": startWelcomePage,
 };
 
 function updateRoute(props: {
@@ -66,6 +67,7 @@ export async function updatePage(
   });
 
   const path = location.pathname as Route;
+  console.log(path);
   getAuth()
     .then((user) => {
       if (startAuthPage[path as AuthRoute] != undefined) {
