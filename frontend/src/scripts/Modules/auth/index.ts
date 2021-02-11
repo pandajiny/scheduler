@@ -23,9 +23,13 @@ const validateLoginForm = (request: LoginRequest) => {
 
 export async function doLoginWithEmailAndPassword(request: LoginRequest) {
   validateLoginForm(request);
-  await AuthService.post(`/auth`, request).catch((err: HttpError) => {
-    throw parseErrorResponse(err).message;
-  });
+  await AuthService.post<{ session_id: string }>(`/auth`, request)
+    .then((resp) => {
+      console.log(resp.headers["set-cookie"]);
+    })
+    .catch((err: HttpError) => {
+      throw parseErrorResponse(err).message;
+    });
 }
 
 export async function doSignout() {

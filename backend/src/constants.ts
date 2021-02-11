@@ -24,6 +24,9 @@ export const sessionOptions: session.SessionOptions = {
   resave: false,
   cookie: {
     maxAge: 24 * 60 * 60 * 1000,
+    domain: process.env.NODE_ENV?.includes('dev')
+      ? undefined
+      : '.pandajiny.com',
   },
   store: new RedisStore({
     port: 4379,
