@@ -51,8 +51,9 @@ function getTitle(groupId: string | null, groups: Group[]): string | undefined {
 async function updateTopBar(title?: string) {
   if (title) {
     const $container = $todosPage.querySelector(".top-bar-container");
+    $container!.innerHTML = ``;
     const $topbar = new TopBar(title);
-    $container!.replaceWith($topbar);
+    $container!.append($topbar);
   }
 }
 
@@ -60,7 +61,11 @@ async function updateSideBar(groups: Group[]) {
   const $container = $todosPage.querySelector(
     ".side-bar-container"
   ) as HTMLDivElement;
-  $container.replaceWith(
+  $container.onclick = (ev) => {
+    ev.stopPropagation();
+  };
+  $container.innerHTML = ``;
+  $container.append(
     new SideBar({
       user: currentUser,
       groups,
@@ -78,5 +83,6 @@ function updateTodolist(todos: Todo[]) {
     scrollTop = $todolist.scrollTop;
   };
   $todolist.scrollTop = scrollTop;
-  $container.replaceWith($todolist);
+  $container.innerHTML = ``;
+  $container.append($todolist);
 }

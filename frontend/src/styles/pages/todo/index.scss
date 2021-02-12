@@ -2,31 +2,37 @@
 @use '../../sizes.scss';
 
 #todo-page {
+  position: relative;
   width: 100%;
   height: 100%;
 
   display: flex;
   flex-direction: column;
 
-  side-bar {
-    position: absolute;
-    display: flex;
-    flex-direction: row;
+  .side-bar-container {
+    side-bar {
+      position: absolute;
+      display: flex;
+      flex-direction: row;
 
-    transform: translateX(-100%);
-    transition: transform 0.5s ease;
+      width: 100%;
+      height: 100%;
 
-    width: 100%;
-    height: 100%;
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+    }
+
+    side-bar.active {
+      transform: translateX(-0%);
+    }
   }
 
-  > side-bar.active {
-    transform: translateX(-0%);
-  }
-
-  > todo-list {
+  > .todolist-container {
     flex: 1;
-    height: 100%;
+    > todo-list {
+      flex: 1;
+      height: 100%;
+    }
   }
 
   > .nav-bar {

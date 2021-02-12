@@ -13,7 +13,7 @@
     "deploy:docker": "docker tag scheduler-service asia.gcr.io/auth-service-303714/scheduler-service && docker push asia.gcr.io/auth-service-303714/scheduler-service",
     "deploy": "npm run deploy:docker",
     "start": "nest start",
-    "dev": "set NODE_ENV=dev && nest start --watch",
+    "dev": "set NODE_ENV=dev && docker stop scheduler-service && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
