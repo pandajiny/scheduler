@@ -1,0 +1,24 @@
+@use "../colors.scss";
+
+top-bar {
+  display: block;
+  width: 100%;
+
+  transition: transform 0.5s;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  h3 {
+    color: colors.$color-primary-dark;
+    font-size: 20px;
+    padding: 14px 0px;
+  }
+
+  setting-button {
+    align-self: flex-end;
+    position: absolute;
+  }
+}

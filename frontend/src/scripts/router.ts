@@ -67,7 +67,6 @@ export async function updatePage(
   });
 
   const path = location.pathname as Route;
-  console.log(path);
   getAuth()
     .then((user) => {
       if (startAuthPage[path as AuthRoute] != undefined) {
@@ -84,21 +83,6 @@ export async function updatePage(
       }
     });
 }
-// const startPage: Record<PagePaths, (user: User | null) => void> = {
-//   "/": (user) => startAuthPage(user, startTodoPage),
-//   "/account": (user) => startAuthPage(user, startAccountPage),
-//   "/welcome": (user) => startPublicPage(user, startWelcomePage),
-//   "/login": (user) => startPublicPage(user, startLoginPage),
-//   "/signup": (user) => startPublicPage(user, startSignupPage),
-// };
-
-// export const redirect: Record<PageNames, () => void> = {
-//   todos: () => updatePage("/"),
-//   welcome: () => updatePage("/welcome"),
-//   login: () => updatePage("/login"),
-//   signup: () => updatePage("/signup"),
-//   account: () => updatePage("/account"),
-// };
 
 export function handleGithubPages(location: Location) {
   // function for github pages

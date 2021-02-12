@@ -147,3 +147,8 @@ select {
   filter: invert(49%) sepia(54%) saturate(483%) hue-rotate(207deg)
     brightness(84%) contrast(91%);
 }
+
+.primary-dark {
+  filter: invert(31%) sepia(18%) saturate(4434%) hue-rotate(244deg)
+    brightness(91%) contrast(89%);
+}

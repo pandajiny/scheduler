@@ -1,20 +1,30 @@
-.nav-item {
-  > .container {
-    display: flex;
-    flex-direction: row;
-    column-gap: 10px;
-    align-items: center;
-    cursor: pointer;
+nav-item {
+  display: block;
 
-    > .icon {
-      $size: 12px;
-      width: $size;
-      height: $size;
-    }
+  display: flex;
+  flex-direction: row;
+  column-gap: 10px;
+  align-items: center;
+  cursor: pointer;
 
-    > .title {
-      height: fit-content;
-      font-size: 16px;
-    }
+  > .icon {
+    @extend .white;
+    $size: 12px;
+    width: $size;
+    height: $size;
+  }
+
+  > .title {
+    height: fit-content;
+    font-size: 16px;
+  }
+}
+
+nav-item.active {
+  color: colors.$color-primary-dark;
+  background-color: colors.$color-bg-primary;
+
+  > .icon {
+    @extend .primary-dark;
   }
 }

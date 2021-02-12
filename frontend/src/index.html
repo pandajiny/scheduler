@@ -88,36 +88,35 @@
   </template>
 
   <template id="todo-page-template">
-    <div class="container">
-      <div class="side-bar-container"></div>
+    <div class="top-bar-container"></div>
+    <div class="side-bar-container"></div>
 
-      <div class="todolist-container"></div>
+    <div class="todolist-container"></div>
 
-      <div class="nav-bar">
-        <div id="nav-list" class="nav-item">
-          <img class="icon" src="./images/icons/icon_list_gray.svg">
-          <label>List</label>
-        </div>
+    <div class="nav-bar">
+      <div id="nav-list" class="nav-item">
+        <img class="icon" src="./images/icons/icon_list_gray.svg">
+        <label>List</label>
+      </div>
 
-        <div id="nav-todos" class="nav-item">
-          <img class="icon" src="./images/icons/icon_todos_gray.svg">
-          <label>Todos</label>
-        </div>
+      <div id="nav-todos" class="nav-item">
+        <img class="icon" src="./images/icons/icon_todos_gray.svg">
+        <label>Todos</label>
+      </div>
 
-        <div id="nav-account" class="nav-item">
-          <img class="icon" src="./images/icons/icon_account_gray.svg">
-          <label>Account</label>
-        </div>
+      <div id="nav-account" class="nav-item">
+        <img class="icon" src="./images/icons/icon_account_gray.svg">
+        <label>Account</label>
+      </div>
 
-        <!-- <div id="nav-search" class="nav-item">
+      <!-- <div id="nav-search" class="nav-item">
           <img class="icon" src="./images/icons/icon_search_gray.svg">
           <label>Find</label>
         </div> -->
 
-        <div id="nav-new" class="nav-item">
-          <img class="icon" src="./images/icons/icon_plus_gray.svg">
-          <label>New</label>
-        </div>
+      <div id="nav-new" class="nav-item">
+        <img class="icon" src="./images/icons/icon_plus_gray.svg">
+        <label>New</label>
       </div>
     </div>
   </template>
@@ -221,17 +220,24 @@
     <div class="empty-space"></div>
   </template>
 
+  <template id="top-bar-template">
+    <h3 class="title"></h3>
+    <setting-button></setting-button>
+  </template>
+
   <template id="nav-item-template">
-    <div class="container">
-      <img class="icon" src="./images/icons/icon_list_item_white.svg">
-      <p class="title"></p>
-    </div>
+    <img class="icon" src="./images/icons/icon_list_item.svg">
+    <p class="title"></p>
   </template>
 
   <!-- custom element templates -->
   <template id="back-button-template">
     <img class="icon" src="./images/icons/icon_back.svg">
     <p>Back</p>
+  </template>
+
+  <template id="setting-button-template">
+    <img class="icon" src="./images/icons/icon_setting.svg">
   </template>
 </body>
 

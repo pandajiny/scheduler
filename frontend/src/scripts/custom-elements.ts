@@ -1,19 +1,19 @@
 import { $template } from "./modules/document";
 
-export class BackButtonElement extends HTMLElement {
+class BackButton extends HTMLElement {
   constructor() {
     super();
     this.append($template("back-button-template"));
   }
 }
 
-customElements.define("back-button", BackButtonElement);
+customElements.define("back-button", BackButton);
 
-export class TestElement extends HTMLElement {
-  constructor(content: string) {
+class SettingButton extends HTMLElement {
+  constructor() {
     super();
-    this.innerHTML = `TEST ELEMENT ${content}`;
+    this.append($template("setting-button-template"));
   }
 }
 
-customElements.define("test-element", TestElement);
+customElements.define("setting-button", SettingButton);

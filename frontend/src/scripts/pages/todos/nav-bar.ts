@@ -14,9 +14,7 @@ export function initNavBar(user: User) {
   const $navNew = $todosPage.querySelector("#nav-new") as HTMLDivElement;
 
   $navList.onclick = () => {
-    const $sideBar = $todosPage.querySelector(
-      ".side-bar-container"
-    ) as HTMLDivElement;
+    const $sideBar = $todosPage.querySelector("side-bar") as HTMLDivElement;
     $sideBar.classList.add("active");
   };
 

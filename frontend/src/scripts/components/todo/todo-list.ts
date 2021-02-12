@@ -1,5 +1,5 @@
 import { $template } from "../../modules/document";
-import { $DateDivider } from "./date-divider";
+import { getMonthString } from "../../modules/time";
 import { TodoItem } from "./todo-item";
 
 export class TodoList extends HTMLElement {
@@ -20,7 +20,6 @@ export class TodoList extends HTMLElement {
 
   constructor(todos: Todo[], handleUpdate: () => void) {
     super();
-    this.style.display = "block";
 
     todos.forEach((todo, index) => {
       if (index == 0) {
@@ -37,5 +36,21 @@ export class TodoList extends HTMLElement {
     });
   }
 }
+
+const $DateDivider = (datetime: number | null): HTMLElement => {
+  const $divider = document.createElement("div");
+  $divider.className = "date-divider";
+
+  if (datetime) {
+    const date = new Date(datetime);
+    $divider.innerHTML = `
+      <div class="container">
+      <h3>${date.getDate()}</h3>
+      <p>${getMonthString(date.getMonth(), true)}</p>
+      </div>
+      `;
+  }
+  return $divider;
+};
 
 customElements.define("todo-list", TodoList);

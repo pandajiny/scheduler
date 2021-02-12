@@ -1,18 +1,19 @@
+import { SideBarElement as SideBar } from "../../components/side-bar";
 import { $template } from "../../modules/document";
 import { getGroupsFromUid } from "../../modules/groups";
 import { getTodos } from "../../modules/todo";
 import { $pages, updatePage } from "../../router";
 import { initNavBar as updateNavBar } from "./nav-bar";
-import { updateSideBar } from "./side-bar";
-import { updateTodolist } from "./todo-list";
+import { TodoList } from "../../components/todo/todo-list";
+import { TopBar } from "../../components/top-bar";
 
 let currentUser: User | null;
-const $page = $pages.todos;
+const $todosPage = $pages.todos;
 export async function startTodoPage(user: User) {
   currentUser = user;
-  $page.classList.add("active");
-  $page.innerHTML = "";
-  $page.append($template("todo-page-template"));
+  $todosPage.classList.add("active");
+  $todosPage.innerHTML = "";
+  $todosPage.append($template("todo-page-template"));
   $updateView();
 }
 
@@ -22,7 +23,6 @@ export async function $updateView() {
     return;
   }
   const groupId = new URLSearchParams(location.search).get("groupId");
-  console.log(groupId);
   const filter: TodosFilter = {
     userId: currentUser.uid,
     groupId: groupId || undefined,
@@ -33,10 +33,50 @@ export async function $updateView() {
     getTodos(filter),
   ]);
 
-  updateSideBar({
-    groups,
-    user: currentUser,
-  });
+  const title = getTitle(groupId, groups);
+  updateTopBar(title);
+  updateSideBar(groups);
   updateNavBar(currentUser);
   updateTodolist(todos);
+}
+
+function getTitle(groupId: string | null, groups: Group[]): string | undefined {
+  return (
+    (groupId &&
+      groups.find((group) => group.group_id == groupId)!.group_name) ||
+    undefined
+  );
+}
+
+async function updateTopBar(title?: string) {
+  if (title) {
+    const $container = $todosPage.querySelector(".top-bar-container");
+    const $topbar = new TopBar(title);
+    $container!.replaceWith($topbar);
+  }
+}
+
+async function updateSideBar(groups: Group[]) {
+  const $container = $todosPage.querySelector(
+    ".side-bar-container"
+  ) as HTMLDivElement;
+  $container.replaceWith(
+    new SideBar({
+      user: currentUser,
+      groups,
+    })
+  );
+}
+
+let scrollTop = 0;
+function updateTodolist(todos: Todo[]) {
+  const $container = $todosPage.querySelector(
+    ".todolist-container"
+  ) as HTMLElement;
+  const $todolist = new TodoList(todos, $updateView);
+  $todolist.onscroll = () => {
+    scrollTop = $todolist.scrollTop;
+  };
+  $todolist.scrollTop = scrollTop;
+  $container.replaceWith($todolist);
 }
