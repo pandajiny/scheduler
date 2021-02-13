@@ -1,4 +1,4 @@
-import { SchedulerService } from "../../script";
+import { SchedulerService } from "../../app";
 import { parseErrorResponse } from "../http";
 export async function getTodos(filter: TodosFilter): Promise<Todo[]> {
   return await SchedulerService.get<Todo[]>(`/todos`, {

@@ -1,6 +1,7 @@
 nav-item {
   display: block;
 
+  position: relative;
   display: flex;
   flex-direction: row;
   column-gap: 10px;
@@ -17,6 +18,13 @@ nav-item {
   > .title {
     height: fit-content;
     font-size: 16px;
+  }
+
+  > .count {
+    font-size: 12px;
+    position: absolute;
+    right: 16px;
+    padding-top: 4px;
   }
 }
 

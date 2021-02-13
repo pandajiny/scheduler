@@ -1,33 +1,41 @@
 @use '../colors.scss';
 
+$md: 18px;
 $sm: 14px;
 back-button {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  color: colors.$color-primary;
+  display: block;
+  .content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: colors.$color-primary;
 
-  cursor: pointer;
+    cursor: pointer;
 
-  .icon {
-    @extend .primary;
-    margin: 0px;
-    padding: 0px;
-    padding-right: 8px;
-  }
+    .icon {
+      @extend .primary;
+      width: $md;
+      height: $md;
+      margin: 0px;
+      padding: 0px;
+      padding-right: 8px;
+    }
 
-  p {
-    height: fit-content;
+    p {
+      font-size: $md;
+      height: fit-content;
+    }
   }
 }
 
 back-button.sm {
-  .icon {
-    width: $sm;
-    height: $sm;
-    padding-right: 4px;
-  }
+  // .icon {
+  //   width: $sm;
+  //   height: $sm;
+  //   padding-right: 4px;
+  // }
   p {
-    font-size: 14px;
+    display: none;
+    font-size: $sm;
   }
 }

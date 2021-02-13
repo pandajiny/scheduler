@@ -1,10 +1,12 @@
 const $welcomePage = document.getElementById("welcome-page") as HTMLDivElement;
 const $todosPage = document.getElementById("todo-page") as HTMLDivElement;
+const $groupsPage = document.getElementById("group-page") as HTMLDivElement;
 const $loginPage = document.getElementById("login-page") as HTMLDivElement;
 const $signupPage = document.getElementById("signup-page") as HTMLDivElement;
 const $accountPage = document.getElementById("account-page") as HTMLDivElement;
 export const $pages = {
   todos: $todosPage,
+  groups: $groupsPage,
   login: $loginPage,
   welcome: $welcomePage,
   signup: $signupPage,
@@ -17,6 +19,7 @@ import { startSignupPage } from "./pages/signup-page";
 import { startAccountPage } from "./pages/account";
 import { getAuth } from "./modules/auth";
 import { startWelcomePage } from "./pages/welcome-page";
+import { startGroupsPage } from "./pages/groups";
 
 function clearPages() {
   Object.values($pages).forEach(($page) => {
@@ -24,12 +27,13 @@ function clearPages() {
     $page.innerHTML = ``;
   });
 }
-type AuthRoute = "/todos" | "/account";
+type AuthRoute = "/todos" | "/groups" | "/account";
 type PublicRoute = "/welcome" | "/login" | "/signup";
 type Route = AuthRoute | PublicRoute;
 
 const startAuthPage: Record<AuthRoute, (user: User) => void> = {
   "/todos": (user: User) => startTodoPage(user),
+  "/groups": (user: User) => startGroupsPage(user),
   "/account": (user: User) => startAccountPage(user),
 };
 
@@ -47,13 +51,17 @@ function updateRoute(props: {
   if (route) {
     history.pushState({}, "", route);
     if (query) {
-      const url = new URL(window.location.href);
-      Object.entries(query).forEach(([key, value]) => {
-        url.searchParams.set(key, value);
-      });
-      history.pushState({}, "", url.toString());
+      updateQuery(query);
     }
   }
+}
+
+function updateQuery(query: Record<string, string>) {
+  const url = new URL(window.location.href);
+  Object.entries(query).forEach(([key, value]) => {
+    url.searchParams.set(key, value);
+  });
+  history.pushState({}, "", url.toString());
 }
 
 export async function updatePage(

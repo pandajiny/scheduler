@@ -17,9 +17,7 @@ export type TableName = `todos` | `todo_groups` | `users`;
 export const DB_TABLES = {
   TODO_TABLE: 'todos',
   TODO_GROUP_TABLE: 'todo_groups',
-  USER_TABLE: 'users',
 };
 
 export * from './todo.query';
 export * from './group.query';
-export * from './user.query';

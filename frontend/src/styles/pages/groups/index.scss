@@ -1,0 +1,8 @@
+@use "../../colors.scss";
+#group-page {
+  color: colors.$color-primary;
+
+  group-list {
+    margin: 16px 32px;
+  }
+}

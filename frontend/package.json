@@ -19,6 +19,6 @@
     "predeploy": "npm run build",
     "deploy": "git add ../docs && git commit -m \"update hosting\" && git push origin main",
     "compile": "tsc --noEmit -w",
-    "update-types": "cd src/types && (git add . && git commit -m '' && git push) & git pull"
+    "sync": "cd src/types && (git add . && git commit -m '' && git push) & git pull"
   }
 }

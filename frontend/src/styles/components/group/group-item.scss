@@ -1,0 +1,32 @@
+group-item {
+  display: block;
+
+  > content {
+    position: relative;
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    > p {
+      padding-left: 8px;
+      font-size: 12px;
+    }
+
+    > h3 {
+      padding: 4px 0px;
+      display: block;
+      cursor: pointer;
+    }
+
+    > action-buttons {
+      top: 28px;
+      position: absolute;
+      align-self: flex-end;
+
+      display: block;
+      width: fit-content;
+      height: fit-content;
+    }
+  }
+}

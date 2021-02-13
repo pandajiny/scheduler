@@ -1,6 +1,6 @@
 import { $template } from "./modules/document";
 
-class BackButton extends HTMLElement {
+export class BackButton extends HTMLElement {
   constructor() {
     super();
     this.append($template("back-button-template"));
@@ -9,7 +9,7 @@ class BackButton extends HTMLElement {
 
 customElements.define("back-button", BackButton);
 
-class SettingButton extends HTMLElement {
+export class SettingButton extends HTMLElement {
   constructor() {
     super();
     this.append($template("setting-button-template"));
@@ -17,3 +17,12 @@ class SettingButton extends HTMLElement {
 }
 
 customElements.define("setting-button", SettingButton);
+
+export class EditButton extends HTMLElement {
+  constructor() {
+    super();
+    this.append($template("edit-button-template"));
+  }
+}
+
+customElements.define("edit-button", EditButton);

@@ -1,11 +1,11 @@
 import { $AccountState } from "../../components/account/account-state";
 import { $template } from "../../modules/document";
-import { updatePage } from "../../router";
-import { NavItemElement } from "./nav-item";
+import { NavItem } from "./nav-item";
 
 export interface SideBarProps {
   user: User | null;
-  groups: Group[];
+  groups: GroupDTO[];
+  onUpdate: (groupId: string | null) => void;
 }
 
 export class SideBarElement extends HTMLElement {
@@ -13,7 +13,7 @@ export class SideBarElement extends HTMLElement {
     super();
     this.append($template("side-bar-template"));
 
-    const { user, groups } = props;
+    const { user, groups, onUpdate } = props;
     const closeSideBar = () => {
       this.classList.remove("active");
     };
@@ -32,21 +32,21 @@ export class SideBarElement extends HTMLElement {
     };
 
     const $items: HTMLElement[] = [
-      new NavItemElement({
+      new NavItem({
         title: "All todos",
         isActivated: isActivated(null),
         onclick: () => {
-          updatePage("/todos");
+          onUpdate(null);
         },
       }),
       ...groups.map(
         (group) =>
-          new NavItemElement({
+          new NavItem({
             title: group.group_name,
+            count: group.item_count,
             isActivated: isActivated(group.group_id),
             onclick: () => {
-              const groupId = group.group_id;
-              updatePage("/todos", { groupId });
+              onUpdate(group.group_id);
             },
           })
       ),

@@ -26,8 +26,9 @@ todo-item {
   }
 
   > .actions {
-    transition: max-height 0.1s;
     max-height: 0px;
+    opacity: 0;
+    transition: max-height 0.2s ease-in, opacity 0.5s;
 
     display: flex;
     flex-direction: row;
@@ -42,8 +43,7 @@ todo-item {
 
   > .actions.active {
     max-height: 100px;
-    transition: max-height 0.3s ease-in;
-
-    padding: 4px;
+    opacity: 1;
+    transition: max-height 0.3s ease-in, opacity 0.3s;
   }
 }

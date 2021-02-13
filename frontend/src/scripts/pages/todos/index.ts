@@ -1,64 +1,74 @@
 import { SideBarElement as SideBar } from "../../components/side-bar";
 import { $template } from "../../modules/document";
 import { getGroupsFromUid } from "../../modules/groups";
-import { getTodos } from "../../modules/todo";
+import { addTodo, getTodos } from "../../modules/todo";
 import { $pages, updatePage } from "../../router";
-import { initNavBar as updateNavBar } from "./nav-bar";
 import { TodoList } from "../../components/todo/todo-list";
 import { TopBar } from "../../components/top-bar";
+import { setAddTodoModal } from "../../modals/todo/add-todo-modal";
 
-let currentUser: User | null;
-const $todosPage = $pages.todos;
-export async function startTodoPage(user: User) {
-  currentUser = user;
-  $todosPage.classList.add("active");
-  $todosPage.innerHTML = "";
-  $todosPage.append($template("todo-page-template"));
-  $updateView();
-}
+let user: User;
+let todosFilter: TodosFilter;
+let groups: GroupDTO[];
+let todos: Todo[];
+const $page = $pages.todos;
+export async function startTodoPage(u: User) {
+  user = u;
 
-export async function $updateView() {
-  if (!currentUser) {
+  if (!user) {
     updatePage("/welcome");
     return;
   }
+
+  $page.classList.add("active");
+  $page.innerHTML = "";
+  $page.append($template("todo-page-template"));
+  // $updateView();
+
   const groupId = new URLSearchParams(location.search).get("groupId");
-  const filter: TodosFilter = {
-    userId: currentUser.uid,
+  todosFilter = {
+    userId: user.uid,
     groupId: groupId || undefined,
   };
 
-  const [groups, todos] = await Promise.all([
-    getGroupsFromUid(currentUser.uid),
-    getTodos(filter),
-  ]);
+  // init page
+  updateTopBar();
+  updateSideBar([]);
+  updateNavBar(user);
+  updateTodolist([]);
 
-  const title = getTitle(groupId, groups);
-  updateTopBar(title);
-  updateSideBar(groups);
-  updateNavBar(currentUser);
-  updateTodolist(todos);
-}
+  getGroupsFromUid(user.uid).then((result) => {
+    groups = result;
+    const title = getTitle(groupId, groups);
+    updateTopBar(title);
+    updateSideBar(groups);
+  });
 
-function getTitle(groupId: string | null, groups: Group[]): string | undefined {
-  return (
-    (groupId &&
-      groups.find((group) => group.group_id == groupId)!.group_name) ||
-    undefined
-  );
+  getTodos(todosFilter).then((result) => {
+    todos = result;
+    updateTodolist(todos);
+  });
 }
 
 async function updateTopBar(title?: string) {
   if (title) {
-    const $container = $todosPage.querySelector(".top-bar-container");
+    const $container = $page.querySelector(".top-bar-container");
     $container!.innerHTML = ``;
-    const $topbar = new TopBar(title);
+    const $topbar = new TopBar({
+      title,
+      handleBack: () => {
+        updatePage("/todos");
+      },
+      handleSetting: () => {
+        updatePage("/groups");
+      },
+    });
     $container!.append($topbar);
   }
 }
 
-async function updateSideBar(groups: Group[]) {
-  const $container = $todosPage.querySelector(
+async function updateSideBar(groups: GroupDTO[]) {
+  const $container = $page.querySelector(
     ".side-bar-container"
   ) as HTMLDivElement;
   $container.onclick = (ev) => {
@@ -67,22 +77,66 @@ async function updateSideBar(groups: Group[]) {
   $container.innerHTML = ``;
   $container.append(
     new SideBar({
-      user: currentUser,
+      user: user,
       groups,
+      onUpdate: (groupId) => {
+        if (groupId) {
+          updatePage("/todos", { groupId });
+        } else {
+          updatePage("/todos");
+        }
+      },
     })
   );
 }
 
+export function updateNavBar(user: User) {
+  const $navList = $page.querySelector("#nav-list") as HTMLDivElement;
+  const $navTodos = $page.querySelector("#nav-todos") as HTMLDivElement;
+  const $navAccount = $page.querySelector("#nav-account") as HTMLDivElement;
+  const $navNew = $page.querySelector("#nav-new") as HTMLDivElement;
+
+  $navList.onclick = () => {
+    const $sideBar = $page.querySelector("side-bar") as HTMLDivElement;
+    $sideBar.classList.add("active");
+  };
+
+  $navAccount.onclick = () => {
+    updatePage("/account");
+  };
+
+  $navNew.onclick = () => {
+    setAddTodoModal({
+      user,
+      handleCancel: async () => {},
+      handleSubmit: async (request: AddTodoRequest) => {
+        await addTodo(request);
+        await getTodos(todosFilter).then(updateTodolist);
+      },
+    });
+  };
+}
+
 let scrollTop = 0;
 function updateTodolist(todos: Todo[]) {
-  const $container = $todosPage.querySelector(
-    ".todolist-container"
-  ) as HTMLElement;
-  const $todolist = new TodoList(todos, $updateView);
+  const $container = $page.querySelector(".todolist-container") as HTMLElement;
+  const $todolist = new TodoList(todos, () => {
+    getTodos(todosFilter).then((todos) => {
+      updateTodolist(todos);
+    });
+  });
   $todolist.onscroll = () => {
     scrollTop = $todolist.scrollTop;
   };
   $todolist.scrollTop = scrollTop;
   $container.innerHTML = ``;
   $container.append($todolist);
+}
+
+function getTitle(groupId: string | null, groups: Group[]): string | undefined {
+  return (
+    (groupId &&
+      groups.find((group) => group.group_id == groupId)!.group_name) ||
+    undefined
+  );
 }

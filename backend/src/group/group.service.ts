@@ -13,8 +13,8 @@ export class GroupService {
     private dbService: DbService, // private userService: UsersService,
   ) {}
 
-  async getGroupsFromUid(uid: string): Promise<Group[]> {
-    return await this.dbService.get<Group>(selectGroupsQuery({ uid }));
+  async getGroupsFromUid(uid: string): Promise<GroupDTO[]> {
+    return await this.dbService.get<GroupDTO>(selectGroupsQuery({ uid }));
   }
 
   async getGroupInformation(groupId: string, uid: string): Promise<Group> {

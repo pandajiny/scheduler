@@ -1,3 +1,5 @@
+import { updatePage } from "../../router";
+
 export function $AccountState(user: User | null): HTMLElement {
   const $accountState = document.createElement("div");
   $accountState.className = "account-state";
@@ -18,6 +20,7 @@ export function $AccountState(user: User | null): HTMLElement {
     $account.classList.add("active");
     $name.textContent = user.name;
     $email.textContent = user.email;
+    $account.onclick = () => updatePage("/account");
   } else {
     const $login = $accountState.querySelector(
       ".login-container"

@@ -1,5 +1,5 @@
 import { updatePage } from "../../router";
-import { AuthService } from "../../script";
+import { AuthService } from "../../app";
 import { parseErrorResponse } from "../http";
 
 export const getAuth = async (): Promise<User> => {
@@ -23,13 +23,11 @@ const validateLoginForm = (request: LoginRequest) => {
 
 export async function doLoginWithEmailAndPassword(request: LoginRequest) {
   validateLoginForm(request);
-  await AuthService.post<{ session_id: string }>(`/auth`, request)
-    .then((resp) => {
-      console.log(resp.headers["set-cookie"]);
-    })
-    .catch((err: HttpError) => {
+  await AuthService.post<{ session_id: string }>(`/auth`, request).catch(
+    (err: HttpError) => {
       throw parseErrorResponse(err).message;
-    });
+    }
+  );
 }
 
 export async function doSignout() {

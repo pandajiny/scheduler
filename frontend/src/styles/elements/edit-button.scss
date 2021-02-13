@@ -1,0 +1,9 @@
+edit-button {
+  display: block;
+  cursor: pointer;
+  .icon {
+    @extend .gray;
+    width: 16px;
+    height: 16px;
+  }
+}

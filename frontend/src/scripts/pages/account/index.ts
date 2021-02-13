@@ -1,4 +1,3 @@
-import { BackButtonElement } from "../../custom-elements";
 import { doSignout } from "../../modules/auth";
 import { $template } from "../../modules/document";
 import { $pages, updatePage } from "../../router";
@@ -9,7 +8,7 @@ export function startAccountPage(user: User) {
   $page.innerHTML = ``;
   $page.append($template("account-page-template"));
 
-  const $buttonBack = $page.querySelector("back-button") as BackButtonElement;
+  const $buttonBack = $page.querySelector("back-button") as HTMLButtonElement;
   const $name = $page.querySelector(".name") as HTMLParagraphElement;
   const $email = $page.querySelector(".email") as HTMLParagraphElement;
   const $buttonSignout = $page.querySelector(

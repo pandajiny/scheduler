@@ -1,10 +1,12 @@
 setting-button {
-  .icon {
-    @extend .gray;
-    $size: 20px;
-    width: $size;
-    height: $size;
-    padding: 8px;
-    cursor: pointer;
+  > .content {
+    > .icon {
+      @extend .gray;
+      $size: 20px;
+      width: $size;
+      height: $size;
+      padding: 8px;
+      cursor: pointer;
+    }
   }
 }

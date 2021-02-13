@@ -2,7 +2,14 @@ import { DB_TABLES, getUniqueString } from '.';
 
 export const selectGroupsQuery = (condition: { uid: string }): string => {
   const { uid } = condition;
-  return `SELECT * FROM todo_groups WHERE owner_id="${uid}"`;
+  return `
+    SELECT groups.*, count(todos.todo_id) as item_count
+    FROM ${DB_TABLES.TODO_GROUP_TABLE} groups
+    LEFT JOIN ${DB_TABLES.TODO_TABLE} todos
+    ON groups.group_id = todos.group_id
+    WHERE groups.owner_id = "${uid}"
+    GROUP BY groups.group_id;
+  `;
 };
 
 export const selectGroupQuery = (groupId: string): string => {
