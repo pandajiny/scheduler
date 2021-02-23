@@ -56,7 +56,16 @@ const validateSignUpForm = (request: SignUpRequest) => {
 export const doSignUp = async (request: SignUpRequest): Promise<void> => {
   validateSignUpForm(request);
 
-  await AuthService.post<LoginResult>(`/auth/signup`, request).catch((err) => {
-    throw parseErrorResponse(err).message;
-  });
+  await AuthService.post<LoginResult>(`/user`, request)
+    .then(async () => {
+      await doLoginWithEmailAndPassword({
+        email: request.email,
+        password: request.password,
+      }).catch((err) => {
+        throw parseErrorResponse(err).message;
+      });
+    })
+    .catch((err) => {
+      throw parseErrorResponse(err).message;
+    });
 };

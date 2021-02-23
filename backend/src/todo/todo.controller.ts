@@ -24,11 +24,6 @@ export class TodoController {
     const uid = session.uid as string;
     const { userId, groupId } = query;
 
-    console.log(
-      `get todos request / user : ${userId || uid}, group : ${groupId ||
-        'not selected'}`,
-    );
-
     const filter: TodosFilter = {
       userId: userId || uid,
       groupId: groupId,

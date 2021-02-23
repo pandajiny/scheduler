@@ -1,14 +1,15 @@
 import { DB_TABLES, getUniqueString } from '.';
 
 export const selectGroupsQuery = (condition: { uid: string }): string => {
+  // return GroupDTO
   const { uid } = condition;
   return `
-    SELECT groups.*, count(todos.todo_id) as item_count
-    FROM ${DB_TABLES.TODO_GROUP_TABLE} groups
-    LEFT JOIN ${DB_TABLES.TODO_TABLE} todos
-    ON groups.group_id = todos.group_id
-    WHERE groups.owner_id = "${uid}"
-    GROUP BY groups.group_id;
+    SELECT ${DB_TABLES.TODO_GROUP_TABLE}.*, count(${DB_TABLES.TODO_TABLE}.todo_id) as item_count
+    FROM ${DB_TABLES.TODO_GROUP_TABLE}
+    LEFT JOIN ${DB_TABLES.TODO_TABLE}
+    ON ${DB_TABLES.TODO_GROUP_TABLE}.group_id = ${DB_TABLES.TODO_TABLE}.group_id
+    WHERE ${DB_TABLES.TODO_GROUP_TABLE}.owner_id = "${uid}"
+    GROUP BY ${DB_TABLES.TODO_GROUP_TABLE}.group_id;
   `;
 };
 

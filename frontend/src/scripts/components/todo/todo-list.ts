@@ -17,14 +17,12 @@ export class TodoList extends HTMLElement {
 
     return new Date(prev).toDateString() != new Date(now).toDateString();
   };
-
   constructor(todos: Todo[], handleUpdate: () => void) {
     super();
 
     todos.forEach((todo, index) => {
-      if (index == 0) {
-        // $todolist.append($dateDivider(todo.limit_datetime));
-      } else if (
+      if (
+        index != 0 &&
         this.isDateChanged(todo.limit_datetime, todos[index - 1].limit_datetime)
       ) {
         this.appendChild($DateDivider(todo.limit_datetime));
@@ -36,6 +34,8 @@ export class TodoList extends HTMLElement {
     });
   }
 }
+
+customElements.define("todo-list", TodoList);
 
 const $DateDivider = (datetime: number | null): HTMLElement => {
   const $divider = document.createElement("div");
@@ -52,5 +52,3 @@ const $DateDivider = (datetime: number | null): HTMLElement => {
   }
   return $divider;
 };
-
-customElements.define("todo-list", TodoList);
