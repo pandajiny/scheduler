@@ -56,12 +56,19 @@ function updateRoute(props: {
   }
 }
 
-function updateQuery(query: Record<string, string>) {
+type QueryChangeEvent = () => void;
+export const queryChangeEvents: QueryChangeEvent[] = [];
+export function updateQuery(query: Record<string, string | undefined>) {
   const url = new URL(window.location.href);
   Object.entries(query).forEach(([key, value]) => {
-    url.searchParams.set(key, value);
+    if (value) {
+      url.searchParams.set(key, value);
+    } else {
+      url.searchParams.delete(key);
+    }
   });
   history.pushState({}, "", url.toString());
+  queryChangeEvents.forEach((ev) => ev());
 }
 
 export async function updatePage(

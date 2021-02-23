@@ -9,11 +9,17 @@
 
     display: flex;
     flex-direction: column;
+    > .top-bar-container {
+      max-height: 0px;
+      opacity: 0;
+      transition: 0.5s;
+    }
+    > .top-bar-container.active {
+      opacity: 1;
+      max-height: 100px;
+    }
 
     > .side-bar-container {
-      // width: 100%;
-      // height: 100%;
-
       > side-bar {
         position: absolute;
         display: flex;
@@ -23,7 +29,7 @@
         height: 100%;
 
         transform: translateX(-100%);
-        transition: transform 0.5s ease;
+        transition: 0.5s ease;
       }
 
       > side-bar.active {

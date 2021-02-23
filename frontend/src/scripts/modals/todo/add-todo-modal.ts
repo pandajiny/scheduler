@@ -1,5 +1,5 @@
+import { dbService } from "../../modules/db";
 import { $template } from "../../modules/document";
-import { getGroupsFromUid } from "../../modules/groups";
 
 const $modal = document.getElementById("add-todo-modal") as HTMLElement;
 
@@ -27,12 +27,11 @@ async function initModal(props: ActionModalProps<AddTodoRequest>) {
     ".select-group"
   ) as HTMLSelectElement;
 
-  const groups = await getGroupsFromUid().catch(() => []);
+  const groups = await dbService.getGroups();
   $selectGroup.append(...$groupOptions(groups));
 
   const closeModal = () => {
     $modal.classList.remove("active");
-
     $inputContent.value = "";
     $inputDate.value = "";
   };
@@ -42,7 +41,7 @@ async function initModal(props: ActionModalProps<AddTodoRequest>) {
       content: $inputContent.value,
       groupId:
         $selectGroup.selectedIndex != 0
-          ? groups[$selectGroup.selectedIndex].group_id
+          ? groups[$selectGroup.selectedIndex - 1].group_id
           : null,
       limitDatetime: new Date($inputDate.value).getTime(),
       ownerId: user.uid,
@@ -58,7 +57,7 @@ async function initModal(props: ActionModalProps<AddTodoRequest>) {
   };
 }
 
-const $groupOptions = (groups: Group[]): HTMLOptionElement[] => {
+const $groupOptions = (groups: GroupDTO[]): HTMLOptionElement[] => {
   const $notselect = document.createElement("option");
   $notselect.textContent = `Not select`;
   return [

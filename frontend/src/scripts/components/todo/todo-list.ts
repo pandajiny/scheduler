@@ -1,4 +1,3 @@
-import { $template } from "../../modules/document";
 import { getMonthString } from "../../modules/time";
 import { TodoItem } from "./todo-item";
 
@@ -17,7 +16,7 @@ export class TodoList extends HTMLElement {
 
     return new Date(prev).toDateString() != new Date(now).toDateString();
   };
-  constructor(todos: Todo[], handleUpdate: () => void) {
+  constructor(todos: Todo[]) {
     super();
 
     todos.forEach((todo, index) => {
@@ -29,7 +28,6 @@ export class TodoList extends HTMLElement {
       }
 
       const $todo = new TodoItem(todo);
-      $todo.onUpdate = handleUpdate;
       this.appendChild($todo);
     });
   }

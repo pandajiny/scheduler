@@ -13,9 +13,7 @@ export class GroupItem extends HTMLElement {
     $title.onclick = () => updatePage("/todos", { groupId: group.group_id });
 
     const $editButton = this.querySelector("edit-button") as HTMLButtonElement;
-    $editButton.onclick = () => {
-      console.log("hi");
-    };
+    $editButton.onclick = () => {};
   }
 }
 

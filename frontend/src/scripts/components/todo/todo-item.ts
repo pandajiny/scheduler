@@ -1,11 +1,12 @@
+import { dbService } from "../../modules/db";
 import { $template } from "../../modules/document";
-import { deleteTodo } from "../../modules/todo";
+import * as todoService from "../../modules/todo";
+import { todosFilter } from "../../pages/todos";
 
-interface TodoItemInterface {
-  onUpdate: () => void;
-}
-export class TodoItem extends HTMLElement implements TodoItemInterface {
-  public onUpdate = () => {};
+export class TodoItem extends HTMLElement {
+  async updateTodos() {
+    todoService.getTodos(await todosFilter()).then(dbService.updateTodos);
+  }
   constructor(todo: Todo) {
     super();
     this.id = `todo-${todo.todo_id}`;
@@ -23,9 +24,14 @@ export class TodoItem extends HTMLElement implements TodoItemInterface {
 
     // actions
     const $actions = this.querySelector(".actions") as HTMLDivElement;
-    const $deleteButton = this.querySelector(
+
+    const $deleteButton = this.querySelector<HTMLButtonElement>(
       ".delete-button"
-    ) as HTMLButtonElement;
+    );
+    $deleteButton!.onclick = () => {
+      todoService.deleteTodo(todo.todo_id).then(this.updateTodos);
+    };
+
     const $editButton = this.querySelector(".edit-button") as HTMLButtonElement;
     const $doneButton = this.querySelector(`.done-button`) as HTMLButtonElement;
 
@@ -54,10 +60,6 @@ export class TodoItem extends HTMLElement implements TodoItemInterface {
       } else {
         $actions.classList.add("active");
       }
-    };
-
-    $deleteButton.onclick = () => {
-      deleteTodo(todo.todo_id).then(this.onUpdate);
     };
     $editButton.onclick = () => {
       setContentEditMode();
