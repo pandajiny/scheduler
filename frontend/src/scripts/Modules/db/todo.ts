@@ -35,7 +35,12 @@ function excuteChangeListeners() {
 export async function updateTodos(todos: Todo[]) {
   const store = await storeTodos();
   store.clear();
-  await addItems<Todo>(todos, store).then(excuteChangeListeners);
+  await addItems<Todo>(
+    todos.sort(
+      (prev, next) => (next.limit_datetime || 0) - (prev.limit_datetime || 0)
+    ),
+    store
+  ).then(excuteChangeListeners);
 }
 
 export async function getTodos(): Promise<Todo[]> {
