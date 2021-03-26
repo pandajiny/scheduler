@@ -1,7 +1,6 @@
 import { DB_TABLES, getUniqueString } from '.';
 
 export const selectGroupsQuery = (condition: { uid: string }): string => {
-  // return GroupDTO
   const { uid } = condition;
   return `
     SELECT ${DB_TABLES.TODO_GROUP_TABLE}.*, count(${DB_TABLES.TODO_TABLE}.todo_id) as item_count

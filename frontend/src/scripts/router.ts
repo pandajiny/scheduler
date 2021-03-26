@@ -84,14 +84,14 @@ export async function updatePage(
   const path = location.pathname as Route;
   getAuth()
     .then((user) => {
-      if (startAuthPage[path as AuthRoute] != undefined) {
+      if (startAuthPage[path as AuthRoute]) {
         startAuthPage[path as AuthRoute](user);
       } else {
         updatePage("/todos");
       }
     })
     .catch(() => {
-      if (startPublicPage[path as PublicRoute] != undefined) {
+      if (startPublicPage[path as PublicRoute]) {
         startPublicPage[path as PublicRoute]();
       } else {
         updatePage("/welcome");

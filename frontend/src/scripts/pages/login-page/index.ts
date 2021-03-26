@@ -1,7 +1,7 @@
 import { doLoginWithEmailAndPassword } from "../../modules/auth";
 import { $pages, updatePage } from "../../router";
-const $page = $pages.login;
 
+const $page = $pages.login;
 export function startLoginPage() {
   $page.classList.add("active");
   $page.innerHTML = ``;

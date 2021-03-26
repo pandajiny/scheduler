@@ -7,6 +7,7 @@ export class TodoItem extends HTMLElement {
   async updateTodos() {
     todoService.getTodos(await todosFilter()).then(dbService.updateTodos);
   }
+
   constructor(todo: Todo) {
     super();
     this.id = `todo-${todo.todo_id}`;
