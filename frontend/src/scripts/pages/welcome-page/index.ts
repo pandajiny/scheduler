@@ -1,3 +1,4 @@
+import { $template } from "../../modules/document";
 import { $pages, updatePage } from "../../router";
 
 const $page = $pages.welcome;
@@ -5,23 +6,18 @@ const $page = $pages.welcome;
 export function startWelcomePage() {
   $page.classList.add("active");
   $page.innerHTML = ``;
+  $page.append($template("welcome-page-template"));
 
-  const $template = document.getElementById(
-    "welcome-page-template"
-  ) as HTMLTemplateElement;
-
-  $page.appendChild($template.content.cloneNode(true));
   const $buttonLogin = $page.querySelector(
     ".button-login"
   ) as HTMLButtonElement;
+  $buttonLogin.onclick = () => {
+    updatePage("/login");
+  };
 
   const $buttonSignup = $page.querySelector(
     ".button-signup"
   ) as HTMLButtonElement;
-
-  $buttonLogin.onclick = () => {
-    updatePage("/login");
-  };
   $buttonSignup.onclick = () => {
     updatePage("/signup");
   };

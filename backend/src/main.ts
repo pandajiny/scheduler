@@ -12,10 +12,7 @@ import {
 import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 
 async function bootstrap() {
-  const httpsOptions: HttpsOptions | undefined = isCertExist({
-    keyPath: KEY_PATH,
-    certPath: CERT_PATH,
-  })
+  const httpsOptions: HttpsOptions | undefined = isCertExist()
     ? {
         key: fs.readFileSync(KEY_PATH),
         cert: fs.readFileSync(CERT_PATH),
@@ -23,9 +20,9 @@ async function bootstrap() {
     : undefined;
 
   if (httpsOptions) {
-    console.log(`run as https`);
+    console.log(`run https server`);
   } else {
-    console.log(`run as http`);
+    console.log(`run http server`);
   }
   const app = await NestFactory.create(AppModule, {
     httpsOptions,
@@ -38,8 +35,8 @@ async function bootstrap() {
   console.log(`scheduler api is running on ${serverUrl}`);
 }
 
-const isCertExist = (paths: { keyPath: string; certPath: string }): boolean => {
-  return fs.existsSync(paths.keyPath) && fs.existsSync(paths.certPath);
+const isCertExist = (): boolean => {
+  return fs.existsSync(KEY_PATH) && fs.existsSync(CERT_PATH);
 };
 
 bootstrap();

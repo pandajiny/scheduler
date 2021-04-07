@@ -43,10 +43,7 @@ const startPublicPage: Record<PublicRoute, () => void> = {
   "/welcome": startWelcomePage,
 };
 
-function updateRoute(props: {
-  route?: AuthRoute | PublicRoute;
-  query?: Record<string, string>;
-}) {
+function updateRoute(props: { route?: Route; query?: Record<string, string> }) {
   const { query, route } = props;
   if (route) {
     history.pushState({}, "", route);
