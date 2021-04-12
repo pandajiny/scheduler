@@ -6,7 +6,7 @@ import { $pages, updatePage, updateQuery } from "../../router";
 import { TodoList } from "../../components/todo/todo-list";
 import { TopBar } from "../../components/top-bar";
 import { setAddTodoModal } from "../../modals/todo/add-todo-modal";
-import { dbService } from "../../modules/db";
+import { dbService } from "../../modules/store";
 
 let user: User;
 const $page = $pages.todos;

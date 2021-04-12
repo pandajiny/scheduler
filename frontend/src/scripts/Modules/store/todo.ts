@@ -45,3 +45,8 @@ export async function getTodos(): Promise<Todo[]> {
     (prev, next) => (prev.limit_datetime || 0) - (next.limit_datetime || 0)
   );
 }
+
+export const TodoStore = {
+  get: getTodos,
+  onUpdate: addTodoChangeListener,
+};

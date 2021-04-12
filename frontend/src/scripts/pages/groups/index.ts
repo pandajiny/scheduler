@@ -1,6 +1,6 @@
 import { GroupList } from "../../components/group/group-list";
 import { TopBar } from "../../components/top-bar";
-import { dbService } from "../../modules/db";
+import { dbService } from "../../modules/store";
 import { $template } from "../../modules/document";
 import { getGroupsFromUid } from "../../modules/groups";
 import { $pages, updatePage } from "../../router";

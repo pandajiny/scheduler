@@ -1,4 +1,4 @@
-import { dbService } from "../../modules/db";
+import { dbService } from "../../modules/store";
 import { $template } from "../../modules/document";
 import * as todoService from "../../modules/todo";
 import { todosFilter } from "../../pages/todos";

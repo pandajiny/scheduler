@@ -1,4 +1,4 @@
-import { dbService } from "../../modules/db";
+import { dbService } from "../../modules/store";
 import { $template } from "../../modules/document";
 
 const $modal = document.getElementById("add-todo-modal") as HTMLElement;

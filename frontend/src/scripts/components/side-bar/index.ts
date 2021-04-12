@@ -1,5 +1,5 @@
 import { $AccountState } from "../../components/account/account-state";
-import { dbService } from "../../modules/db";
+import { dbService } from "../../modules/store";
 import { $template } from "../../modules/document";
 import { getTodos } from "../../modules/todo";
 import { todosFilter } from "../../pages/todos";
